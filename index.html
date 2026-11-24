@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Wildlens · field guide</title>
+<meta name="theme-color" content="#2d5a34">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE: calm and practical, like a naturalist walking beside you.
+   IDEA: a bound field notebook: warm paper, forest-green ink, species cards.
+   PICTURE: the scanner itself, large, at the top; then cards stamped with an initial.
+   COLOUR and TYPE: paper #f3efe8, forest green #2d5a34, leather #8a5a2b, rescue orange for SOS; Source Serif for titles, Inter to read.
+   LAYOUT: single phone column, five-item bottom bar. */
+:root{color-scheme:light dark;
+--bg:light-dark(#f3efe8,#14130f);--card:light-dark(#faf8f4,#1e1c17);--ink:light-dark(#2a2621,#ede8df);--mute:light-dark(#6b6358,#a69e91);
+--line:light-dark(#e3dccf,#35312a);--green:light-dark(#2d5a34,#93c99d);--greenbg:#2d5a34;--brown:light-dark(#8a5a2b,#d9a46a);
+--tan:#c49a6c;--tanbg:light-dark(#ecdfd2,#2c241c);--sos:#d1492a;--warn-bg:light-dark(#fbeee6,#2e1d14)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Inter,system-ui,sans-serif;overflow-x:clip;padding-bottom:170px}
+h1,h2,h3{font-family:"Source Serif 4",Georgia,serif;font-weight:500;line-height:1.08;margin:0;text-wrap:balance}
+h1{font-size:44px;color:var(--green)}
+h2{font-size:26px}
+h3{font-size:20px;font-weight:600}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--brown);outline-offset:2px}
+main{max-width:680px;margin:0 auto;padding:18px max(4vw,16px)}
+.eye{font-size:13px;font-weight:700;color:var(--brown);letter-spacing:.08em}
+.head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:14px}
+.sub{color:var(--mute);margin:4px 0 0}
+.net{display:inline-flex;align-items:center;gap:6px;background:var(--greenbg);color:#f3efe8;font-weight:700;font-size:14px;padding:8px 14px;border-radius:99px;white-space:nowrap}
+.net.off{background:var(--brown)}
+.prem{display:flex;gap:10px;align-items:center;width:100%;text-align:left;background:var(--tanbg);border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;font-weight:600;font-size:15px;color:var(--ink);min-height:48px}
+.prem svg{flex:none;width:22px;height:22px;color:var(--brown)}
+.card{background:var(--card);border:1.5px solid var(--line);border-radius:22px;padding:18px;margin-top:14px}
+.scanbox{text-align:center;padding:26px 18px}
+.lens{width:150px;height:150px;border-radius:50%;background:light-dark(#e4e4dc,#26251f);display:grid;place-items:center;margin:0 auto 16px;overflow:hidden}
+.lens svg{width:64px;height:64px;color:var(--green)}
+.lens img{width:100%;height:100%;object-fit:cover}
+.scanbox h2{font-size:30px}
+.scanbox p{color:var(--mute);max-width:34ch;margin:10px auto 0}
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border:0;border-radius:18px;padding:14px 18px;min-height:56px;font-weight:700;font-size:18px;background:var(--greenbg);color:#f3efe8;margin-top:12px}
+.btn svg{width:24px;height:24px}
+.btn.alt{background:var(--card);color:var(--brown);border:1.5px solid var(--line)}
+.btn.sm{width:auto;min-height:44px;font-size:15px;padding:10px 16px;border-radius:12px;margin-top:0}
+.btn.sos{background:var(--sos)}
+.hint{font-size:14px;font-style:italic;color:var(--mute);text-align:center;margin:12px 0 0}
+.fileIn{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;pointer-events:none}
+.ask{display:flex;gap:8px;margin-top:10px}
+.ask input{flex:1;padding:12px 14px;border:1.5px solid var(--line);border-radius:14px;background:var(--card);font-size:16px;min-height:50px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:12px 0 4px;scrollbar-width:none}
+.chips button{flex:none;border:1.5px solid var(--line);background:var(--card);border-radius:99px;padding:8px 14px;font-size:14px;font-weight:500;min-height:40px;white-space:nowrap}
+.chips button[aria-pressed=true]{background:var(--greenbg);color:#f3efe8;border-color:var(--greenbg)}
+.ans{background:var(--card);border:1.5px solid var(--line);border-radius:18px;padding:16px 18px;margin-top:12px}
+.ans ul,.det ul{padding-left:20px;margin:6px 0}.ans p,.det p{margin:6px 0}
+.lbl{display:inline-block;font-size:12px;font-weight:700;padding:3px 10px;border-radius:99px;background:var(--greenbg);color:#f3efe8;margin-bottom:6px}
+.lbl.ai{background:var(--brown)}
+.src{font-size:13px;color:var(--mute)}
+.tay{display:flex;gap:12px;align-items:center}.tav{flex:none;width:56px;height:56px}.tav img{width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid var(--green);display:block}.lbl .mini{width:18px;height:18px;border-radius:50%;object-fit:cover;vertical-align:-4px;margin:0 6px 0 -4px}
+.disc{font-size:13px;color:var(--mute);border-top:1.5px solid var(--line);margin-top:28px;padding-top:14px;line-height:1.5}
+.askcard{display:flex;gap:14px;align-items:center;text-align:left;width:100%;margin-top:26px}
+.tayFab{position:fixed;right:16px;bottom:86px;z-index:6;width:64px;height:64px;border-radius:50%;border:3px solid #f3efe8;box-shadow:0 6px 18px rgba(0,0,0,.28);padding:0;background:#2d5a34}
+.tayFab img{width:100%;height:100%;border-radius:50%;display:block}
+.tayFab i{position:absolute;right:2px;bottom:2px;width:16px;height:16px;border-radius:50%;background:#9a9a9a;border:2px solid #f3efe8}
+.tayFab i.on{background:#3cb04a}
+.sheet{position:fixed;inset:0;z-index:15;background:var(--bg);display:flex;flex-direction:column}
+.sheet header{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1.5px solid var(--line);background:var(--card)}
+.sheet .sname{display:block;font-family:"Source Serif 4",serif;font-size:22px;font-weight:500}
+.sheet small{color:var(--mute);font-size:13px}
+.xbtn{border:0;background:var(--bg);border-radius:50%;width:44px;height:44px;font-size:18px}
+.msgs{flex:1;overflow-y:auto;padding:8px 16px 16px}
+.me{background:var(--greenbg);color:#f3efe8;border-radius:18px 18px 4px 18px;padding:10px 14px;margin:14px 0 4px auto;max-width:85%;width:fit-content}
+.sheet form{display:flex;gap:8px;padding:10px 16px calc(12px + env(safe-area-inset-bottom));border-top:1.5px solid var(--line);background:var(--card)}
+.sheet form input{flex:1;padding:12px 14px;border:1.5px solid var(--line);border-radius:14px;background:var(--bg);font-size:16px;min-height:48px}
+.yk{background:var(--card);border:1.5px solid var(--line);border-radius:22px;padding:16px;margin-top:14px}
+.ykTop{display:flex;gap:14px;align-items:center}
+.ykTop .av,.ykTop img.ph{width:96px;height:96px;border-radius:16px;object-fit:cover;flex:none}
+.ykTop .av{font-size:44px}
+.ykTop h2{font-size:26px}
+.badge{display:flex;align-items:center;gap:8px;margin-top:6px;font-size:15px}
+.badge .dot{width:16px;height:16px;border-radius:50%;flex:none}
+.score{display:flex;align-items:center;gap:14px;margin-top:14px;padding:12px;border-radius:16px;background:var(--bg)}
+.ring{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:20px;color:#fff;flex:none}
+.pn{list-style:none;padding:0;margin:8px 0}
+.pn li{display:flex;gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+.pn li::before{content:"";flex:none;width:12px;height:12px;border-radius:50%;background:#2e8b3d;margin-top:6px}
+.pn.neg li::before{background:#d1492a}
+details.more{margin-top:10px}details.more summary{cursor:pointer;font-weight:700;color:var(--brown);padding:10px 0;min-height:44px}
+.help{width:40px;height:40px;border-radius:50%;border:1.5px solid var(--line);background:var(--card);font-weight:700;font-size:18px;color:var(--green)}
+.intro{position:fixed;inset:0;z-index:30;background:rgba(20,19,15,.55);display:grid;place-items:end center;padding:16px}
+.introCard{background:var(--card);border-radius:26px;padding:22px;width:min(100%,520px);margin-bottom:max(16px,env(safe-area-inset-bottom))}
+.introAv{width:84px;height:84px;border-radius:50%;display:block;margin:-64px auto 8px;border:4px solid var(--card)}
+.introCard h2{font-size:28px;text-align:center}.introCard p{text-align:center;color:var(--mute);margin:10px 0 0}
+.dots{display:flex;gap:6px;justify-content:center;margin-top:16px}.dots i{width:8px;height:8px;border-radius:50%;background:var(--line)}.dots i.on{background:var(--green);width:22px;border-radius:99px}
+.urgent{background:var(--sos);color:#fff;border-radius:12px;padding:10px 14px;margin-top:12px;font-weight:600}
+.warn{background:var(--warn-bg);border-left:4px solid var(--sos);padding:10px 14px;border-radius:8px;margin:10px 0;font-size:15px}
+.link{border:0;background:none;color:var(--brown);font-weight:700;padding:8px 0;min-height:44px}
+.search{width:100%;padding:14px 16px;border:1.5px solid var(--line);border-radius:16px;background:var(--card);font-size:16px;min-height:54px}
+.item{display:grid;grid-template-columns:76px minmax(0,1fr);gap:16px;align-items:center;width:100%;text-align:left;background:var(--card);border:1.5px solid var(--line);border-radius:20px;padding:14px;margin-top:12px}
+.av{width:76px;height:76px;border-radius:14px;background:var(--tan);color:#fbf6ef;display:grid;place-items:center;font-family:"Source Serif 4",serif;font-size:38px;overflow:hidden}
+.av.s{background:var(--greenbg)}.av.a{background:var(--brown)}
+.av svg{width:38px;height:38px}.av img{width:100%;height:100%;object-fit:cover}
+.tag{display:inline-block;font-size:12px;font-weight:700;padding:2px 10px;border-radius:99px;background:var(--tan);color:#fff}
+.tag.s{background:var(--greenbg)}.tag.a{background:var(--brown)}
+.item b{display:block;font-family:"Source Serif 4",serif;font-weight:500;font-size:22px;line-height:1.15;margin-top:4px}
+.item i{display:block;color:var(--mute);font-size:14px}
+.item span.sn{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;color:var(--mute);font-size:14px;margin-top:4px}
+.det h3{margin-top:16px}
+.det .top{display:flex;gap:16px;align-items:center}
+.conf{height:8px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:6px}.conf i{display:block;height:100%;background:var(--green)}
+.photo{width:100%;max-height:320px;object-fit:cover;border-radius:16px;margin-top:12px;display:block}
+.banner{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:var(--greenbg);color:#f3efe8;border-radius:16px;padding:12px 16px;margin-top:14px}
+.banner b{font-family:"Source Serif 4",serif;font-size:20px;font-weight:500}
+.banner button{border:0;background:#f3efe8;color:#2d5a34;border-radius:10px;padding:10px 14px;font-weight:700;min-height:44px}
+.fig{position:relative;height:380px;z-index:0;border-radius:18px;overflow:hidden;background:light-dark(#e9e4d8,#1b1a15);border:1.5px solid var(--line);margin-top:14px}
+.fig svg{position:absolute;inset:0;width:100%;height:100%}
+.empty{text-align:center;color:var(--mute);padding:40px 16px}
+.empty svg{width:54px;height:54px;color:var(--mute)}
+.empty b{display:block;font-family:"Source Serif 4",serif;font-weight:500;font-size:24px;color:var(--ink);margin-top:8px}
+.kv{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:10px}
+.kv div{background:var(--bg);border-radius:12px;padding:10px}
+.kv small{display:block;color:var(--mute);font-size:13px}
+.kv b{font-family:"Source Serif 4",serif;font-size:24px;font-weight:500;white-space:nowrap}
+.big{font-family:"Source Serif 4",serif;font-size:clamp(30px,8vw,44px);line-height:1.1;white-space:nowrap}
+.note{font-size:13px;color:var(--mute);margin-top:8px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.dial{width:190px;height:190px;margin:8px auto;display:block}
+.plan{border:1.5px solid var(--line);border-radius:18px;padding:16px;margin-top:12px;background:var(--card)}
+.plan.p{background:var(--greenbg);color:#f3efe8;border-color:var(--greenbg)}
+.plan .price{font-family:"Source Serif 4",serif;font-size:44px;line-height:1}
+.plan ul{padding-left:20px;margin:10px 0 0}
+.area{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center}
+.area small{display:block;color:var(--mute)}
+.prog{height:8px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:10px}.prog i{display:block;height:100%;width:0;background:var(--green);transition:width .2s}
+.pill{font-size:13px;font-weight:700;padding:4px 10px;border-radius:99px;background:var(--bg);white-space:nowrap}
+.pill.ok{background:var(--greenbg);color:#f3efe8}
+nav{position:fixed;inset:auto 0 0 0;background:var(--card);border-top:1.5px solid var(--line);display:grid;grid-template-columns:repeat(5,minmax(0,1fr));z-index:5}
+nav button{border:0;background:none;padding:10px 2px 14px;min-height:68px;font-family:"Source Serif 4",serif;font-size:14px;color:var(--mute);display:flex;flex-direction:column;align-items:center;gap:4px}
+nav button svg{width:26px;height:26px}
+nav button[aria-current]{color:var(--green)}
+nav button[data-v=sos][aria-current],nav button[data-v=sos]{color:var(--sos)}
+.flash{position:fixed;inset:0;z-index:20;background:#000;display:none;align-items:flex-end;justify-content:center;padding:40px}
+.flash.on{display:flex}.flash.lit{background:#fff}
+.flash button{background:var(--sos);color:#fff;border:0;border-radius:12px;padding:14px 24px;font-weight:700}
+@media(max-width:400px){h1{font-size:38px}.item{grid-template-columns:60px minmax(0,1fr)}.av{width:60px;height:60px;font-size:30px}.kv b{font-size:20px}}
+@media(prefers-reduced-motion:no-preference){.item,.btn{transition:transform .12s}.item:active,.btn:active{transform:scale(.98)}}
+</style>
+</head>
+<body>
+<main>
+
+<section id="v-scan">
+<div class="head"><div><div class="eye">FIELD GUIDE</div><h1 id="appName">Wildlens</h1></div><div style="display:flex;gap:8px;align-items:center"><button class="help" id="helpBtn" aria-label="How Wildlens works">?</button><span class="net" id="net">Online</span></div></div>
+<button class="prem" id="premBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3l2 5.5L19.5 10 14 12l-2 5.5L10 12 4.5 10 10 8.5z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg><span id="premTxt"></span></button>
+<div class="card scanbox">
+<div class="lens" id="lens"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></div>
+<h2>Scan anything in the wild</h2>
+<p>Snap a photo. Taylor tells you what it is, what it's made of, how it helps you survive or make fire, where it comes from and how to grow or produce it.</p>
+</div>
+<button class="btn" id="camBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>Take photo</button>
+<button class="btn alt" id="galBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 9"/></svg>Pick from gallery</button>
+<input id="camIn" class="fileIn" type="file" accept="image/*" capture="environment">
+<input id="galIn" class="fileIn" type="file" accept="image/*">
+<p class="hint">Plants, animals, mushrooms, rocks, water, buildings, materials: even asphalt or plastic.</p>
+<div id="scanOut"></div>
+
+<button class="card askcard" id="openTay"><span class="tav"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIj48ZGVmcz48Y2xpcFBhdGggaWQ9ImMiPjxjaXJjbGUgY3g9IjYwIiBjeT0iNjAiIHI9IjYwIi8+PC9jbGlwUGF0aD48L2RlZnM+PGcgY2xpcC1wYXRoPSJ1cmwoI2MpIj48cmVjdCB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgZmlsbD0iIzJkNWEzNCIvPjxjaXJjbGUgY3g9IjE4IiBjeT0iMjAiIHI9IjEwIiBmaWxsPSIjM2Y3YTQ2Ii8+PGNpcmNsZSBjeD0iMTAwIiBjeT0iMTYiIHI9IjEyIiBmaWxsPSIjM2Y3YTQ2Ii8+PHBhdGggZD0iTTE0IDEyMGM0LTIyIDIyLTMyIDQ2LTMyczQyIDEwIDQ2IDMyeiIgZmlsbD0iIzVhNWIyYyIvPjxwYXRoIGQ9Ik00NCA5MmwxNiAxNCAxNi0xNC02LTQtMTAgOS0xMC05eiIgZmlsbD0iIzRhNGIyNCIvPjxnIGZpbGw9IiNiNDUzMmEiPjxjaXJjbGUgY3g9IjM0IiBjeT0iNTIiIHI9IjE0Ii8+PGNpcmNsZSBjeD0iODYiIGN5PSI1MiIgcj0iMTQiLz48Y2lyY2xlIGN4PSIzMCIgY3k9IjcyIiByPSIxMyIvPjxjaXJjbGUgY3g9IjkwIiBjeT0iNzIiIHI9IjEzIi8+PGNpcmNsZSBjeD0iMzQiIGN5PSI5MiIgcj0iMTIiLz48Y2lyY2xlIGN4PSI4NiIgY3k9IjkyIiByPSIxMiIvPjxjaXJjbGUgY3g9IjYwIiBjeT0iMzIiIHI9IjIwIi8+PGNpcmNsZSBjeD0iNDIiIGN5PSIzNiIgcj0iMTQiLz48Y2lyY2xlIGN4PSI3OCIgY3k9IjM2IiByPSIxNCIvPjwvZz48cmVjdCB4PSI1NCIgeT0iNzgiIHdpZHRoPSIxMiIgaGVpZ2h0PSIxNCIgcng9IjUiIGZpbGw9IiNmMmM5YjEiLz48ZWxsaXBzZSBjeD0iNjAiIGN5PSI2MCIgcng9IjIxIiByeT0iMjQiIGZpbGw9IiNmNmQ2YzIiLz48ZyBmaWxsPSIjYzk2NjJmIj48Y2lyY2xlIGN4PSI0NiIgY3k9IjQwIiByPSI5Ii8+PGNpcmNsZSBjeD0iNTgiIGN5PSIzNyIgcj0iOSIvPjxjaXJjbGUgY3g9IjcwIiBjeT0iMzkiIHI9IjkiLz48Y2lyY2xlIGN4PSI0MCIgY3k9IjQ4IiByPSI2Ii8+PGNpcmNsZSBjeD0iODAiIGN5PSI0NyIgcj0iNiIvPjwvZz48Y2lyY2xlIGN4PSI0OSIgY3k9IjY2IiByPSI0IiBmaWxsPSIjZWY5ZThhIiBvcGFjaXR5PSIuNTUiLz48Y2lyY2xlIGN4PSI3MSIgY3k9IjY2IiByPSI0IiBmaWxsPSIjZWY5ZThhIiBvcGFjaXR5PSIuNTUiLz48cGF0aCBkPSJNNDYgNThxNC00IDggME02NiA1OHE0LTQgOCAwIiBzdHJva2U9IiMzYTJhMjIiIHN0cm9rZS13aWR0aD0iMi4yIiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cGF0aCBkPSJNNTIgNzBxOCA4IDE2IDAiIHN0cm9rZT0iIzNhMmEyMiIgc3Ryb2tlLXdpZHRoPSIyLjIiIGZpbGw9IiNmZmYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxnIGZpbGw9IiNkOTdhM2EiPjxjaXJjbGUgY3g9IjI0IiBjeT0iNjIiIHI9IjUiLz48Y2lyY2xlIGN4PSI5NiIgY3k9IjYyIiByPSI1Ii8+PGNpcmNsZSBjeD0iMjgiIGN5PSI4NCIgcj0iNSIvPjxjaXJjbGUgY3g9IjkyIiBjeT0iODQiIHI9IjUiLz48L2c+PHBhdGggZD0iTTg0IDMwYzQtNiAxMC03IDE0LTQtMyAxLTYgMy03IDciIGZpbGw9IiM3ZmIwNjkiLz48L2c+PC9zdmc+" alt=""></span><div><h2>Ask Taylor</h2><p class="sub" style="margin:0">Your field agent. Water, fire, bites, storms, the body, buildings: ask anything.</p></div></button>
+</section>
+
+<section id="v-libreria" hidden>
+<div class="eye">FIELD GUIDE</div><h1>The Library</h1><p class="sub" id="libCount"></p>
+<div id="areaBox"></div>
+<input class="search" id="libQ" type="search" placeholder="Search the field guide…" aria-label="Search the library" style="margin-top:14px">
+<div class="chips" id="catChips"></div>
+<div id="libList"></div>
+</section>
+
+<section id="v-scheda" hidden>
+<button class="link" id="back">← Back</button>
+<div id="det" class="det"></div>
+</section>
+
+<section id="v-mappa" hidden>
+<div class="eye">FIELD SITES</div><h1>Map</h1><p class="sub" id="mapCount"></p>
+<div class="fig" id="map"></div>
+<p class="note">Your discoveries on OpenStreetMap, with trails. Map areas you have viewed stay available offline; with no map data you still see your pins and GPS.</p>
+<div class="card">
+<h3>Where you are</h3>
+<div class="big" id="coords">— , —</div>
+<div class="row"><button class="btn sm" id="gps">Find my location</button><button class="btn sm alt" id="copy">Copy coordinates</button></div>
+<p class="note" id="gpsNote">Coordinates are the first thing to tell rescuers.</p>
+<div class="kv"><div><small>Sunrise</small><b id="rise">—</b></div><div><small>Sunset</small><b id="set">—</b></div><div><small>Daylight left</small><b id="left">—</b></div></div>
+<p class="note" id="sunNote">No GPS? Hold your arm out toward the sun: each finger between sun and horizon is about 15 minutes of light.</p>
+</div>
+<div class="card">
+<h3>Compass</h3>
+<svg class="dial" viewBox="0 0 200 200" aria-label="Compass"><circle cx="100" cy="100" r="92" fill="none" stroke="currentColor" stroke-opacity=".25" stroke-width="2"/>
+<g font-family="Source Serif 4,serif" font-size="20" text-anchor="middle" fill="currentColor"><text x="100" y="30">N</text><text x="176" y="107">E</text><text x="100" y="186">S</text><text x="24" y="107">W</text></g>
+<g id="needle"><path d="M100 36 L110 100 L100 92 L90 100Z" fill="#d1492a"/><path d="M100 164 L110 100 L100 108 L90 100Z" fill="currentColor" fill-opacity=".35"/></g></svg>
+<button class="btn sm" id="cmp" style="margin:0 auto">Turn on compass</button>
+<p class="note" id="cmpNote">No compass? Plant a stick, mark the shadow tip, wait 15 minutes, mark again. The first mark is west, the second east.</p>
+</div>
+</section>
+
+<section id="v-diario" hidden>
+<div class="eye">YOUR FINDINGS</div><h1>Journal</h1>
+<div id="diary"></div>
+<div class="card"><h3>Back in town?</h3><p style="margin:6px 0 0">Share your finds with the community on <b>Borgo</b> and plan the next outing on <b>Barfront</b>.</p><p class="note" id="syncNote"></p><button class="btn sm" id="sync" style="margin-top:10px">Prepare sharing</button></div>
+</section>
+
+<section id="v-sos" hidden>
+<div class="eye" style="color:var(--sos)">EMERGENCY</div><h1 style="color:var(--sos)">SOS</h1>
+<div class="card">
+<div class="big" style="color:var(--sos)">112 · 911</div>
+<p style="margin:6px 0 0"><b>112</b> works across Europe, <b>911</b> in the US and Canada. Both often work with no credit and on another carrier's network. In the mountains ask for mountain rescue.</p>
+<ol><li>Where you are: coordinates (Map tab), trail, altitude.</li><li>What happened and how many people.</li><li>Injured: conscious, breathing, bleeding.</li><li>Keep your phone on and the line free.</li></ol>
+<p class="note" id="sosPos"></p>
+</div>
+<div class="card">
+<h3>Get found</h3>
+<button class="btn sos" id="sosLight">Flashing SOS screen</button>
+<button class="btn alt" id="whistle">Whistle: 6 blasts</button>
+<p class="note">Alpine distress signal: 6 signals a minute, a minute's pause, repeat. Reply: 3 a minute.</p>
+<ul><li>Helicopter: <b>both arms up in a Y</b> = "yes, we need help". One arm up, one down = "no".</li><li>Three fires, three whistles or three of anything mean distress.</li></ul>
+</div>
+</section>
+
+<section id="v-premium" hidden>
+<button class="link" id="back2">← Back</button>
+<div class="eye">MEMBERSHIP</div><h1>Wildlens Premium</h1>
+<div class="plan"><h3>Free</h3><ul><li>10 AI scans a month</li><li>Full survival guide, offline</li><li>Ask Taylor, Map, Journal, SOS</li></ul></div>
+<div class="plan p"><h3 style="color:#f3efe8">Premium</h3><div class="price">$2.99 <small style="font-size:18px">/ month</small></div><ul><li>Unlimited AI scans</li><li>Every offline area pack: species, risks, rules, maps</li><li>Offline AI recognition (coming)</li></ul><button class="btn" id="buy" style="background:#f3efe8;color:#2d5a34">Get Premium</button><p class="note" id="buyNote" style="color:#dfe9df"></p></div>
+<h2 style="margin-top:22px">Area packs</h2>
+<p class="sub">Download your area before you go. The base pack works everywhere.</p>
+<div class="card area"><div><b>Base pack</b><small>Survival, first aid, body, buildings, common species · always on</small></div><span class="pill ok">Installed</span></div>
+<div id="areaList"></div>
+<p class="note">Prototype: packs are already inside the app and the download is simulated. Sizes are estimates for the full version.</p>
+</section>
+<footer class="disc">Wildlens is an informational field guide. It does not replace experts, doctors or rescue services: in an emergency call 112 (Europe) or 911 (North America). Never eat wild mushrooms or plants based on this app.</footer>
+</main>
+
+<button class="tayFab" id="tayFab" aria-label="Ask Taylor"><img id="tayImg" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIj48ZGVmcz48Y2xpcFBhdGggaWQ9ImMiPjxjaXJjbGUgY3g9IjYwIiBjeT0iNjAiIHI9IjYwIi8+PC9jbGlwUGF0aD48L2RlZnM+PGcgY2xpcC1wYXRoPSJ1cmwoI2MpIj48cmVjdCB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgZmlsbD0iIzJkNWEzNCIvPjxjaXJjbGUgY3g9IjE4IiBjeT0iMjAiIHI9IjEwIiBmaWxsPSIjM2Y3YTQ2Ii8+PGNpcmNsZSBjeD0iMTAwIiBjeT0iMTYiIHI9IjEyIiBmaWxsPSIjM2Y3YTQ2Ii8+PHBhdGggZD0iTTE0IDEyMGM0LTIyIDIyLTMyIDQ2LTMyczQyIDEwIDQ2IDMyeiIgZmlsbD0iIzVhNWIyYyIvPjxwYXRoIGQ9Ik00NCA5MmwxNiAxNCAxNi0xNC02LTQtMTAgOS0xMC05eiIgZmlsbD0iIzRhNGIyNCIvPjxnIGZpbGw9IiNiNDUzMmEiPjxjaXJjbGUgY3g9IjM0IiBjeT0iNTIiIHI9IjE0Ii8+PGNpcmNsZSBjeD0iODYiIGN5PSI1MiIgcj0iMTQiLz48Y2lyY2xlIGN4PSIzMCIgY3k9IjcyIiByPSIxMyIvPjxjaXJjbGUgY3g9IjkwIiBjeT0iNzIiIHI9IjEzIi8+PGNpcmNsZSBjeD0iMzQiIGN5PSI5MiIgcj0iMTIiLz48Y2lyY2xlIGN4PSI4NiIgY3k9IjkyIiByPSIxMiIvPjxjaXJjbGUgY3g9IjYwIiBjeT0iMzIiIHI9IjIwIi8+PGNpcmNsZSBjeD0iNDIiIGN5PSIzNiIgcj0iMTQiLz48Y2lyY2xlIGN4PSI3OCIgY3k9IjM2IiByPSIxNCIvPjwvZz48cmVjdCB4PSI1NCIgeT0iNzgiIHdpZHRoPSIxMiIgaGVpZ2h0PSIxNCIgcng9IjUiIGZpbGw9IiNmMmM5YjEiLz48ZWxsaXBzZSBjeD0iNjAiIGN5PSI2MCIgcng9IjIxIiByeT0iMjQiIGZpbGw9IiNmNmQ2YzIiLz48ZyBmaWxsPSIjYzk2NjJmIj48Y2lyY2xlIGN4PSI0NiIgY3k9IjQwIiByPSI5Ii8+PGNpcmNsZSBjeD0iNTgiIGN5PSIzNyIgcj0iOSIvPjxjaXJjbGUgY3g9IjcwIiBjeT0iMzkiIHI9IjkiLz48Y2lyY2xlIGN4PSI0MCIgY3k9IjQ4IiByPSI2Ii8+PGNpcmNsZSBjeD0iODAiIGN5PSI0NyIgcj0iNiIvPjwvZz48Y2lyY2xlIGN4PSI0OSIgY3k9IjY2IiByPSI0IiBmaWxsPSIjZWY5ZThhIiBvcGFjaXR5PSIuNTUiLz48Y2lyY2xlIGN4PSI3MSIgY3k9IjY2IiByPSI0IiBmaWxsPSIjZWY5ZThhIiBvcGFjaXR5PSIuNTUiLz48cGF0aCBkPSJNNDYgNThxNC00IDggME02NiA1OHE0LTQgOCAwIiBzdHJva2U9IiMzYTJhMjIiIHN0cm9rZS13aWR0aD0iMi4yIiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cGF0aCBkPSJNNTIgNzBxOCA4IDE2IDAiIHN0cm9rZT0iIzNhMmEyMiIgc3Ryb2tlLXdpZHRoPSIyLjIiIGZpbGw9IiNmZmYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxnIGZpbGw9IiNkOTdhM2EiPjxjaXJjbGUgY3g9IjI0IiBjeT0iNjIiIHI9IjUiLz48Y2lyY2xlIGN4PSI5NiIgY3k9IjYyIiByPSI1Ii8+PGNpcmNsZSBjeD0iMjgiIGN5PSI4NCIgcj0iNSIvPjxjaXJjbGUgY3g9IjkyIiBjeT0iODQiIHI9IjUiLz48L2c+PHBhdGggZD0iTTg0IDMwYzQtNiAxMC03IDE0LTQtMyAxLTYgMy03IDciIGZpbGw9IiM3ZmIwNjkiLz48L2c+PC9zdmc+" alt=""><i id="aiDot"></i></button>
+<div class="sheet" id="sheet" hidden role="dialog" aria-label="Taylor">
+<header><span class="tav"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIj48ZGVmcz48Y2xpcFBhdGggaWQ9ImMiPjxjaXJjbGUgY3g9IjYwIiBjeT0iNjAiIHI9IjYwIi8+PC9jbGlwUGF0aD48L2RlZnM+PGcgY2xpcC1wYXRoPSJ1cmwoI2MpIj48cmVjdCB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgZmlsbD0iIzJkNWEzNCIvPjxjaXJjbGUgY3g9IjE4IiBjeT0iMjAiIHI9IjEwIiBmaWxsPSIjM2Y3YTQ2Ii8+PGNpcmNsZSBjeD0iMTAwIiBjeT0iMTYiIHI9IjEyIiBmaWxsPSIjM2Y3YTQ2Ii8+PHBhdGggZD0iTTE0IDEyMGM0LTIyIDIyLTMyIDQ2LTMyczQyIDEwIDQ2IDMyeiIgZmlsbD0iIzVhNWIyYyIvPjxwYXRoIGQ9Ik00NCA5MmwxNiAxNCAxNi0xNC02LTQtMTAgOS0xMC05eiIgZmlsbD0iIzRhNGIyNCIvPjxnIGZpbGw9IiNiNDUzMmEiPjxjaXJjbGUgY3g9IjM0IiBjeT0iNTIiIHI9IjE0Ii8+PGNpcmNsZSBjeD0iODYiIGN5PSI1MiIgcj0iMTQiLz48Y2lyY2xlIGN4PSIzMCIgY3k9IjcyIiByPSIxMyIvPjxjaXJjbGUgY3g9IjkwIiBjeT0iNzIiIHI9IjEzIi8+PGNpcmNsZSBjeD0iMzQiIGN5PSI5MiIgcj0iMTIiLz48Y2lyY2xlIGN4PSI4NiIgY3k9IjkyIiByPSIxMiIvPjxjaXJjbGUgY3g9IjYwIiBjeT0iMzIiIHI9IjIwIi8+PGNpcmNsZSBjeD0iNDIiIGN5PSIzNiIgcj0iMTQiLz48Y2lyY2xlIGN4PSI3OCIgY3k9IjM2IiByPSIxNCIvPjwvZz48cmVjdCB4PSI1NCIgeT0iNzgiIHdpZHRoPSIxMiIgaGVpZ2h0PSIxNCIgcng9IjUiIGZpbGw9IiNmMmM5YjEiLz48ZWxsaXBzZSBjeD0iNjAiIGN5PSI2MCIgcng9IjIxIiByeT0iMjQiIGZpbGw9IiNmNmQ2YzIiLz48ZyBmaWxsPSIjYzk2NjJmIj48Y2lyY2xlIGN4PSI0NiIgY3k9IjQwIiByPSI5Ii8+PGNpcmNsZSBjeD0iNTgiIGN5PSIzNyIgcj0iOSIvPjxjaXJjbGUgY3g9IjcwIiBjeT0iMzkiIHI9IjkiLz48Y2lyY2xlIGN4PSI0MCIgY3k9IjQ4IiByPSI2Ii8+PGNpcmNsZSBjeD0iODAiIGN5PSI0NyIgcj0iNiIvPjwvZz48Y2lyY2xlIGN4PSI0OSIgY3k9IjY2IiByPSI0IiBmaWxsPSIjZWY5ZThhIiBvcGFjaXR5PSIuNTUiLz48Y2lyY2xlIGN4PSI3MSIgY3k9IjY2IiByPSI0IiBmaWxsPSIjZWY5ZThhIiBvcGFjaXR5PSIuNTUiLz48cGF0aCBkPSJNNDYgNThxNC00IDggME02NiA1OHE0LTQgOCAwIiBzdHJva2U9IiMzYTJhMjIiIHN0cm9rZS13aWR0aD0iMi4yIiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cGF0aCBkPSJNNTIgNzBxOCA4IDE2IDAiIHN0cm9rZT0iIzNhMmEyMiIgc3Ryb2tlLXdpZHRoPSIyLjIiIGZpbGw9IiNmZmYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxnIGZpbGw9IiNkOTdhM2EiPjxjaXJjbGUgY3g9IjI0IiBjeT0iNjIiIHI9IjUiLz48Y2lyY2xlIGN4PSI5NiIgY3k9IjYyIiByPSI1Ii8+PGNpcmNsZSBjeD0iMjgiIGN5PSI4NCIgcj0iNSIvPjxjaXJjbGUgY3g9IjkyIiBjeT0iODQiIHI9IjUiLz48L2c+PHBhdGggZD0iTTg0IDMwYzQtNiAxMC03IDE0LTQtMyAxLTYgMy03IDciIGZpbGw9IiM3ZmIwNjkiLz48L2c+PC9zdmc+" alt=""></span><div style="flex:1"><b class="sname">Taylor</b><small id="aiState">Field agent · checking AI…</small></div><button class="xbtn" id="closeTay" aria-label="Close">✕</button></header>
+<div class="msgs" id="msgs"></div>
+<div class="chips" id="exChips" style="padding:6px 16px"></div>
+<form id="askF"><input id="askQ" type="text" placeholder="Ask Taylor…" aria-label="Question" autocomplete="off"><button class="btn sm" type="submit">Send</button></form>
+</div>
+<div class="intro" id="intro" hidden role="dialog" aria-label="Welcome to Wildlens">
+<div class="introCard"><img class="introAv" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIj48ZGVmcz48Y2xpcFBhdGggaWQ9ImMiPjxjaXJjbGUgY3g9IjYwIiBjeT0iNjAiIHI9IjYwIi8+PC9jbGlwUGF0aD48L2RlZnM+PGcgY2xpcC1wYXRoPSJ1cmwoI2MpIj48cmVjdCB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgZmlsbD0iIzJkNWEzNCIvPjxjaXJjbGUgY3g9IjE4IiBjeT0iMjAiIHI9IjEwIiBmaWxsPSIjM2Y3YTQ2Ii8+PGNpcmNsZSBjeD0iMTAwIiBjeT0iMTYiIHI9IjEyIiBmaWxsPSIjM2Y3YTQ2Ii8+PHBhdGggZD0iTTE0IDEyMGM0LTIyIDIyLTMyIDQ2LTMyczQyIDEwIDQ2IDMyeiIgZmlsbD0iIzVhNWIyYyIvPjxwYXRoIGQ9Ik00NCA5MmwxNiAxNCAxNi0xNC02LTQtMTAgOS0xMC05eiIgZmlsbD0iIzRhNGIyNCIvPjxnIGZpbGw9IiNiNDUzMmEiPjxjaXJjbGUgY3g9IjM0IiBjeT0iNTIiIHI9IjE0Ii8+PGNpcmNsZSBjeD0iODYiIGN5PSI1MiIgcj0iMTQiLz48Y2lyY2xlIGN4PSIzMCIgY3k9IjcyIiByPSIxMyIvPjxjaXJjbGUgY3g9IjkwIiBjeT0iNzIiIHI9IjEzIi8+PGNpcmNsZSBjeD0iMzQiIGN5PSI5MiIgcj0iMTIiLz48Y2lyY2xlIGN4PSI4NiIgY3k9IjkyIiByPSIxMiIvPjxjaXJjbGUgY3g9IjYwIiBjeT0iMzIiIHI9IjIwIi8+PGNpcmNsZSBjeD0iNDIiIGN5PSIzNiIgcj0iMTQiLz48Y2lyY2xlIGN4PSI3OCIgY3k9IjM2IiByPSIxNCIvPjwvZz48cmVjdCB4PSI1NCIgeT0iNzgiIHdpZHRoPSIxMiIgaGVpZ2h0PSIxNCIgcng9IjUiIGZpbGw9IiNmMmM5YjEiLz48ZWxsaXBzZSBjeD0iNjAiIGN5PSI2MCIgcng9IjIxIiByeT0iMjQiIGZpbGw9IiNmNmQ2YzIiLz48ZyBmaWxsPSIjYzk2NjJmIj48Y2lyY2xlIGN4PSI0NiIgY3k9IjQwIiByPSI5Ii8+PGNpcmNsZSBjeD0iNTgiIGN5PSIzNyIgcj0iOSIvPjxjaXJjbGUgY3g9IjcwIiBjeT0iMzkiIHI9IjkiLz48Y2lyY2xlIGN4PSI0MCIgY3k9IjQ4IiByPSI2Ii8+PGNpcmNsZSBjeD0iODAiIGN5PSI0NyIgcj0iNiIvPjwvZz48Y2lyY2xlIGN4PSI0OSIgY3k9IjY2IiByPSI0IiBmaWxsPSIjZWY5ZThhIiBvcGFjaXR5PSIuNTUiLz48Y2lyY2xlIGN4PSI3MSIgY3k9IjY2IiByPSI0IiBmaWxsPSIjZWY5ZThhIiBvcGFjaXR5PSIuNTUiLz48cGF0aCBkPSJNNDYgNThxNC00IDggME02NiA1OHE0LTQgOCAwIiBzdHJva2U9IiMzYTJhMjIiIHN0cm9rZS13aWR0aD0iMi4yIiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cGF0aCBkPSJNNTIgNzBxOCA4IDE2IDAiIHN0cm9rZT0iIzNhMmEyMiIgc3Ryb2tlLXdpZHRoPSIyLjIiIGZpbGw9IiNmZmYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxnIGZpbGw9IiNkOTdhM2EiPjxjaXJjbGUgY3g9IjI0IiBjeT0iNjIiIHI9IjUiLz48Y2lyY2xlIGN4PSI5NiIgY3k9IjYyIiByPSI1Ii8+PGNpcmNsZSBjeD0iMjgiIGN5PSI4NCIgcj0iNSIvPjxjaXJjbGUgY3g9IjkyIiBjeT0iODQiIHI9IjUiLz48L2c+PHBhdGggZD0iTTg0IDMwYzQtNiAxMC03IDE0LTQtMyAxLTYgMy03IDciIGZpbGw9IiM3ZmIwNjkiLz48L2c+PC9zdmc+" alt="Taylor"><div id="introBody"></div><div class="dots" id="introDots"></div>
+<div class="row" style="justify-content:space-between;margin-top:16px"><button class="btn sm alt" id="introBack">Back</button><button class="link" id="introSkip">Skip</button><button class="btn sm" id="introNext">Next</button></div></div></div>
+<nav id="nav" aria-label="Sections">
+<button data-v="scan" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>Scan</button>
+<button data-v="libreria"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h6a2 2 0 012 2v12a2 2 0 00-2-2H4zM20 5h-6a2 2 0 00-2 2v12a2 2 0 012-2h6z"/></svg>Library</button>
+<button data-v="mappa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0114 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Map</button>
+<button data-v="diario"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 109-9 9 9 0 00-7 3.4"/><path d="M3 4v4h4M12 8v4l3 2"/></svg>Journal</button>
+<button data-v="sos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17v.5"/></svg>SOS</button>
+</nav>
+<div class="flash" id="flash"><button id="stopFlash">Stop</button></div>
+<script>
+{
+const $=id=>document.getElementById(id);
+const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}}};
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ico={
+water:'<path d="M17 4c4 5 6 8 6 11a6 6 0 01-12 0c0-3 2-6 6-11z"/>',
+fire:'<path d="M17 4c1 4 6 6 6 12a6 6 0 01-12 0c0-3 2-4 3-6 1 2 2 3 3 3 0-3-1-6 0-9z"/>',
+shelter:'<path d="M4 26L17 6l13 20zM17 6v20M11 26l6-8 6 8"/>',
+nav:'<circle cx="17" cy="17" r="12"/><path d="M21 13l-3 7-6 2 3-7z"/>',
+aid:'<rect x="6" y="6" width="22" height="22" rx="5"/><path d="M17 11v12M11 17h12"/>',
+plants:'<path d="M17 29V14M17 18c-6 0-9-4-9-9 6 0 9 4 9 9zM17 15c0-5 3-8 9-8 0 5-3 8-9 8z"/>',
+signals:'<path d="M8 28V6M8 7h16l-4 5 4 5H8"/>',
+weather:'<path d="M10 22a6 6 0 110-12 8 8 0 0115 2 5 5 0 010 10zM17 22l-3 6h4l-2 4"/>',
+body:'<circle cx="17" cy="7" r="3.5"/><path d="M17 11v10M10 15h14M17 21l-5 8M17 21l5 8"/>',
+build:'<path d="M5 29V14l12-8 12 8v15zM12 29v-8h10v8M5 14h24"/>'};
+const G=[
+{id:'water',t:'Water',s:'Find it and make it safe',k:'water drink drinking thirst thirsty dehydration purify boil filter rain',b:[
+['p','Without water you last only a few days, less in heat or with hard effort. Treat all surface water as unsafe, even clear mountain streams.'],
+['h','Where to find it'],['ul',['Running springs and streams, upstream of pastures and houses.','Rain caught with a tarp or a waterproof jacket.','Melted snow: never eat it directly, it drops your body temperature.','Morning dew wiped from grass with a cloth.']],
+['h','How to make it safe'],['ol',['Strain it through cloth to remove cloudiness.','Bring it to a rolling boil for 1 minute (3 minutes above 2,000 m / 6,500 ft).','Or use a hiking filter or purification tablets, following the times on the pack.','Last resort: a clear plastic bottle, full, in direct sun for 6 hours (2 days if cloudy).']],
+['w','Never drink seawater or urine: they make dehydration worse. Avoid stagnant or foamy water and water near mines or farm fields.']]},
+{id:'fire',t:'Fire',s:'Light it and put it out properly',k:'fire light lighting tinder kindling ferro rod spark warm',b:[
+['p','Fire needs three things: fuel, air and heat. Prepare everything before you strike a spark.'],
+['h','Make three piles'],['ol',['Tinder: very dry, very fine material. Birch bark, dry grass, pine needles, resin, cotton.','Kindling: from pencil-lead to thumb thickness.','Fuel: thumb to wrist thickness, then bigger once the flame is steady.']],
+['h','Light it'],['ul',['Pick a spot sheltered from wind, on bare soil or rock, away from low branches and roots.','Light the tinder, add kindling in a teepee leaving gaps for air, then fuel.','With a ferro rod: hold the striker still against the tinder and pull the rod back.']],
+['w','Many areas ban fires in forests, especially in fire season. Check local rules. Always drown the fire with water and stir until the ash is cold to the touch.']]},
+{id:'shelter',t:'Shelter',s:'Cold, wind and night',k:'shelter cold freezing hypothermia night sleep wind bivouac',b:[
+['p','Cold kills before hunger and often before thirst. The rule of 3: 3 minutes without air, 3 hours exposed to harsh cold, 3 days without water, 3 weeks without food.'],
+['h','Priorities'],['ol',['Insulate yourself from the ground: branches, dry leaves, your pack. Ground steals more heat than air.','Block wind and rain: a tarp, a rock, a small shelter your body can warm.','Stay dry: change wet clothes, remove layers before you sweat.']],
+['h','Spotting hypothermia'],['ul',['Strong shivering, clumsy hands, slurred speech.','If shivering stops but the person is confused, it is serious: call emergency services.','Warm the trunk, not hands and feet first. Warm drinks only if fully conscious.']]]},
+{id:'nav',t:'Navigation',s:'No compass, no signal',k:'navigation lost north south sun stars shadow compass direction trail',b:[
+['p','If you are lost: stop, sit, think. Often the safest choice is to go back to the last known point or to stay put.'],
+['h','Natural methods'],['ul',['The sun rises in the east and sets in the west; at solar noon it is due south in the northern hemisphere.','Shadow stick: plant a stick, mark the shadow tip, wait 15 minutes, mark again. The first mark is west, the second east.','At night the North Star shows north: extend the front edge of the Big Dipper about 5 times.']],
+['w','"Moss grows on the north side" is not reliable. Following a stream downhill can lead to gorges and waterfalls: only do it if you can see where it goes.']]},
+{id:'aid',t:'First aid',s:'Wounds, falls, bites',k:'first aid wound bleeding blood snake bite viper fracture broken sprain ankle',b:[
+['p','Your safety first, then the person, then the emergency call.'],
+['h','Bleeding'],['ol',['Press hard, directly on the wound, with a clean cloth.','If it soaks through, do not remove it: add another on top.','Raise the limb if you can and keep pressing until help arrives.']],
+['h','Snake bite'],['ul',['Stay calm and still: movement spreads venom.','Remove rings and watches, keep the limb still like a fracture.','Call emergency services. Do not cut, do not suck, no tight tourniquet, no ice.']],
+['h','Sprain or suspected fracture'],['ul',['Do not move it: splint it as you find it with sticks and bandages.','Cold wrapped in cloth to reduce swelling.']]]},
+{id:'plants',t:'Plants and mushrooms',s:'Learn without risking it',k:'plants mushrooms mushroom fungi edible eat poisonous berries berry foraging',b:[
+['w','Never eat a wild mushroom without an expert check. No app and no photo is enough: deadly species look like good ones.'],
+['p','Wild food matters little in an emergency of a few days: water and shelter come first. Use the guide to learn, not to gamble.'],
+['h','Dangerous look-alikes'],['ul',['Wild garlic is confused with lily of the valley and autumn crocus, both highly toxic. The garlic smell stays on your hands and fools you.','The carrot family (Apiaceae) includes poison hemlock and water hemlock, both deadly: avoid them all.','Berries: no general rule is safe, not even "birds eat them".']],
+['h','Easier to recognize'],['ul',['Stinging nettle: toothed leaves and stinging hairs, eaten cooked.','Dandelion: toothed leaves, a single yellow flower on a hollow stem with white sap.']]]},
+{id:'signals',t:'Signals',s:'Get found',k:'signals rescue help helicopter whistle sos mirror found',b:[
+['ul',['Alpine distress signal: 6 signals a minute (whistle, light, waving), one minute pause, repeat. Reply: 3 a minute.','Three of anything means distress: three fires, three whistles, three piles of stones.','Helicopter: both arms raised in a Y means "yes, we need help". One arm up, one down: "no".','By day a mirror or a phone screen reflects sunlight for kilometres.','Bright colours spread in an open space are visible from the air.']],
+['p','Use the SOS tab for the flashing screen and the whistle.']]},
+{id:'weather',t:'Weather',s:'Storms and sudden changes',k:'weather storm thunderstorm lightning thunder clouds rain wind',b:[
+['h','Signs it is turning'],['ul',['Clouds towering upward in early afternoon, shaped like towers or anvils.','Wind suddenly shifting and temperature dropping.','Pressure falling fast: your altimeter "climbs" while you stand still.']],
+['h','Lightning'],['ol',['Count seconds between flash and thunder: under 30 seconds you are at risk.','Leave ridges, summits and lone trees. Move away from water and metal.','Crouch on your pack, feet together, a few metres from others.','Wait 30 minutes after the last thunder before moving on.']]]},
+{id:'body',t:'The human body',s:'What it is and how it keeps you alive',k:'body human anatomy heart blood bones temperature organs',b:[
+['p','The human body is about 60% water, held together by 206 bones in an adult and kept alive by a few systems that all need oxygen, water, energy and the right temperature.'],
+['h','The systems that matter outdoors'],['ul',['Breathing: lungs take in oxygen; a few minutes without it causes brain damage.','Circulation: the heart pumps about 5 litres of blood a minute at rest. Losing a lot of blood fast is life-threatening.','Temperature: core stays near 37°C (98.6°F). Below 35°C (95°F) is hypothermia, above 40°C (104°F) is heatstroke.','Water: you lose it with sweat and breath, faster in heat, cold dry air and altitude.','Energy: fat reserves last weeks, which is why food comes last in survival.']],
+['w','Confusion, very pale or blue skin, fast weak pulse or trouble breathing are warning signs: call emergency services.']]},
+{id:'build',t:'How buildings are made',s:'Read a structure, build a shelter',k:'building structure house cabin wall roof foundation bridge construction stone wood',b:[
+['p','Every structure does one job: carry its own weight and the loads on it (people, snow, wind) down to the ground.'],
+['h','The parts'],['ul',['Foundation: spreads the weight into the ground.','Load-bearing walls or a frame of posts and beams: carry the weight down.','Roof: sheds water and snow; steeper in snowy places.']],
+['h','Common types'],['ul',['Masonry (stone, brick): strong in compression, weak if cracked or shaken.','Timber frame and log cabins: light, flexible, quick to build.','Reinforced concrete: steel bars inside concrete carry the pulling forces.']],
+['h','Outdoors'],['ul',['An old hut or barn can shelter you: check the roof and walls before going in.','A lean-to uses the same logic: a strong ridge pole, a slope to shed rain, insulation underneath.']],
+['w','Avoid ruins with sagging roofs, big diagonal cracks or leaning walls, especially in wind or snow.']]}
+];
+const AREAS=[
+{id:'oregon',t:'Oregon Cascades and Coast',r:'USA › Oregon',mb:190,ok:true,g:[
+{id:'or-risks',ic:'weather',t:'Oregon risks',s:'Rain, cold ocean, wildfire',k:'oregon risks rain hypothermia sneaker wave tsunami wildfire giardia',b:[
+['ul',['Rain and wind can cause hypothermia even in summer at elevation: pack a warm layer and a shell.','On the coast never turn your back on the ocean: sneaker waves and rolling logs injure people every year.','In tsunami zones learn the blue evacuation route signs; after a strong quake, go to high ground right away.','Wildfire season runs from summer into fall: check closures and fire restrictions before you go.','Streams can carry Giardia: always treat water.']],
+['p','Emergency: call 911.']]},
+{id:'or-plants',ic:'plants',t:'Oregon plants',s:'Fire helpers and dangers',k:'oregon plants poison oak cedar douglas fir salal hemlock',b:[
+['w','<b>Poison oak</b>: leaves in groups of three, glossy and lobed like oak, green or red. Its oil causes a painful rash, even from clothes or smoke. Never burn it.'],
+['h','Fire helpers'],['ul',['Western red cedar: shredded inner bark makes great tinder.','Douglas fir: pitch from the bark burns hot and long.']],
+['h','Deadly'],['ul',['Water hemlock grows in wet areas: carrot-like leaves and white umbrella flowers. One of the most toxic plants in North America.','Death cap mushrooms have been found in the region.']]]},
+{id:'or-animals',ic:'signals',t:'Oregon wildlife',s:'Bears, cougars, rattlesnakes',k:'oregon animals black bear cougar mountain lion rattlesnake',b:[
+['h','Black bear'],['ul',['Make noise on the trail and store food away from your tent.','If one approaches: stand tall, speak firmly, back away slowly.','If a black bear attacks you, fight back.']],
+['h','Cougar'],['ul',['Never run. Make yourself big, keep eye contact, pick up small children.','If attacked, fight back hard.']],
+['h','Rattlesnakes'],['p','Mostly east of the Cascades and in southern Oregon, on warm rocks. Watch where you put hands and feet; a rattle means back off.']]}]},
+{id:'dolomites',t:'Dolomites',r:'Italy › Trentino-Alto Adige and Veneto',mb:180,ok:true,g:[
+{id:'dol-risks',ic:'weather',t:'Dolomites risks',s:'Storms, ticks, via ferrata, avalanches',k:'dolomites risks storm ticks via ferrata avalanche',b:[
+['ul',['Frequent early-afternoon thunderstorms in summer: start early and be off ridges by 1–2 pm.','On via ferrata and scree, rocks fall: always wear a helmet.','Ticks in meadows and woods; this area carries tick-borne encephalitis. Check yourself every evening.','Off-piste in winter: read the daily avalanche bulletin and carry beacon, shovel and probe.']],
+['p','Emergency: 112, ask for mountain rescue.']]},
+{id:'dol-plants',ic:'plants',t:'Dolomites plants',s:'Protected and poisonous',k:'dolomites plants monkshood hellebore gentian edelweiss',b:[
+['w','<b>White false hellebore and great yellow gentian</b> look alike and the hellebore can kill. Hellebore leaves alternate and are hairy underneath; gentian leaves are opposite in pairs and smooth.'],
+['ul',['Monkshood: blue-purple helmet flowers near huts and streams. Toxic even through the skin.','Edelweiss, gentians and many orchids are protected: look, do not pick.']]]},
+{id:'dol-animals',ic:'signals',t:'Dolomites wildlife',s:'Bears, vipers, marmots',k:'dolomites animals bear viper marmot chamois',b:[
+['ul',['Brown bears live mainly in western Trentino (Brenta, Adamello): make noise, never run, back away slowly.','Asp vipers and adders on sunny rocks and meadows.','A marmot\'s sharp whistle warns of danger, often an eagle or a person.']]]}]},
+{id:'apennines',t:'Central Apennines',r:'Italy › Abruzzo, Lazio, Marche, Umbria',mb:150,ok:false}];
+const SP=[
+{id:'oak',c:'Flora',n:'English oak',sc:'Quercus robur',k:'tree acorns wood',d:'Large deciduous tree with lobed leaves and acorns on long stalks.',m:'Hardwood: dense cellulose and lignin fibres, rich in tannins.',u:['Dense wood that burns long and makes good coals.','Acorns are edible only after shelling and soaking in several changes of water to remove bitter tannins.','Bark tannins were used to tan leather.'],f:'Excellent long-burning fuel once the fire is established; poor tinder.',o:'Beech family tree native to Europe and western Asia; can live for centuries.',g:'Plant a fresh acorn in autumn in deep soil. Slow-growing, long-lived.',w:['Raw untreated acorns upset the stomach and kidneys.']},
+{id:'dandelion',c:'Flora',n:'Dandelion',sc:'Taraxacum officinale',k:'weed flower yellow seed ball',d:'Rosette of toothed leaves and a single yellow flower on a hollow stem with white sap; turns into a seed ball.',m:'Leaves, flower and a long taproot; milky latex in the stem.',u:['Young leaves raw or cooked, more bitter after flowering.','Flowers in fritters; roasted root as a coffee substitute.','Easy to recognize: a reliable spring green.'],f:'Not useful for fire.',o:'Daisy family plant found across the northern hemisphere in meadows and roadsides.',g:'Sow in spring; grows almost anywhere with sun.',w:['Do not pick by busy roads or in sprayed lawns.']},
+{id:'nettle',c:'Flora',n:'Stinging nettle',sc:'Urtica dioica',k:'herb stinging fiber cordage',d:'Perennial with toothed heart-shaped leaves covered in stinging hairs, near houses and barns.',m:'Hollow stinging hairs filled with irritants; tough fibres in the stem.',u:['Cooked it loses its sting: soups, risotto, omelettes.','Dry stem fibres twist into strong cordage.'],f:'Dry stalks make fair kindling.',o:'Nettle family plant across Europe, Asia and North America.',g:'Spreads by rhizomes; needs damp, rich soil.',w:['Raw it stings: never eat it without cooking or drying.']},
+{id:'birch',c:'Flora',n:'Silver birch',sc:'Betula pendula',k:'tree white bark tinder fire',d:'Slender tree with white bark that peels in thin strips.',m:'Bark rich in betulin and oils, which is why it burns even when damp.',u:['Outer bark burns even when damp: superb tinder.','Sap collected in early spring is drinkable.','Tinder fungus often grows on birch trunks.'],f:'Best natural tinder: shave thin curls of bark and light them.',o:'Pioneer tree of the birch family, among the first to colonize bare ground.',g:'Grows fast from seed in sunny spots; lives 60–90 years.',w:['Only peel bark that is already loose: stripping a full ring kills the tree.']},
+{id:'spruce',c:'Flora',n:'Norway spruce',sc:'Picea abies',k:'tree conifer resin needles',d:'Tall conifer with short square needles and hanging cones.',m:'Softwood full of resin channels.',u:['Resin burns well and helps start fires.','Low boughs insulate you from the ground in an emergency shelter.','Tea from young tips, rich in vitamin C.'],f:'Resin and dead lower twigs light easily, even after rain.',o:'Pine family tree from the mountains of Europe.',g:'Grown from seed in nurseries; likes cool, damp climates.',w:['Do not confuse it with yew, which has flat dark needles and is very poisonous.']},
+{id:'yew',c:'Flora',n:'Yew',sc:'Taxus baccata',k:'tree poisonous needles red berry',d:'Evergreen conifer with flat dark-green needles and small red cup-shaped fruits.',m:'Dense elastic wood; leaves and seeds contain toxic alkaloids.',u:['No food use: knowing it keeps you safe.','Its springy wood was used for bows.'],f:'Do not burn or use for tea.',o:'Very slow-growing conifer; some live over a thousand years.',g:'Planted as an ornamental and for hedges.',w:['Almost every part is highly poisonous, seeds included: a few leaves can kill.']},
+{id:'monkshood',c:'Flora',n:'Monkshood',sc:'Aconitum napellus',k:'poisonous plant blue flower mountain',d:'Mountain plant with blue-purple helmet-shaped flowers and deeply divided leaves.',m:'Contains aconitine, one of the strongest plant poisons in Europe.',u:['No use: knowing it keeps you safe.'],f:'Not useful.',o:'Buttercup family plant of European mountains.',g:'Sometimes grown in gardens: handle only with gloves.',w:['Extremely poisonous; the toxin can pass through the skin. Do not touch it bare-handed.']},
+{id:'false-hellebore',c:'Flora',n:'White false hellebore',sc:'Veratrum album',k:'poisonous plant gentian look-alike pasture',d:'Tall plant of wet pastures with large pleated leaves, alternate and hairy underneath.',m:'Contains toxic alkaloids that slow the heart.',u:['No use: knowing it keeps you safe.'],f:'Not useful.',o:'Mountain plant of Europe and Asia.',g:'Not grown for food.',w:['Looks like great yellow gentian, whose leaves are opposite and smooth. False hellebore can kill.']},
+{id:'wild-garlic',c:'Flora',n:'Wild garlic',sc:'Allium ursinum',k:'herb edible look-alike lily of the valley',d:'Woodland plant with broad shiny leaves and white star flowers; smells of garlic.',m:'Sulphur compounds give the garlic smell.',u:['Leaves raw or as pesto in spring.'],f:'Not useful.',o:'Onion family plant of damp European woods.',g:'Spreads from bulbs in damp shade.',w:['Confused with lily of the valley and autumn crocus, both very toxic. Check every single leaf.']},
+{id:'bramble',c:'Flora',n:'Blackberry bramble',sc:'Rubus fruticosus',k:'berries thorns blackberries',d:'Thorny arching shrub with compound leaves and black berries in late summer.',m:'Woody canes with hooked prickles.',u:['Blackberries are edible raw.','Leaves for tea; dethorned canes as ties.'],f:'Dead dry canes make quick kindling.',o:'Rose family shrub of hedges and open woods.',g:'Spreads by itself; thornless varieties exist.',w:['Pick away from busy roads and sprayed fields.']},
+{id:'porcini',c:'Fungi',n:'Porcini (king bolete)',sc:'Boletus edulis',k:'mushroom edible forest',d:'Brown cap, white then yellow-green pores underneath, and a stout stem with a pale net pattern.',m:'Fungal fruiting body; the real organism is an underground web of threads.',u:['A prized edible, only after an expert check.'],f:'Not useful.',o:'Lives in partnership with the roots of spruce, beech, chestnut and oak.',g:'Cannot be farmed: it needs living tree roots.',w:['Other boletes are bitter or toxic. Have every harvest checked by an expert.','Picking is regulated in many places: check local permits and limits.']},
+{id:'death-cap',c:'Fungi',n:'Death cap',sc:'Amanita phalloides',k:'mushroom deadly poisonous',d:'Olive-green to yellowish cap, white gills, a ring on the stem and a sac-like cup at the base, often hidden in soil.',m:'Contains amatoxins that destroy liver cells.',u:['No use: knowing it keeps you safe.'],f:'Not useful.',o:'Behind most mushroom deaths in Europe; introduced in parts of North America, including the Pacific Northwest.',g:'Not cultivated.',w:['Deadly even in small amounts. Symptoms come many hours later, when the liver is already damaged: go to the emergency room with the mushroom remains.']},
+{id:'fly-agaric',c:'Fungi',n:'Fly agaric',sc:'Amanita muscaria',k:'mushroom poisonous red white spots',d:'The fairy-tale mushroom: red cap with white warts, white gills and stem.',m:'Contains ibotenic acid and muscimol, which are toxic.',u:['No use: knowing it keeps you safe.'],f:'Not useful.',o:'Lives with birch and conifer roots.',g:'Not cultivated.',w:['Poisonous. Rain can wash the white spots off.']},
+{id:'tinder-fungus',c:'Fungi',n:'Tinder fungus',sc:'Fomes fomentarius',k:'fungus fire tinder hoof birch',d:'Hard hoof-shaped bracket fungus on dead or dying birch and beech trunks.',m:'Its inner layer (amadou) is a soft felt of fungal fibres.',u:['The inner layer catches sparks and smoulders for a long time: carries fire from place to place.'],f:'Catches a spark from flint and steel; blow the ember into dry tinder.',o:'Wood-decay fungus of northern forests; Ötzi the Iceman carried it 5,000 years ago.',g:'Not cultivated.',w:['Not edible.']},
+{id:'viper',c:'Fauna',n:'Asp viper',sc:'Vipera aspis',k:'snake venomous bite',d:'Snake up to about 70 cm with a triangular head, vertical pupils and a slightly upturned snout. Likes sunny rocks.',m:'Venom is a mix of proteins that damages tissue and blood.',u:['Knowing it keeps you safe: it is not aggressive and bites only if stepped on or handled.'],f:'Not applicable.',o:'European viper found across mainland Italy.',g:'Protected wild species.',w:['If bitten: stay calm, keep the limb still, call emergency services. No cutting, no sucking, no tourniquet.']},
+{id:'tick',c:'Fauna',n:'Castor bean tick',sc:'Ixodes ricinus',k:'tick parasite lyme disease',d:'Small mite that waits on tall grass and attaches to skin to feed on blood.',m:'Arachnid, related to spiders.',u:['Wear long light-coloured trousers and check your body every evening.'],f:'Not applicable.',o:'Found across Europe in meadows and damp woods; close relatives live in North America.',g:'Not applicable.',w:['Can carry Lyme disease and tick-borne encephalitis. Remove it early with tweezers, pulling straight out; see a doctor if a red ring appears.']},
+{id:'bear',c:'Fauna',n:'Brown bear',sc:'Ursus arctos',k:'bear animal danger',d:'Large brown mammal; in Italy mainly in western Trentino and the central Apennines.',m:'Large omnivore; can smell food from far away.',u:['Learning its tracks and scat tells you when you are in its territory.'],f:'Not applicable.',o:'Found across Europe, Asia and North America.',g:'Protected species.',w:['Make noise in the woods. If you meet one, never approach and never run: back away slowly, speaking calmly.']},
+{id:'flint',c:'Minerals',n:'Flint',sc:'Microcrystalline quartz (SiO₂)',k:'stone sparks fire',d:'Hard stone that breaks with curved, razor-sharp edges, often grey or brown, in nodules inside limestone.',m:'Silica made of tiny quartz crystals.',u:['Struck against high-carbon steel it throws sparks to start fire.','Flakes cut like blades.'],f:'Strike the edge with a steel striker onto tinder fungus or char cloth.',o:'Silica laid down by sea creatures such as sponges, then hardened in sediment.',g:'Not produced: collected in nature.',w:['Flakes are sharp: protect eyes and hands when knapping.']},
+{id:'pet',c:'Materials',n:'PET plastic bottle',sc:'Polyethylene terephthalate',k:'plastic bottle water sodis',d:'The clear plastic of water bottles: light, tough and waterproof.',m:'A polymer: long chains made from petroleum-based building blocks.',u:['A clear bottle in full sun for 6 hours makes water safer (SODIS method).','Container, funnel, even a rough magnifying lens when filled with water.'],f:'A water-filled clear bottle can focus sunlight onto tinder in strong sun.',o:'Made from petroleum derivatives.',g:'Produced industrially by polymerization; widely recycled.',w:['Do not heat it over a fire: it warps and releases toxic fumes.']},
+{id:'asphalt',c:'Materials',n:'Asphalt',sc:'Bitumen + aggregate',k:'road bitumen tarmac',d:'Road surface: crushed stone and sand glued together with bitumen.',m:'About 95% stone and sand, bound by a few percent of bitumen.',u:['A paved road almost always leads to houses or help: follow it if you are lost.','In summer it stays warm after sunset.'],f:'Do not burn it.',o:'Bitumen comes from refining crude oil; natural tar pits exist too.',g:'Bitumen is heated and mixed with aggregate, then rolled flat.',w:['Its fumes are toxic when burned.']},
+{id:'h2o',c:'Water',n:'Water',sc:'H₂O',k:'water composition minerals hard soft',d:'Clear liquid essential to all life; in nature it always carries dissolved minerals, gases and often microbes.',m:'Two hydrogen atoms and one oxygen atom. Natural water also holds calcium, magnesium, sodium and other minerals; "hard" water has more calcium and magnesium.',u:['Drinking: treat it first (see Water guide).','Cleaning wounds: use boiled water left to cool.','Cooking, washing, and in a clear bottle as a lens.'],f:'Puts fires out: always keep some ready.',o:'Present on Earth since its early history; it cycles endlessly through rain, rivers, sea and air.',g:'Collected, not produced: rain, springs, wells, melted snow.',w:['Clear does not mean safe: bacteria, parasites and chemicals are invisible.']},
+{id:'log-cabin',c:'Structures',n:'Log cabin',sc:'Stacked-log timber structure',k:'cabin hut shelter wood building',d:'Walls of horizontal logs notched at the corners, under a pitched roof.',m:'Logs carry the weight; corner notches lock the walls; gaps are sealed with moss, clay or rope.',u:['A sound cabin is a dry, windproof shelter.','Check the roof first, then walls and chimney before lighting a fire.'],f:'Use the existing stove or hearth only: check the chimney is clear.',o:'Traditional in northern Europe and North America where straight conifers grow.',g:'Fell straight logs, notch the corners, stack and seal, then add a steep roof.',w:['Avoid it if the roof sags or the walls lean.']},
+{id:'dry-stone',c:'Structures',n:'Dry stone wall',sc:'Mortarless stone masonry',k:'stone wall terrace farm',d:'Wall of stones stacked without mortar, common on mountain terraces and pastures.',m:'Weight and friction hold it together; it leans slightly inward and drains water freely.',u:['A good windbreak for a bivouac.','Marks old paths and pastures, which often lead to huts.'],f:'Stones near fire can crack: never use river stones that may hold water.',o:'One of the oldest building methods in the world.',g:'Lay large stones at the base, overlap joints, slope the faces inward.',w:['Do not climb on old walls: stones can slip.']}
+];
+
+const RATE={oak:[70,'caution'],dandelion:[65,'safe'],nettle:[75,'caution'],birch:[90,'safe'],spruce:[85,'safe'],yew:[10,'danger'],monkshood:[0,'danger'],'false-hellebore':[0,'danger'],'wild-garlic':[45,'caution'],bramble:[70,'caution'],porcini:[40,'caution'],'death-cap':[0,'danger'],'fly-agaric':[5,'danger'],'tinder-fungus':[85,'safe'],viper:[5,'danger'],tick:[0,'danger'],bear:[10,'danger'],flint:[80,'caution'],pet:[70,'safe'],asphalt:[40,'caution'],h2o:[100,'caution'],'log-cabin':[80,'caution'],'dry-stone':[50,'caution']};
+const spG=SP.map(s=>{const b=[['p',s.d]];if(s.m)b.push(['h','What it is made of'],['p',s.m]);b.push(['h','Survival uses'],['ul',s.u]);if(s.f)b.push(['h','Fire'],['p',s.f]);b.push(['h','Origin'],['p',s.o],['h','Grow or produce'],['p',s.g],...s.w.map(x=>['w',x]));const r=RATE[s.id]||[50,'caution'];return{id:'sp-'+s.id,c:s.c,t:s.n,s:s.sc,k:(s.k||'')+' '+s.c,b,score:r[0],safety:r[1]}});
+for(const g of G)g.c=g.id==='body'?'Body':g.id==='build'?'Structures':'Survival';
+for(const a of AREAS)for(const g of a.g||[])g.c='Area';
+let inst=store.get('ms-areas',[]);
+const areaG=()=>AREAS.filter(a=>inst.includes(a.id)).flatMap(a=>a.g);
+const ALL=()=>[...areaG(),...G,...spG];
+let diary=store.get('ms-diary',[]);
+let pos=store.get('ms-pos',null);
+const strip=s=>String(s).replace(/<[^>]+>/g,'');
+const deacc=s=>String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+
+let view='scan',prev='scan';
+function show(v){if(v!=='scheda'&&v!=='premium')prev=v;else if(view!=='scheda'&&view!=='premium')prev=view;view=v;for(const s of document.querySelectorAll('main>section'))s.hidden=s.id!=='v-'+v;for(const b of $('nav').children){if(b.dataset.v===v)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')}if(v==='mappa')drawMap();if(v==='diario')renderDiary();if(v==='libreria')renderLib();if(v==='sos')$('sosPos').textContent=pos?'Last known position: '+pos.lat.toFixed(5)+', '+pos.lon.toFixed(5):'Find your position in the Map tab so you can read it to rescuers.';scrollTo(0,0)}
+$('nav').onclick=e=>{const b=e.target.closest('button');if(b)show(b.dataset.v)};
+$('back').onclick=()=>show(prev);$('back2').onclick=()=>show(prev);
+function net(){const on=navigator.onLine;$('net').textContent=on?'Online':'Offline';$('net').classList.toggle('off',!on)}
+addEventListener('online',net);addEventListener('offline',net);net();
+
+const TAY=()=>`<img class="mini" src="${$('tayImg').src}" alt="">`;
+const svgI=id=>ico[id]?`<svg viewBox="0 0 34 34" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ico[id]}</svg>`:'';
+const avCls=c=>c==='Survival'||c==='Body'?'s':c==='Area'?'a':'';
+const isGuide=g=>!!ico[g.ic||g.id];
+function avatar(g,img){if(img)return`<div class="av"><img src="${img}" alt=""></div>`;const i=svgI(g.ic||g.id);return`<div class="av ${i?avCls(g.c)||'s':''}">${i||esc((g.t||'?')[0])}</div>`}
+const snippet=g=>{const p=g.b.find(b=>b[0]==='p'||b[0]==='ul');if(!p)return'';return strip(Array.isArray(p[1])?p[1].join(' '):p[1])};
+function itemHTML(g,attr,img,pre){const gd=isGuide(g);return`<button class="item" ${attr}>${avatar(g,img)}<div><span class="tag ${avCls(g.c)}">${esc(g.c)}</span><b>${esc(g.t)}</b>${g.score!=null?`<span class="badge" style="margin:2px 0 0;font-size:13px"><span class="dot" style="width:12px;height:12px;background:${lvl(g.score)[1]}"></span>${g.score}/100 · ${(SAFE[g.safety]||SAFE.caution)[0]}</span>`:''}${!gd&&g.s&&g.score==null?`<i>${esc(g.s)}</i>`:''}<span class="sn">${pre||''}${esc(gd?g.s:snippet(g))}</span></div></button>`}
+function block(b){const[t,v]=b;if(t==='p')return`<p>${v}</p>`;if(t==='h')return`<h3>${v}</h3>`;if(t==='w')return`<div class="warn">${v}</div>`;const tag=t==='ol'?'ol':'ul';return`<${tag}>${v.map(x=>`<li>${x}</li>`).join('')}</${tag}>`}
+function detHTML(g,img,extra){return`<div class="top">${avatar(g,img)}<div><span class="tag ${avCls(g.c)}">${esc(g.c)}</span><h2 style="font-size:30px;margin-top:4px">${esc(g.t)}</h2>${g.s?`<i class="src">${esc(g.s)}</i>`:''}</div></div>${extra||''}<div class="card">${g.b.map(block).join('')}</div>`}
+const lvl=n=>n>=75?['Excellent','#2e8b3d']:n>=50?['Good','#7cb342']:n>=25?['Limited','#e8920f']:['Poor','#d1492a'];
+const SAFE={safe:['Safe to handle','#2e8b3d'],caution:['Handle with care','#e8920f'],danger:['Dangerous','#d1492a']};
+function yukaHTML(g,img,cf){let sec='',pos=[],neg=[],det=[];for(const b of g.b){if(b[0]==='h'){sec=b[1];continue}if(b[0]==='w'){neg.push(b[1]);continue}if(sec==='Survival uses'&&b[0]==='ul'){pos.push(...b[1]);continue}if(sec==='Fire'){const s=strip(b[1]);if(/^(not useful|not applicable)/i.test(s))continue;(/^(do not|never)/i.test(s)?neg:pos).push('<b>Fire:</b> '+b[1]);continue}det.push(sec&&det.lastSec!==sec?(det.lastSec=sec,['h',sec]):null,b)}
+det=det.filter(Boolean);const L=lvl(g.score??0),S=SAFE[g.safety]||SAFE.caution;
+return`<div class="yk"><div class="ykTop">${img?`<img class="ph" src="${img}" alt="">`:avatar(g)}<div><span class="tag ${avCls(g.c)}">${esc(g.c)}</span><h2 style="margin-top:4px">${esc(g.t)}</h2>${g.s?`<i class="src">${esc(g.s)}</i>`:''}<div class="badge"><span class="dot" style="background:${S[1]}"></span><b>${S[0]}</b></div></div></div>
+<div class="score"><div class="ring" style="background:${L[1]}">${g.score??'–'}</div><div><b style="font-size:18px">${L[0]}</b><div class="src">Survival usefulness out of 100${cf!=null?' · Taylor is '+cf+'% sure':''}</div></div></div>
+${pos.length?`<h3>Positives</h3><ul class="pn">${pos.map(x=>`<li><span>${x}</span></li>`).join('')}</ul>`:''}
+${neg.length?`<h3>Watch out</h3><ul class="pn neg">${neg.map(x=>`<li><span>${x}</span></li>`).join('')}</ul>`:''}
+<details class="more"${pos.length+neg.length?'':' open'}><summary>Details</summary>${det.map(block).join('')}</details></div>`}
+function openScheda(id){const g=ALL().find(x=>x.id===id);if(!g)return;$('det').innerHTML=g.score!=null?yukaHTML(g):detHTML(g);show('scheda')}
+
+/* LIBRARY */
+let cat='All';
+function renderLib(){const cats=['All',...(inst.length?['Area']:[]),'Survival','Body','Structures','Flora','Fungi','Fauna','Minerals','Water','Materials'];if(!cats.includes(cat))cat='All';$('catChips').innerHTML=cats.map(c=>`<button type="button" aria-pressed="${c===cat}">${c}</button>`).join('');
+const q=deacc($('libQ').value.trim());let l=ALL();if(cat!=='All')l=l.filter(g=>g.c===cat);if(q)l=l.filter(g=>deacc(g.t+' '+g.s+' '+g.k+' '+JSON.stringify(g.b)).includes(q));
+$('libCount').textContent=`${diary.length} of yours · ${ALL().length} curated`;
+$('libList').innerHTML=l.length?l.map(g=>itemHTML(g,`data-open="${g.id}"`)).join(''):'<div class="empty"><b>Nothing found</b>Try another word or category.</div>';
+const act=AREAS.filter(a=>inst.includes(a.id));$('areaBox').innerHTML=act.length?`<div class="banner"><div><small>Active area</small><br><b>${act.map(a=>a.t).join(', ')}</b></div><button data-area="1">Manage</button></div>`:`<div class="banner"><div><small>No area downloaded</small><br><b>Download your area before you go</b></div><button data-area="1">Choose area</button></div>`}
+$('catChips').onclick=e=>{const b=e.target.closest('button');if(!b)return;cat=b.textContent;renderLib()};
+$('libQ').oninput=renderLib;
+$('libList').onclick=e=>{const b=e.target.closest('[data-open]');if(b)openScheda(b.dataset.open)};
+$('areaBox').onclick=e=>{if(e.target.dataset.area){renderAreas();show('premium')}};
+
+/* AREAS */
+function renderAreas(){$('areaList').innerHTML=AREAS.map(a=>`<div class="card"><div class="area"><div><b>${a.t}</b><small>${a.r} · about ${a.mb} MB</small></div>${!a.ok?'<span class="pill">Soon</span>':inst.includes(a.id)?`<button class="btn sm alt" data-rm="${a.id}">Remove</button>`:`<button class="btn sm" data-dl="${a.id}">Download</button>`}</div><div class="prog" id="p-${a.id}" hidden><i></i></div></div>`).join('')}
+$('areaList').onclick=e=>{const d=e.target.dataset;if(d.rm){inst=inst.filter(x=>x!==d.rm);store.set('ms-areas',inst);renderAreas();return}if(!d.dl)return;e.target.disabled=true;e.target.textContent='Downloading…';const p=$('p-'+d.dl);p.hidden=false;let v=0;const t=setInterval(()=>{v+=8+Math.random()*14;p.firstChild.style.width=Math.min(v,100)+'%';if(v>=100){clearInterval(t);inst.push(d.dl);store.set('ms-areas',inst);renderAreas()}},180)};
+
+/* PREMIUM */
+const mk='ms-scans-'+new Date().toISOString().slice(0,7);
+let used=store.get(mk,0);
+function premTxt(){$('premTxt').textContent=`${used}/10 free AI scans this month · Tap to upgrade`}
+premTxt();
+$('premBtn').onclick=()=>{renderAreas();show('premium')};
+$('buy').onclick=()=>{$('buyNote').textContent='Payments are not live in this prototype. In the store version this connects to Stripe or in-app purchase.'};
+
+/* ASK TAYLOR (offline engine) */
+const STOP=new Set('a an the i me my we you your it is are was be been am do does did can could should would will what how why where when which who to of in on at for with from by and or but if so not no this that these those there here have has had get got just about into out up down over some any very really like im ive its dont cant help please tell find know way going got need want'.split(' '));
+const SYN={thirsty:'water drink',thirst:'water drink',drink:'water',drinkable:'water safe boil',potable:'water safe boil',stream:'water springs',cold:'shelter hypothermia cold',freezing:'hypothermia cold',shivering:'hypothermia shivering',night:'shelter night',sleep:'shelter',lost:'navigation lost',north:'north',south:'sun south',snake:'snake bite viper',bitten:'bite snake',bite:'bite snake',bleeding:'bleeding',blood:'bleeding',cut:'bleeding wound',wound:'wound bleeding',lightning:'lightning storm',thunder:'thunder lightning',storm:'storm lightning',bear:'bear',cougar:'cougar',mushroom:'mushrooms mushroom',mushrooms:'mushrooms',fungus:'mushrooms fungi',berry:'berries',berries:'berries',eat:'edible eat',food:'edible',helicopter:'helicopter',rescue:'rescue signals',ankle:'sprain',sprained:'sprain',broken:'fracture broken',tick:'ticks tick',fire:'fire light tinder',light:'fire light',matches:'fire tinder',tinder:'tinder fire',heart:'heart body',body:'body',temperature:'temperature body',building:'building structure',house:'building cabin',cabin:'cabin building',hut:'cabin building shelter'};
+const stem=w=>w.length>6?w.slice(0,6):w.replace(/s$/,'');
+const toks=s=>deacc(s).split(/[^a-z0-9]+/).filter(w=>w.length>1&&!STOP.has(w));
+function chunks(src){const out=[];for(const g of src||ALL()){let h='';const meta=new Set(toks(g.t+' '+g.s+' '+g.k).map(stem));for(const b of g.b){if(b[0]==='h'){h=b[1];continue}const items=Array.isArray(b[1])?b[1]:[b[1]];out.push({i:out.length,g,h,w:b[0]==='w',items,own:new Set(toks(h+' '+items.map(strip).join(' ')).map(stem)),meta})}}return out}
+function retrieve(q,src){let qs=[];for(const w of toks(q)){qs.push(w);if(SYN[w])qs.push(...SYN[w].split(' '))}qs=[...new Set(qs.map(stem))];if(!qs.length)return[];const all=chunks(src);const sc=all.map(c=>{let s=0,o=0;for(const t of qs){if(c.own.has(t)){s+=3;o++}if(c.meta.has(t))s+=4}return{...c,s,o}}).filter(c=>c.o>0).sort((a,b)=>b.s-a.s);if(!sc.length)return[];const top=sc[0].g;const pick=sc.filter(c=>c.g===top).slice(0,3);for(const c of all)if(c.g===top&&c.w&&!pick.some(p=>p.i===c.i))pick.push(c);const same=pick.sort((a,b)=>a.i-b.i);const other=sc.find(c=>c.g!==top&&c.s>=sc[0].s*.7&&c.o>1);return other?[...same,other]:same}
+const URG=/bit|bleed|blood|unconscious|faint|not breathing|broken|fracture|wound|lost|hypotherm|fell|fall|bear|cougar|attack/;
+const md=t=>esc(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').split(/\n+/).map(l=>/^\s*([-*•]|\d+\.)\s+/.test(l)?'<li>'+l.replace(/^\s*([-*•]|\d+\.)\s+/,'')+'</li>':'<p>'+l+'</p>').join('').replace(/(<li>.*?<\/li>)+/g,m=>'<ul>'+m+'</ul>');
+function offline(q,el){const r=retrieve(q);const u=URG.test(deacc(q))?'<div class="urgent">If it is serious or someone is hurt: call 112 (Europe) or 911 (US) now. See the SOS tab.</div>':'';
+if(!r.length){const miss=AREAS.filter(a=>a.ok&&!inst.includes(a.id)).find(a=>retrieve(q,a.g).length);if(miss){el.innerHTML=u+`<div class="ans"><span class="lbl">Offline guide</span><p>The answer is in the <b>${miss.t}</b> pack, which you have not downloaded yet.</p><button class="btn sm" data-goarea="1">Download area</button></div>`;return''}el.innerHTML=u+'<div class="ans"><span class="lbl">Offline guide</span><p>No answer in the offline guide yet. Try words like water, fire, cold, snake, storm, lost, mushrooms, body.</p></div>';return''}
+const groups=[];for(const c of r){let gr=groups.find(x=>x.g===c.g);if(!gr)groups.push(gr={g:c.g,cs:[]});gr.cs.push(c)}
+el.innerHTML=u+groups.map(gr=>`<div class="ans"><span class="lbl">Offline guide</span><div class="src">From: ${esc(gr.g.t)}</div>${gr.cs.map((c,j)=>(c.h&&!c.w&&c.h!==gr.cs[j-1]?.h?`<b>${c.h}</b>`:'')+(c.w?`<div class="warn">${c.items[0]}</div>`:c.items.length>1?`<ul>${c.items.map(i=>`<li>${i}</li>`).join('')}</ul>`:`<p>${c.items[0]}</p>`)).join('')}<button class="link" data-open="${gr.g.id}">Open the full page →</button></div>`).join('');
+return r.map(c=>`[${c.g.t}${c.h?' › '+c.h:''}] `+c.items.map(strip).join(' ')).join('\n')}
+let sample=null,imgOK=false;
+(async()=>{try{sample=await window.claude?.use?.('sample')??null;if(sample){try{imgOK=!!(await sample.limits()).images}catch(e){}}}catch(e){sample=null}aiStatus()})();
+function aiStatus(){$('aiDot').classList.toggle('on',!!sample);$('aiState').textContent=sample?'Field agent · AI on'+(imgOK?' · photo scans on':''):'Field agent · offline guide only (AI not available here)'}
+const SYS='You are Taylor, the field agent of the Wildlens app: a field guide for hikers and people living off-grid. Answer in the language of the question (English by default), short and practical: at most 8 lines, numbered steps when useful, **bold** only for the single most important thing. Safety first: for emergencies remind 112 in Europe or 911 in North America and mountain rescue. Never say a wild mushroom, berry or plant is edible or safe to eat from a photo or description: name dangerous look-alikes and send the user to a local mycologist or expert. Never say water is drinkable from a photo: explain how to make it safe. If unsure, say so. Use the guide excerpts when relevant.';
+async function ai(prompt,el){if(!sample)return;const box=document.createElement('div');box.className='ans';box.innerHTML='<span class="lbl ai">'+TAY()+'Taylor · AI</span><div class="out"><p>Taylor is thinking…</p></div><p class="note">Prototype: Taylor\'s AI needs a connection here. In the installable version it runs on the phone, offline.</p>';el.appendChild(box);const out=box.querySelector('.out');try{const r=await sample(prompt,{cache:false,onText:({text})=>{out.innerHTML=md(text)}});out.innerHTML=md(r.text)}catch(e){if(e&&e.code==='not_granted'){box.remove();sample=null;return}out.innerHTML='<p>'+(e&&e.code==='rate_limited'?'Too many questions in a row: try again shortly. The offline answer above still stands.':'Taylor\'s AI is not available right now. The offline answer above still stands.')+'</p>'}}
+let hist=[];
+function bubble(cls,html){const d=document.createElement('div');if(cls)d.className=cls;d.innerHTML=html||'';$('msgs').appendChild(d);return d}
+function scrollChat(){const m=$('msgs');setTimeout(()=>m.scrollTop=m.scrollHeight,30)}
+function ask(q){bubble('me',esc(q));const d=bubble('');const ctx=offline(q,d);if(sample){const past=hist.slice(-4).map(h=>`User: ${h.q}\nTaylor: ${h.a}`).join('\n');ai(`${SYS}\n\n${past?'Conversation so far:\n'+past+'\n\n':''}Question: ${q}\n\nOffline guide excerpts:\n${ctx||'(none relevant)'}`,d)}hist.push({q,a:strip(ctx).slice(0,300)||'(no guide answer)'});scrollChat()}
+$('msgs').onclick=e=>{const id=e.target.dataset.open;if(id){closeTay();openScheda(id)}if(e.target.dataset.goarea){closeTay();renderAreas();show('premium')}};
+$('askF').onsubmit=e=>{e.preventDefault();const q=$('askQ').value.trim();if(!q)return;$('askQ').value='';ask(q)};
+const EX=['How do I make water safe to drink?','A snake bit me','How do I start a fire?','I\'m lost','A storm is coming','I saw a bear','I\'m cold and it\'s getting dark','Can I eat this mushroom?','What is the human body made of?'];
+$('exChips').innerHTML=EX.map(x=>`<button type="button">${esc(x)}</button>`).join('');
+$('exChips').onclick=e=>{const b=e.target.closest('button');if(b)ask(b.textContent)};
+function openTay(){$('sheet').hidden=false;$('tayFab').hidden=true;if(!$('msgs').children.length)bubble('ans',`<span class="lbl ai">${TAY()}Taylor</span><p>Hi, I'm Taylor, your field agent. Ask me about water, fire, shelter, bites, storms, plants, the body or how things are built. I answer from the offline guide right away${sample?', then add my own advice':''}.</p>`);setTimeout(()=>$('askQ').focus(),50)}
+function closeTay(){$('sheet').hidden=true;$('tayFab').hidden=false}
+$('tayFab').onclick=openTay;$('openTay').onclick=openTay;$('closeTay').onclick=closeTay;
+
+/* SCAN */
+$('camBtn').onclick=()=>$('camIn').click();$('galBtn').onclick=()=>$('galIn').click();
+function shrink(f,max,cb){const img=new Image();img.onload=()=>{const c=document.createElement('canvas'),r=Math.min(1,max/Math.max(img.width,img.height));c.width=Math.round(img.width*r);c.height=Math.round(img.height*r);c.getContext('2d').drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(img.src);c.toBlob(b=>cb(b,c),'image/jpeg',.82)};img.onerror=()=>$('scanOut').innerHTML='<div class="ans"><p>Could not open this image. Try another photo.</p></div>';img.src=URL.createObjectURL(f)}
+const onPick=e=>{const f=e.target.files[0];e.target.value='';if(!f)return;shrink(f,900,(blob,c)=>{const t=document.createElement('canvas'),r=Math.min(1,320/Math.max(c.width,c.height));t.width=c.width*r;t.height=c.height*r;t.getContext('2d').drawImage(c,0,0,t.width,t.height);const thumb=t.toDataURL('image/jpeg',.7);$('lens').innerHTML=`<img src="${thumb}" alt="Photo to scan">`;runScan(blob,thumb)})};
+$('camIn').onchange=onPick;$('galIn').onchange=onPick;
+async function aiJSON(prompt,blob){const o={cache:false};if(blob&&imgOK)o.images=[blob];if(typeof sample.json==='function'){const v=await sample.json(prompt,o);return typeof v==='string'?JSON.parse(v):v}const r=await sample(prompt,o);const m=r.text.match(/\{[\s\S]*\}/);return JSON.parse(m?m[0]:r.text)}
+const arr=v=>Array.isArray(v)?v.filter(Boolean).map(String):v?[String(v)]:[];
+const CATS=['Flora','Fungi','Fauna','Minerals','Water','Materials','Structures','Body'];
+function toG(r,id){const c=CATS.includes(r.category)?r.category:'Other';const b=[['p',esc(r.description)]];if(r.made_of)b.push(['h','What it is made of'],['p',esc(r.made_of)]);const u=arr(r.survival_uses).map(esc);if(u.length)b.push(['h','Survival uses'],['ul',u]);if(r.fire)b.push(['h','Fire'],['p',esc(r.fire)]);if(r.origin)b.push(['h','Origin'],['p',esc(r.origin)]);if(r.grow_or_produce)b.push(['h','Grow or produce'],['p',esc(r.grow_or_produce)]);for(const w of arr(r.dangers))b.push(['w',esc(w)]);if(c==='Fungi')b.push(['w','Never eat a wild mushroom without an expert check. A photo is never enough.']);const sf=['safe','caution','danger'].includes(r.safety)?r.safety:'caution';return{id,c,t:String(r.name||'Unknown'),s:String(r.scientific||''),k:'',b,score:Math.max(0,Math.min(100,Math.round(Number(r.usefulness)||0))),safety:c==='Fungi'&&sf==='safe'?'caution':sf}}
+function matchLib(g){const n=deacc(g.t),s=deacc(g.s);return spG.find(x=>{const xt=deacc(x.t),xs=deacc(x.s);return(s&&xs&&(xs===s||xs.includes(s)||s.includes(xs)))||(n&&(xt===n||xt.includes(n)||n.includes(xt)))})}
+async function runScan(blob,thumb){const out=$('scanOut');const id='d'+Date.now();
+if(!sample||!imgOK){diary.unshift({id,img:thumb,when:new Date().toISOString(),lat:pos?.lat,lon:pos?.lon,g:{id,c:'Other',t:'Photo to identify',s:'',k:'',b:[['p','Saved to your journal. Offline AI recognition comes with the installable version, with the model on your phone.']]}});saveDiary();out.innerHTML=`<div class="ans"><span class="lbl">Offline</span><p><b>Photo saved to your journal.</b> AI recognition is not available in this copy: the installable version will do it with no signal.</p><p>Meanwhile, browse the library by category:</p><div class="chips">${['Flora','Fungi','Fauna','Minerals','Structures'].map(c=>`<button type="button" data-cat="${c}">${c}</button>`).join('')}</div></div>`;return}
+out.innerHTML='<div class="ans"><span class="lbl ai">'+TAY()+'Taylor</span><p>Taylor is looking at your photo…</p></div>';
+try{const r=await aiJSON(`${SYS}\n\nIdentify what is in the photo: it can be a plant, mushroom, animal, rock, water, a building or structure, a material or object, or a part of the human body. Reply ONLY with one valid JSON object, no text before or after, with these keys: {"name":"common English name","scientific":"scientific name, or the material/construction type","category":"one of Flora, Fungi, Fauna, Minerals, Water, Materials, Structures, Body, Other","confidence":number 0-100,"description":"2 sentences","made_of":"what it is made of or how it is built, 1-2 sentences","survival_uses":["up to 4 survival or outdoor uses"],"fire":"whether and how it helps make or feed a fire, 1 sentence","origin":"biological or material origin, 1-2 sentences","grow_or_produce":"how it is grown, raised, built or produced, 1-2 sentences","dangers":["safety warnings and dangerous look-alikes"],"safety":"safe, caution or danger (to touch, eat or approach)","usefulness":number 0-100 for survival usefulness}`,blob);
+const g=toG(r,id);const cf=Math.max(0,Math.min(100,Number(r.confidence)||0));const m=matchLib(g);
+const entry={id,img:thumb,when:new Date().toISOString(),lat:pos?.lat,lon:pos?.lon,g,cf,lib:m?.id};diary.unshift(entry);saveDiary();used++;store.set(mk,used);premTxt();
+out.innerHTML=`<div class="ans" style="padding:10px 16px">${scanHead(entry)}</div>`+yukaHTML(g,thumb,cf);
+}catch(e){out.innerHTML=`<div class="ans"><p>${e&&e.code==='rate_limited'?'Too many scans in a row: try again shortly.':e&&e.code==='not_granted'?'To recognize photos, allow the app to use Taylor\'s AI.':'Taylor could not read this photo. Try again closer and with more light.'}</p></div>`}}
+function scanHead(d){return`<span class="lbl ai">${TAY()}Taylor identified</span><p class="note" style="margin:4px 0 0">Saved to your journal${d.lat!=null?' with location':''}.</p>${d.lib?`<button class="link" data-open="${d.lib}">See it in the Library →</button>`:''}`}
+$('scanOut').onclick=e=>{const o=e.target.dataset.open;if(o)openScheda(o);const c=e.target.dataset.cat;if(c){cat=c;$('libQ').value='';show('libreria')}};
+
+/* JOURNAL */
+function saveDiary(){if(!store.set('ms-diary',diary)){for(const d of diary.slice(10))d.img=null;store.set('ms-diary',diary)}}
+const when=s=>{try{return new Date(s).toLocaleString('en-GB',{dateStyle:'medium',timeStyle:'short'})}catch(e){return''}};
+function renderDiary(){$('diary').innerHTML=diary.length?diary.map(d=>itemHTML(d.g,`data-d="${d.id}"`,d.img,esc(when(d.when))+(d.lat!=null?' · located':'')+' · ')).join(''):'<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 109-9 9 9 0 00-7 3.4"/><path d="M3 4v4h4M12 8v4l3 2"/></svg><b>No scans yet</b>Point the camera at something and your discoveries will live here.</div>';
+const n=diary.length;$('syncNote').textContent=n?`${n} discover${n===1?'y':'ies'} ready to share.`:'Your journal is empty.'}
+function openDiary(id){const d=diary.find(x=>x.id===id);if(!d)return;$('det').innerHTML=(d.cf!=null?yukaHTML(d.g,d.img,d.cf):detHTML(d.g,d.img)+(d.img?`<img class="photo" src="${d.img}" alt="${esc(d.g.t)}">`:''))+`<p class="note">${esc(when(d.when))}${d.lat!=null?' · '+d.lat.toFixed(5)+', '+d.lon.toFixed(5):''}</p><button class="btn sm alt" data-del="${d.id}">Delete from journal</button>`;show('scheda')}
+$('diary').onclick=e=>{const b=e.target.closest('[data-d]');if(b)openDiary(b.dataset.d)};
+$('det').onclick=e=>{const del=e.target.dataset.del;if(del){diary=diary.filter(x=>x.id!==del);saveDiary();show('diario');return}const o=e.target.dataset.open;if(o)openScheda(o)};
+$('sync').onclick=()=>{$('syncNote').textContent='Sharing is simulated in this prototype: your data stays on the phone. The Borgo and Barfront link comes with the full version.'};
+
+/* MAP */
+let lmap=null,llayer=null;
+function drawLeaflet(){const pts=diary.filter(d=>d.lat!=null);$('mapCount').textContent=`${pts.length} pinned discover${pts.length===1?'y':'ies'}`;const box=$('map');
+if(!lmap){box.innerHTML='';lmap=L.map(box,{zoomControl:true,attributionControl:true}).setView(pos?[pos.lat,pos.lon]:[45.5,-122.0],pos?14:6);L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap contributors'}).addTo(lmap);llayer=L.layerGroup().addTo(lmap)}
+llayer.clearLayers();const ll=[];for(const d of pts){const m=L.circleMarker([d.lat,d.lon],{radius:9,color:'#fff',weight:2,fillColor:'#c49a6c',fillOpacity:1}).addTo(llayer);m.bindTooltip(esc(d.g.t));m.on('click',()=>openDiary(d.id));ll.push([d.lat,d.lon])}
+if(pos){L.circleMarker([pos.lat,pos.lon],{radius:8,color:'#fff',weight:2,fillColor:'#d1492a',fillOpacity:1}).addTo(llayer).bindTooltip('You');ll.push([pos.lat,pos.lon])}
+setTimeout(()=>{lmap.invalidateSize();if(ll.length>1)lmap.fitBounds(ll,{padding:[40,40],maxZoom:16});else if(ll.length)lmap.setView(ll[0],15)},60)}
+function drawMap(){if(window.L&&navigator.onLine!==false||lmap){try{return drawLeaflet()}catch(e){}}const pts=diary.filter(d=>d.lat!=null);$('mapCount').textContent=`${pts.length} pinned discover${pts.length===1?'y':'ies'}`;const box=$('map');const all=[...pts.map(d=>({lat:d.lat,lon:d.lon,n:d.g.t,id:d.id})),...(pos?[{lat:pos.lat,lon:pos.lon,me:1}]:[])];
+if(!all.length){box.innerHTML='<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/></svg><b>No pinned scans yet</b>Find your location below, then scan: each discovery lands on the map.</div>';return}
+const W=box.clientWidth||340,H=box.clientHeight||320,la=all.map(p=>p.lat),lo=all.map(p=>p.lon),la0=(Math.min(...la)+Math.max(...la))/2,lo0=(Math.min(...lo)+Math.max(...lo))/2,k=Math.cos(la0*Math.PI/180);
+const sx=Math.max((Math.max(...lo)-Math.min(...lo))*k,.004),sy=Math.max(Math.max(...la)-Math.min(...la),.004),sc=Math.min((W-80)/sx,(H-80)/sy);
+const X=p=>W/2+(p.lon-lo0)*k*sc,Y=p=>H/2-(p.lat-la0)*sc;const mpp=111320/sc;let L=50;for(const c of [50,100,200,500,1000,2000,5000,10000,20000,50000])if(c/mpp<=W/3)L=c;const lp=L/mpp;
+let g='';for(let x=0;x<W;x+=40)g+=`<line x1="${x}" y1="0" x2="${x}" y2="${H}"/>`;for(let y=0;y<H;y+=40)g+=`<line x1="0" y1="${y}" x2="${W}" y2="${y}"/>`;
+const topo=[0,1,2,3].map(i=>`<ellipse cx="${W*.62}" cy="${H*.42}" rx="${70+i*46}" ry="${40+i*30}"/>`).join('');
+box.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Map of discoveries"><g stroke="currentColor" stroke-opacity=".08">${g}</g><g fill="none" stroke="#8a5a2b" stroke-opacity=".18" stroke-width="1.2">${topo}</g>${all.filter(p=>!p.me).map(p=>`<g data-d="${p.id}" style="cursor:pointer"><circle cx="${X(p)}" cy="${Y(p)}" r="10" fill="#c49a6c" stroke="#fff" stroke-width="2"/><text x="${X(p)+14}" y="${Y(p)+4}" font-size="12" font-family="Inter,sans-serif" fill="currentColor">${esc(p.n.slice(0,22))}</text></g>`).join('')}${all.filter(p=>p.me).map(p=>`<circle cx="${X(p)}" cy="${Y(p)}" r="16" fill="#d1492a" fill-opacity=".18"/><circle cx="${X(p)}" cy="${Y(p)}" r="7" fill="#d1492a" stroke="#fff" stroke-width="2"/><text x="${X(p)}" y="${Y(p)-14}" text-anchor="middle" font-size="12" font-weight="700" font-family="Inter,sans-serif" fill="#d1492a">You</text>`).join('')}<g transform="translate(16 ${H-22})" font-family="Inter,sans-serif" font-size="12" fill="currentColor"><line x1="0" y1="0" x2="${lp}" y2="0" stroke="currentColor" stroke-width="2"/><line x1="0" y1="-4" x2="0" y2="4" stroke="currentColor" stroke-width="2"/><line x1="${lp}" y1="-4" x2="${lp}" y2="4" stroke="currentColor" stroke-width="2"/><text x="${lp+8}" y="4">${L>=1000?L/1000+' km':L+' m'}</text></g><text x="${W-16}" y="26" text-anchor="end" font-family="Source Serif 4,serif" font-size="18" fill="currentColor">N ↑</text></svg>`}
+$('map').onclick=e=>{const g=e.target.closest('[data-d]');if(g)openDiary(g.dataset.d)};
+const fmt=d=>d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+function sun(lat,lon){const r=Math.PI/180,jd=Date.now()/864e5+2440587.5,n=Math.ceil(jd-2451545+.0008),J=n-lon/360,M=(357.5291+.98560028*J)%360,C=1.9148*Math.sin(M*r)+.02*Math.sin(2*M*r)+.0003*Math.sin(3*M*r),L=(M+C+282.9372)%360,Jt=2451545+J+.0053*Math.sin(M*r)-.0069*Math.sin(2*L*r),sd=Math.sin(L*r)*Math.sin(23.4397*r),cd=Math.cos(Math.asin(sd)),cw=(Math.sin(-.833*r)-Math.sin(lat*r)*sd)/(Math.cos(lat*r)*cd);if(cw<-1||cw>1)return null;const w=Math.acos(cw)/r,toD=j=>new Date((j-2440587.5)*864e5);return{rise:toD(Jt-w/360),set:toD(Jt+w/360)}}
+function showPos(){if(!pos)return;$('coords').textContent=pos.lat.toFixed(5)+', '+pos.lon.toFixed(5);$('gpsNote').textContent='Found at '+fmt(new Date(pos.t))+(pos.acc?' · accuracy about '+Math.round(pos.acc)+' m':'');const s=sun(pos.lat,pos.lon);if(!s){$('sunNote').textContent='At this latitude the sun does not rise or set today.';return}$('rise').textContent=fmt(s.rise);$('set').textContent=fmt(s.set);const m=Math.round((s.set-Date.now())/6e4);$('left').textContent=m>0?Math.floor(m/60)+'h '+String(m%60).padStart(2,'0'):'dark';$('sunNote').textContent='Astronomical times for today at your position. In valleys and forest it gets dark sooner.'}
+$('gps').onclick=()=>{if(!navigator.geolocation){$('gpsNote').textContent='This device does not offer location.';return}$('gpsNote').textContent='Looking for GPS… faster outdoors.';try{navigator.geolocation.getCurrentPosition(p=>{pos={lat:p.coords.latitude,lon:p.coords.longitude,acc:p.coords.accuracy,t:Date.now()};store.set('ms-pos',pos);showPos();drawMap()},()=>{$('gpsNote').textContent='Location unavailable: allow location for this site in your browser settings and try again outdoors.'},{enableHighAccuracy:true,timeout:20000})}catch(e){$('gpsNote').textContent='Location not available on this device or browser.'}};
+$('copy').onclick=async()=>{if(!pos){$('gpsNote').textContent='Find your location first.';return}try{await navigator.clipboard.writeText(pos.lat.toFixed(5)+', '+pos.lon.toFixed(5));$('gpsNote').textContent='Coordinates copied.'}catch(e){$('gpsNote').textContent='Copy failed: read them aloud from the screen.'}};
+showPos();
+function heading(e){const h=e.webkitCompassHeading??(e.absolute&&e.alpha!=null?360-e.alpha:null);if(h==null)return;$('needle').setAttribute('transform',`rotate(${-h} 100 100)`);$('cmpNote').textContent='Heading: '+Math.round(h)+'° · hold the phone flat, away from metal.'}
+$('cmp').onclick=async()=>{try{if(typeof DeviceOrientationEvent!=='undefined'&&DeviceOrientationEvent.requestPermission){const r=await DeviceOrientationEvent.requestPermission();if(r!=='granted')throw 0}addEventListener('deviceorientationabsolute',heading);addEventListener('deviceorientation',heading);$('cmpNote').textContent='Compass on. If the needle does not move, your phone has no compass sensor available: use the shadow-stick method.'}catch(e){$('cmpNote').textContent='Sensor blocked here. Use the shadow stick: two marks 15 minutes apart, the first is west.'}};
+
+/* SOS */
+let fl=null;const seq=[1,1,1,1,1,3,3,1,3,1,3,3,1,1,1,1,1,7];
+$('sosLight').onclick=()=>{const f=$('flash');f.classList.add('on');let i=0;const step=()=>{f.classList.toggle('lit',i%2===0);fl=setTimeout(step,seq[i%seq.length]*220);i++};step();try{document.documentElement.requestFullscreen?.().catch(()=>{})}catch(e){}};
+$('stopFlash').onclick=()=>{clearTimeout(fl);$('flash').className='flash';try{document.fullscreenElement&&document.exitFullscreen()}catch(e){}};
+$('whistle').onclick=()=>{try{const a=new (window.AudioContext||window.webkitAudioContext)();for(let i=0;i<6;i++){const o=a.createOscillator(),g=a.createGain();o.type='square';o.frequency.value=3000;o.connect(g);g.connect(a.destination);const t=a.currentTime+i;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.4,t+.02);g.gain.setValueAtTime(.4,t+.5);g.gain.linearRampToValueAtTime(0,t+.55);o.start(t);o.stop(t+.6)}}catch(e){}};
+
+
+
+/* INTRO: Taylor explains the app */
+const STEPS=[['Hi, I\'m Taylor','I\'m your field agent. Wildlens is a pocket field guide that keeps working with no signal: in the woods, on the trail, off-grid.'],
+['Scan anything','Tap <b>Take photo</b> or <b>Pick from gallery</b>. I tell you what it is, a survival score out of 100 and a safety light, like a food scanner but for the wild.'],
+['Ask me anything','Tap my face in the bottom-right corner, on any screen. Water, fire, bites, storms, the body, buildings: I answer from the offline guide right away.'],
+['Library and areas','Field pages on survival, plants, mushrooms, animals, rocks, water and buildings. Download your area (Oregon, Dolomites) before you go.'],
+['Map and Journal','Every scan is saved in your Journal and pinned on the Map with GPS. The Map also shows sunrise, sunset and a compass.'],
+['SOS','Emergency numbers, your coordinates, a flashing SOS screen and a whistle. Wildlens is a guide, not a doctor: when in doubt, call for help.']];
+let step=0;
+function drawIntro(){const s=STEPS[step];$('introBody').innerHTML=`<h2>${s[0]}</h2><p>${s[1]}</p>`;$('introDots').innerHTML=STEPS.map((_,i)=>`<i class="${i===step?'on':''}"></i>`).join('');$('introBack').style.visibility=step?'visible':'hidden';$('introNext').textContent=step===STEPS.length-1?'Let\'s go':'Next'}
+function openIntro(){step=0;drawIntro();$('intro').hidden=false}
+function closeIntro(){$('intro').hidden=true;store.set('ms-intro',1)}
+$('introNext').onclick=()=>{if(step<STEPS.length-1){step++;drawIntro()}else closeIntro()};
+$('introBack').onclick=()=>{if(step){step--;drawIntro()}};
+$('introSkip').onclick=closeIntro;$('helpBtn').onclick=openIntro;
+addEventListener('keydown',e=>{if($('intro').hidden)return;if(e.key==='ArrowRight')$('introNext').click();if(e.key==='ArrowLeft')$('introBack').click();if(e.key==='Escape')closeIntro()});
+if(!store.get('ms-intro',0))openIntro();
+if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
+</script>
+</body>
+</html>
