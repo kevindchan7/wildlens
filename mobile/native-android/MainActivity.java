@@ -7,6 +7,7 @@ public class MainActivity extends BridgeActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         registerPlugin(WildSensorsPlugin.class);
+        registerPlugin(CampfirePlugin.class);
         super.onCreate(savedInstanceState);
     }
 }

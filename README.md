@@ -21,7 +21,7 @@ The `mobile/` folder wraps the web app in `app/` as a native Android/iPhone app.
 - **iPhone:** needs a Mac with Xcode: `npm install @capacitor/ios && npx cap add ios && npx cap open ios`. Publishing needs an Apple Developer account.
 - Store release (Play Store) needs a signing key; the CI build is a debug test build.
 
-Native extras already wired in the web code (`NATIVE` bridge): phone torch, timers as system notifications, barometer and step counter (`mobile/native-android/WildSensorsPlugin.java`, copied in by CI). Next: Campfire local server, offline map packs.
+Native extras already wired in the web code (`NATIVE` bridge): phone torch, timers as system notifications, barometer and step counter (`mobile/native-android/WildSensorsPlugin.java`, copied in by CI). Campfire (`mobile/native-android/CampfirePlugin.java`): the phone serves `app/campfire.html` on port 7700 over its Wi-Fi or hotspot; friends join from any browser with a QR code. Next: offline map packs.
 
 ## Access control and Gestionale
 

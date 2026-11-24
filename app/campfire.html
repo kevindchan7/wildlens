@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#14201a">
+<title>Wildlens · Campfire</title>
+<link rel="icon" href="/icon.svg">
+<style>
+:root{--bg:#f4f1ea;--card:#fff;--ink:#1d2a22;--mute:#6b7469;--line:#e4ddd0;--green:#2d5a34;--sos:#b8432c;--tan:#efe6d4}
+*{box-sizing:border-box}body{margin:0;font:17px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink);padding-bottom:150px}
+header{background:linear-gradient(170deg,#1d3527,#0f1a13);color:#eef2ec;padding:22px 18px 20px;position:relative;overflow:hidden}
+header small{color:#e3b866;font-weight:800;letter-spacing:.16em;font-size:12px}header h1{margin:4px 0 2px;font-size:32px}header p{margin:0;color:#b9c7bc}
+.fire{position:absolute;right:14px;bottom:8px;width:92px;height:92px}
+.fl{transform-origin:50% 100%;animation:fl 1.2s ease-in-out infinite alternate}@keyframes fl{to{transform:scale(1.06,.92) skewX(4deg)}}
+nav{display:flex;margin:12px;background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:4px}
+nav button{flex:1;border:0;background:none;padding:12px;font:inherit;font-weight:700;color:var(--mute);border-radius:12px}nav button[aria-pressed=true]{background:var(--tan);color:var(--ink)}
+main{padding:0 12px}.p{background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:12px 14px;margin-bottom:10px}
+.p.u{border-color:var(--sos);background:#fbe9e4}.p b{font-size:15px}.p small{color:var(--mute);font-size:13px;margin-left:6px}.p div{margin-top:4px;white-space:pre-wrap;overflow-wrap:anywhere}
+.empty{color:var(--mute);text-align:center;padding:40px 10px}
+.task{display:flex;gap:10px;align-items:center;background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:12px;margin-bottom:8px}.task.done span{text-decoration:line-through;color:var(--mute)}
+.task input{width:22px;height:22px}
+.mem{display:inline-flex;gap:6px;align-items:center;background:var(--card);border:1.5px solid var(--line);border-radius:99px;padding:8px 14px;margin:0 6px 8px 0}
+footer{position:fixed;left:0;right:0;bottom:0;background:var(--bg);border-top:1.5px solid var(--line);padding:10px 12px calc(10px + env(safe-area-inset-bottom))}
+.kinds{display:flex;gap:8px;margin-bottom:8px}.kinds button{border:1.5px solid var(--line);background:var(--card);border-radius:99px;padding:8px 16px;font:inherit;font-weight:700;color:var(--mute)}.kinds button[aria-pressed=true]{background:#1d2a22;color:#fff;border-color:#1d2a22}.kinds button.urg[aria-pressed=true]{background:var(--sos);border-color:var(--sos)}
+.send{display:flex;gap:8px}.send input{flex:1;font:inherit;padding:14px 16px;border:1.5px solid var(--line);border-radius:99px;background:#fff;min-width:0}
+.send button{width:54px;height:54px;border-radius:50%;border:0;background:linear-gradient(135deg,#d9824c,#b8582e);color:#fff;font-size:22px}
+#who{position:fixed;inset:0;background:rgba(10,14,11,.7);display:flex;align-items:center;justify-content:center;padding:20px;z-index:9}
+#who[hidden]{display:none}#who .box{background:var(--card);border-radius:20px;padding:20px;width:100%;max-width:380px}
+#who input{width:100%;font:inherit;padding:14px;border:1.5px solid var(--line);border-radius:14px;margin:10px 0}
+#who button.go{width:100%;border:0;border-radius:14px;padding:14px;font:inherit;font-weight:800;background:var(--green);color:#fff}
+.em{display:flex;flex-wrap:wrap;gap:6px}.em button{font-size:24px;width:46px;height:46px;border-radius:12px;border:1.5px solid var(--line);background:#fff}.em button[aria-pressed=true]{border-color:var(--green);background:var(--tan)}
+#off{display:none;background:#fbe9e4;color:var(--sos);text-align:center;padding:8px;font-weight:700}
+</style>
+</head>
+<body>
+<div id="off"></div>
+<header>
+<small id="lit">CAMPFIRE · LIT</small><h1 id="camp">Campfire</h1><p id="count"></p>
+<svg class="fire" viewBox="0 0 100 100" aria-hidden="true"><ellipse cx="50" cy="88" rx="38" ry="9" fill="#6b6a62"/><g fill="#8b8a80"><circle cx="18" cy="84" r="9"/><circle cx="34" cy="90" r="9"/><circle cx="50" cy="92" r="9"/><circle cx="66" cy="90" r="9"/><circle cx="82" cy="84" r="9"/></g><path d="M30 84l40-12M30 72l40 12" stroke="#8a5a32" stroke-width="7" stroke-linecap="round"/><g class="fl"><path d="M50 18c10 18 22 26 18 46-2 12-10 18-18 18s-18-6-18-18c-2-14 8-20 10-30 4 8 6 10 8 10-2-10-2-18 0-26z" fill="#e8622c"/><path d="M50 44c6 10 12 14 10 24-1 7-5 10-10 10s-10-3-10-10c0-8 6-10 6-16 2 4 4 5 4 5 0-5 0-9 0-13z" fill="#f6c04a"/></g></svg>
+</header>
+<nav><button data-t="board" aria-pressed="true" id="tBoard">Board</button><button data-t="tasks" aria-pressed="false" id="tTasks">Tasks</button><button data-t="people" aria-pressed="false" id="tPeople">People</button></nav>
+<main id="main"></main>
+<footer id="foot">
+<div class="kinds"><button id="kNote" aria-pressed="true">Note</button><button id="kUrg" class="urg" aria-pressed="false">⚠ Urgent</button></div>
+<form class="send" id="sf"><input id="tx" maxlength="500" autocomplete="off"><button aria-label="Send">➤</button></form>
+</footer>
+<div id="who" hidden><div class="box"><h2 id="wH" style="margin:0">Join the camp</h2><p id="wP" style="margin:6px 0 0;color:var(--mute)"></p><input id="wN" maxlength="30" autocomplete="off"><div class="em" id="wE"></div><button class="go" id="wGo" style="margin-top:14px">OK</button></div></div>
+<script>
+(function(){
+const L=(navigator.language||'en').slice(0,2),li=L==='it'?1:L==='es'?2:0;
+const T={lit:['CAMPFIRE · LIT','FALÒ · ACCESO','FOGATA · ENCENDIDA'],board:['Board','Bacheca','Tablón'],tasks:['Tasks','Compiti','Tareas'],people:['People','Persone','Personas'],note:['Note','Nota','Nota'],urg:['⚠ Urgent','⚠ Urgente','⚠ Urgente'],ph:['Leave a note for the camp…','Lascia una nota al campo…','Deja una nota al campamento…'],phT:['New task, e.g. collect firewood','Nuovo compito, es. raccogliere legna','Nueva tarea, p. ej. recoger leña'],
+emptyB:['Nothing on the board yet. Leave the first note.','Ancora niente in bacheca. Lascia la prima nota.','Aún no hay nada en el tablón. Deja la primera nota.'],emptyT:['No tasks yet.','Ancora nessun compito.','Aún no hay tareas.'],emptyP:['Nobody has joined yet.','Non è ancora entrato nessuno.','Aún no se ha unido nadie.'],
+here:['here','presenti','presentes'],join:['Join the camp','Entra nel campo','Únete al campamento'],joinP:['Your name, so the others know who writes. No app, no account.','Il tuo nome, così gli altri sanno chi scrive. Niente app, niente account.','Tu nombre, para que los demás sepan quién escribe. Sin app ni cuenta.'],name:['Your name','Il tuo nome','Tu nombre'],
+off:['Lost contact with the camp phone. Stay close to it and on its Wi-Fi.','Contatto perso con il telefono del campo. Resta vicino e sulla sua rete Wi-Fi.','Se perdió el contacto con el móvil del campamento. Quédate cerca y en su Wi-Fi.'],now:['now','ora','ahora'],min:['min ago','min fa','min'],hrs:['h ago','h fa','h']};
+const t=k=>T[k][li];
+const $=i=>document.getElementById(i);const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let me={};try{me=JSON.parse(localStorage.getItem('wl-camp-me'))||{}}catch(e){}
+if(!me.id)me.id='g'+Math.random().toString(36).slice(2,10);
+let tab='board',urgent=false,st={posts:[],tasks:[],members:[],name:'Campfire'},lastN=0,fails=0;
+const EM=['🧭','🦊','🐻','🦉','🌲','🍄','⛰️','🔥','🐺','🦅','🌿','⭐'];
+$('lit').textContent=t('lit');$('tBoard').textContent=t('board');$('tTasks').textContent=t('tasks');$('tPeople').textContent=t('people');$('kNote').textContent=t('note');$('kUrg').textContent=t('urg');
+$('wH').textContent=t('join');$('wP').textContent=t('joinP');$('wN').placeholder=t('name');
+function ago(ms){const m=Math.round((st.now-ms)/6e4);return m<1?t('now'):m<60?m+' '+t('min'):Math.round(m/60)+' '+t('hrs')}
+function draw(){$('camp').textContent=st.name||'Campfire';$('count').textContent='● '+st.members.length+' '+t('here');
+const M=$('main');if(tab==='board'){M.innerHTML=st.posts.length?st.posts.slice().reverse().map(p=>`<div class="p ${p.urgent?'u':''}"><b>${esc(p.emoji)} ${esc(p.from)}</b><small>${p.urgent?'⚠ ':''}${ago(p.t)}</small><div>${esc(p.text)}</div></div>`).join(''):`<div class="empty">${t('emptyB')}</div>`}
+else if(tab==='tasks'){M.innerHTML=st.tasks.length?st.tasks.map(k=>`<label class="task ${k.done?'done':''}"><input type="checkbox" data-k="${k.k}" ${k.done?'checked':''}><span>${esc(k.text)}</span></label>`).join(''):`<div class="empty">${t('emptyT')}</div>`}
+else{M.innerHTML=st.members.length?st.members.map(m=>`<span class="mem">${esc(m.emoji)} ${esc(m.name)}</span>`).join(''):`<div class="empty">${t('emptyP')}</div>`}
+$('foot').style.display=tab==='people'?'none':'';$('tx').placeholder=tab==='tasks'?t('phT'):t('ph');document.querySelector('.kinds').style.display=tab==='board'?'':'none'}
+async function api(path,body){const r=await fetch(path,body?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}:{cache:'no-store'});if(!r.ok)throw 0;return r.json()}
+async function poll(){try{const s=await api('/api/state');const newest=s.posts.length?s.posts[s.posts.length-1].n:0;if(newest>lastN&&lastN&&s.posts.some(p=>p.n>lastN&&p.urgent&&p.id!==me.id)&&navigator.vibrate)navigator.vibrate([300,120,300]);lastN=newest;st=s;fails=0;$('off').style.display='none';draw()}catch(e){if(++fails>2){$('off').textContent=t('off');$('off').style.display='block'}}}
+document.querySelector('nav').onclick=e=>{const b=e.target.closest('[data-t]');if(!b)return;tab=b.dataset.t;for(const x of document.querySelectorAll('nav button'))x.setAttribute('aria-pressed',x===b);draw()};
+$('kNote').onclick=()=>{urgent=false;$('kNote').setAttribute('aria-pressed',true);$('kUrg').setAttribute('aria-pressed',false)};$('kUrg').onclick=()=>{urgent=true;$('kUrg').setAttribute('aria-pressed',true);$('kNote').setAttribute('aria-pressed',false)};
+$('main').onchange=async e=>{const c=e.target.closest('[data-k]');if(c){try{await api('/api/task',{toggle:+c.dataset.k});poll()}catch(er){}}};
+$('sf').onsubmit=async e=>{e.preventDefault();const v=$('tx').value.trim();if(!v)return;try{if(tab==='tasks')await api('/api/task',{text:v,name:me.name});else await api('/api/post',{id:me.id,name:me.name,emoji:me.e,text:v,urgent});$('tx').value='';$('kNote').click();poll()}catch(er){}};
+function ask(){$('who').hidden=false;$('wN').value=me.name||'';$('wE').innerHTML=EM.map(x=>`<button type="button" aria-pressed="${x===(me.e||'🧭')}">${x}</button>`).join('');$('wE').onclick=e=>{const b=e.target.closest('button');if(!b)return;me.e=b.textContent;for(const x of $('wE').children)x.setAttribute('aria-pressed',x===b)};
+$('wGo').onclick=async()=>{const n=$('wN').value.trim();if(n.length<1){$('wN').focus();return}me.name=n;me.e=me.e||'🧭';localStorage.setItem('wl-camp-me',JSON.stringify(me));$('who').hidden=true;try{await api('/api/join',{id:me.id,name:me.name,emoji:me.e})}catch(e){}poll()}}
+if(!me.name)ask();else api('/api/join',{id:me.id,name:me.name,emoji:me.e}).catch(()=>{});
+poll();setInterval(poll,3000);
+})();
+</script>
+</body>
+</html>
