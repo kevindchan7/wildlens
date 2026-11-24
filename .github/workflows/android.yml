@@ -51,6 +51,7 @@ jobs:
           G=android/app/build.gradle
           grep -q 'tasks-genai' $G || sed -i "0,/^dependencies {/s//dependencies {\n    implementation 'com.google.mediapipe:tasks-genai:0.10.27'/" $G
           grep -q 'tasks-vision' $G || sed -i "0,/^dependencies {/s//dependencies {\n    implementation 'com.google.mediapipe:tasks-vision:0.10.26'/" $G
+          grep -q 'abiFilters' $G || sed -i "0,/defaultConfig {/s//defaultConfig {\n        ndk { abiFilters 'arm64-v8a' }/" $G
           grep -q 'noCompress' $G || sed -i "0,/^android {/s//android {\n    androidResources { noCompress += ['tflite'] }/" $G
       - name: Photo recognition models bundled in the app
         run: |
@@ -87,7 +88,7 @@ jobs:
         run: |
           rm -rf /tmp/site && mkdir -p /tmp/site
           cp -r index.html sw.js icon.svg condizioni.html poster.html app gestionale /tmp/site/
-          cp Wildlens.apk /tmp/site/Wildlens.apk
+          S=$(stat -c %s Wildlens.apk); if [ $S -lt 95000000 ]; then cp Wildlens.apk /tmp/site/Wildlens.apk; else echo "APK $S bytes: served from the GitHub release only"; fi
           npm install --silent --no-save --prefix /tmp/prot terser@5 && cp scripts/proteggi.mjs /tmp/prot/ && node /tmp/prot/proteggi.mjs /tmp/site
           cd /tmp/site
           git init -q -b pubblico

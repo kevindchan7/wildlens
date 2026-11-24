@@ -70,7 +70,7 @@ input,textarea{font:inherit;width:100%;padding:12px;border-radius:10px;border:1p
 <script>
 const SB='https://lrdiktrvtzhucsujhtfd.supabase.co',PK='sb_publishable_QN0qyjbHmvfvGX6E8tIPSw_rUVRh-o5';
 const $=id=>document.getElementById(id);
-const BASE=location.origin;const WEB=BASE+'/app/',APK=BASE+'/Wildlens.apk';
+const BASE=location.origin;const WEB=BASE+'/app/',APK=BASE+'https://github.com/kevindchan7/wildlens/releases/download/android-latest/Wildlens.apk';
 let K=(()=>{const h=new URLSearchParams(location.hash.slice(1)).get('k');if(h){localStorage.setItem('wl-dev',h);history.replaceState(null,'',location.pathname)}return localStorage.getItem('wl-dev')||''})();
 let D=null;
 async function rpc(fn,args){const r=await fetch(SB+'/rest/v1/rpc/'+fn,{method:'POST',headers:{apikey:PK,'Content-Type':'application/json'},body:JSON.stringify(args)});const j=await r.json().catch(()=>null);if(!r.ok)throw new Error(j&&j.message||('Errore '+r.status));return j}
