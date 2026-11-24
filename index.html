@@ -578,7 +578,7 @@ const CATS=['Flora','Fungi','Fauna','Minerals','Water','Materials','Structures',
 function toG(r,id){const c=CATS.includes(r.category)?r.category:'Other';const b=[['p',esc(r.description)]];if(!r||typeof r!=='object')throw new Error('bad');if(r.made_of)b.push(['h','What it is made of'],['p',esc(r.made_of)]);const u=arr(r.survival_uses).map(esc);if(u.length)b.push(['h','Survival uses'],['ul',u]);if(r.fire)b.push(['h','Fire'],['p',esc(r.fire)]);if(r.origin)b.push(['h','Origin'],['p',esc(r.origin)]);if(r.grow_or_produce)b.push(['h','Grow or produce'],['p',esc(r.grow_or_produce)]);for(const w of arr(r.dangers))b.push(['w',esc(w)]);if(c==='Fungi')b.push(['w','Never eat a wild mushroom without an expert check. A photo is never enough.']);const sf=['safe','caution','danger'].includes(r.safety)?r.safety:'caution';return{id,c,t:String(r.name||'Unknown'),s:String(r.scientific||''),k:'',b,score:Math.max(0,Math.min(100,Math.round(Number(r.usefulness)||0))),safety:c==='Fungi'&&sf==='safe'?'caution':sf}}
 function matchLib(g){const n=deacc(g.t),s=deacc(g.s);return spG.find(x=>{const xt=deacc(x.t),xs=deacc(x.s);return(s&&xs&&(xs===s||xs.includes(s)||s.includes(xs)))||(n&&(xt===n||xt.includes(n)||n.includes(xt)))})}
 async function runScan(blob,thumb){const out=$('scanOut');const id='d'+Date.now();
-pend={thumb,ans:[],blob};if(!sample||!imgOK){guided(brainState==='loading'?'Taylor\'s brain is still loading: meanwhile, answer a few questions.':'');return}
+pend={thumb,ans:[],blob};if(!sample||!imgOK){if(clipState==='ready')return clipScan(blob);noBrain();return}
 out.innerHTML='<div class="ans"><span class="lbl ai">'+TAY()+'Taylor</span><p>Taylor is looking at your photo…</p></div>';
 try{const r=await aiJSON(`${SYS}\n\nIdentify what is in the photo: it can be a plant, mushroom, animal, rock, water, a building or structure, a material or object, or a part of the human body. Reply ONLY with one valid JSON object, no text before or after, with these keys: {"name":"common English name","scientific":"scientific name, or the material/construction type","category":"one of Flora, Fungi, Fauna, Minerals, Water, Materials, Structures, Body, Other","confidence":number 0-100,"description":"2 sentences","made_of":"what it is made of or how it is built, 1-2 sentences","survival_uses":["up to 4 survival or outdoor uses"],"fire":"whether and how it helps make or feed a fire, 1 sentence","origin":"biological or material origin, 1-2 sentences","grow_or_produce":"how it is grown, raised, built or produced, 1-2 sentences","dangers":["safety warnings and dangerous look-alikes"],"safety":"safe, caution or danger (to touch, eat or approach)","usefulness":number 0-100 for survival usefulness}`,blob);
 const g=toG(r,id);const cf=Math.max(0,Math.min(100,Number(r.confidence)||0));const m=matchLib(g);
@@ -592,14 +592,14 @@ $('scanOut').onclick=e=>{const o=e.target.dataset.open;if(o)openScheda(o);const 
 /* GUIDED IDENTIFICATION (works on every phone, no AI) */
 let pend=null;
 const COLORS=[['White','white'],['Red','red'],['Yellow / orange','yellow'],['Blue / purple','blue'],['Black / dark','black'],['Brown','brown'],['Green','green'],['Not sure','']];
-const QS={root:['What did you photograph?',[['Plant or tree','plant'],['Mushroom or fungus','fungus'],['Animal or insect','animal'],['Rock or mineral','mineral'],['Water or snow','water'],['Material or object','material'],['Building or structure','structure']]],
+const QS={root:['What did you photograph?',[['Plant or tree','plant'],['Mushroom or fungus','fungus'],['Animal or insect','animal'],['Rock or mineral','mineral'],['Water or snow','water'],['Material or object','material'],['Building or structure','structure'],['Person or body part','body']]],
 plant:[['What kind of plant?',[['Tree','tree'],['Shrub or bush','shrub'],['Small plant or flower','herb'],['Moss or lichen','moss lichen'],['Grass or reed','grass']]],['What are the leaves like?',[['Needles','needle'],['Small scales','scales'],['Broad leaves','broad'],['Divided or feathery','divided'],['Not sure','']]],['Main colour of flowers, berries or fruit?',COLORS]],
 fungus:[['Where is it growing?',[['On the ground, with a cap','cap ground'],['On wood, like a shelf','bracket wood'],['Round ball, no cap','ground white'],['Not sure','']]],['Colour of the cap or top?',COLORS]],
 animal:[['What kind of animal?',[['Mammal','mammal'],['Snake or reptile','reptile'],['Insect or tick','insect']]]],
 mineral:[['What does it look like?',[['Black or dark','black dark'],['White or clear','white clear'],['Grey and speckled','grey speckled'],['Metallic or gold','metallic yellow'],['Soft brown, sticky','brown soft'],['Glassy','glassy']]]],
 material:[['What is it made of?',[['Plastic','plastic'],['Metal','metallic'],['Cloth','cloth'],['Black, burnt','black'],['Something else','']]]],
 structure:[['What is it built from?',[['Wood','wood'],['Stone','stone'],['Something else','']]]],water:[]};
-function guided(note){const out=$('scanOut');const st=pend.ans.length;const root=pend.ans[0];let q;
+function guided(note){const out=$('scanOut');const st=pend.ans.length;const root=pend.ans[0];let q;if(root==='body'){out.innerHTML=`<div class="ans"><span class="lbl ai">${TAY()}Taylor</span><p><b>That's the human body.</b> Here is how it keeps you alive outdoors.</p></div>`+detHTML(G.find(g=>g.id==='body'));return}
 if(st===0)q=QS.root;else{const list=QS[root.split(' ')[0]]||[];q=list[st-1]}
 if(!q){return showCands()}
 out.innerHTML=`<div class="ans"><span class="lbl ai">${TAY()}Taylor</span>${note?`<p>${note}</p>`:''}<p><b>${q[0]}</b></p><div class="chips" style="flex-wrap:wrap">${q[1].map(o=>`<button type="button" data-g="${o[1]}">${o[0]}</button>`).join('')}</div>${st?'<button class="link" data-gback="1">← Back</button>':''}${brainState!=='ready'?'<p class="note">Tip: download Taylor\'s offline brain in Premium for automatic recognition.</p>':''}</div>`}
@@ -610,6 +610,33 @@ function pick(id){const g=spG.find(x=>x.id===id);$('scanOut').innerHTML=yukaHTML
 function saveAs(id){const g=spG.find(x=>x.id===id);if(!g||!pend)return;diary.unshift({id:'d'+Date.now(),img:pend.thumb,when:new Date().toISOString(),lat:pos?.lat,lon:pos?.lon,g,by:'you'});saveDiary();$('scanOut').innerHTML=`<div class="ans"><span class="lbl ai">${TAY()}Taylor</span><p><b>Saved to your Journal.</b></p></div>`+yukaHTML(g,pend.thumb)+combosFor(id.slice(3))}
 $('scanOut').addEventListener('click',e=>{const b=e.target.closest('[data-g],[data-pick],[data-saveas],[data-gback]');if(!b||!pend)return;e.stopPropagation();
 if(b.dataset.g!==undefined){pend.ans.push(b.dataset.g||'');guided()}else if(b.dataset.pick){pick(b.dataset.pick)}else if(b.dataset.saveas){saveAs(b.dataset.saveas)}else if(b.dataset.gback){if($('scanOut').querySelector('[data-saveas]'))showCands();else{pend.ans.pop();guided()}}},true);
+
+
+/* LIGHT BRAIN: CLIP matches the photo against the whole library, runs on any phone (no WebGPU needed) */
+let clip=null,clipState='none';
+const EXTRA={'a human hand':'body','a human face':'body','a person':'body','a foot':'body','a dog':'other','a cat':'other','a car':'other','a phone':'other','food on a plate':'other','a bed or blanket':'other','a room indoors':'other','a computer':'other'};
+function noBrain(){const out=$('scanOut');out.innerHTML=`<div class="ans"><span class="lbl ai">${TAY()}Taylor</span><p><b>To recognize photos by herself, Taylor needs her brain on this phone.</b> Download it once, then it works with no internet.</p>
+<button class="btn" data-brain="light">Light brain · about 150 MB · any phone</button><button class="btn alt" data-brain="full">Full brain · about 2 GB · newest phones</button><div class="prog" id="scanProg" hidden><i></i></div><p class="note" id="scanNote"></p>
+<p style="margin-top:14px"><b>Or tell me what it is:</b></p><div class="chips" style="flex-wrap:wrap">${QS.root[1].map(o=>`<button type="button" data-g="${o[1]}">${o[0]}</button>`).join('')}</div></div>`}
+async function loadClip(onP){if(clipState==='ready')return;clipState='loading';const files={};
+const cb=i=>{if(i.status==='progress'&&i.file){files[i.file]=[i.loaded||0,i.total||0];let l=0,tt=0;for(const k in files){l+=files[k][0];tt+=files[k][1]}if(tt)onP(`Downloading ${(l/1e6).toFixed(0)} of ${(tt/1e6).toFixed(0)} MB…`,Math.min(99,l/tt*100))}};
+try{const T=await import('https://cdn.jsdelivr.net/npm/@huggingface/transformers@4/dist/transformers.min.js');clip=await T.pipeline('zero-shot-image-classification','Xenova/clip-vit-base-patch32',{progress_callback:cb});clipState='ready';store.set('ms-clip',1);onP('Ready.',100)}
+catch(e){clipState='none';onP(!navigator.onLine?'The first download needs internet.':'Could not load: '+(e&&e.message?e.message.slice(0,120):'error'));throw e}}
+async function clipScan(blob){const out=$('scanOut');out.innerHTML=`<div class="ans"><span class="lbl ai">${TAY()}Taylor</span><p>Taylor is looking at your photo…</p></div>`;
+try{const labels=[...spG.map(s=>s.t),...Object.keys(EXTRA)];const u=URL.createObjectURL(blob);let r;try{r=await clip(u,labels,{hypothesis_template:'a photo of {}'})}finally{URL.revokeObjectURL(u)}
+r=r.sort((a,b)=>b.score-a.score);const top=r[0];
+if(EXTRA[top.label]==='body'){pend.ans=['body'];return guided()}
+if(EXTRA[top.label]){out.innerHTML=`<div class="ans"><span class="lbl ai">${TAY()}Taylor</span><p>This looks like <b>${esc(top.label.replace(/^an? /,''))}</b>, which is not in the field guide. Try a plant, mushroom, animal, rock, water or material.</p><p><b>Or tell me what it is:</b></p><div class="chips" style="flex-wrap:wrap">${QS.root[1].map(o=>`<button type="button" data-g="${o[1]}">${o[0]}</button>`).join('')}</div></div>`;return}
+const c=r.filter(x=>!EXTRA[x.label]).slice(0,4).map(x=>({s:spG.find(s=>s.t===x.label),p:Math.round(x.score*100)})).filter(x=>x.s);
+out.innerHTML=`<div class="ans"><span class="lbl ai">${TAY()}Taylor</span><p><b>I think it's ${esc(c[0].s.t)}</b> (${c[0].p}% match). Tap to compare, then confirm.</p>${c.some(x=>x.s.c==='Fungi')?'<div class="warn">Never eat a wild mushroom based on this. Have it checked by an expert.</div>':''}${c.map(x=>itemHTML(x.s,`data-pick="${x.s.id}"`,null,x.p+'% · ')).join('')}<button class="link" data-g-reset="1">None of these? Answer questions instead</button></div>`;
+}catch(e){noBrain()}}
+$('scanOut').addEventListener('click',async e=>{const b=e.target.closest('[data-brain],[data-g-reset]');if(!b)return;e.stopPropagation();
+if(b.dataset.gReset!==undefined){pend.ans=[];return guided()}
+const P=(m,pc)=>{const n=$('scanNote'),g=$('scanProg');if(n)n.textContent=m;if(g&&pc!=null){g.hidden=false;g.firstChild.style.width=pc+'%'}};
+$('scanOut').querySelectorAll('[data-brain]').forEach(x=>x.disabled=true);
+if(b.dataset.brain==='light'){try{await loadClip(P);if(pend)clipScan(pend.blob)}catch(err){$('scanOut').querySelectorAll('[data-brain]').forEach(x=>x.disabled=false)}}
+else{renderAreas();show('premium');loadBrain()}},true);
+if(store.get('ms-clip',0))setTimeout(()=>loadClip(()=>{}).catch(()=>{}),1500);
 
 /* TAYLOR'S OFFLINE BRAIN: Gemma 4 E2B in the browser (WebGPU) */
 let brain=null,brainState='none',gq=Promise.resolve();
