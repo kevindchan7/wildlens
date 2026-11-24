@@ -1199,7 +1199,7 @@ function readiness(){return[["Taylor's brain",clipState==='ready'||brainState===
 function renderReady(){const r=readiness(),ok=r.filter(x=>x[1]).length,pct=Math.round(ok/r.length*100),next=r.find(x=>!x[1]);$('rdPct').textContent=pct+'%';$('rdRing').style.background=`conic-gradient(#9fd3a8 ${pct}%, rgba(255,255,255,.18) 0)`;$('rdTitle').textContent=tr(pct===100?'Field-ready':'Get field-ready');if(!/Light brain:|Downloading/.test($('rdTxt').textContent)||pct===100)$('rdTxt').textContent=pct===100?tr('Everything works with no signal.'):`${ok} ${tr('of')} ${r.length} ${tr('done · next:')} ${tr(next[0])}`}
 $('readyBtn').onclick=openIntro;setInterval(()=>{if(view==='scan')renderReady()},3000);renderReady();
 window.WL_AFTER_GATE=()=>{if(!store.get('ms-setup',0))setTimeout(openIntro,250);else setTimeout(()=>coach('scan'),600)};
-if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('sw.js').catch(()=>{});
+if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost'))navigator.serviceWorker.register('sw.js').catch(()=>{});
 
 /* SETTINGS */
 $('setBtn').onclick=()=>{renderSettings();show('settings')};$('back3').onclick=()=>show(prev);
