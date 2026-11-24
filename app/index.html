@@ -272,7 +272,7 @@ nav button[data-v=sos][aria-current],nav button[data-v=sos]{color:var(--sos)}
 .bhome{width:100%;text-align:left;display:flex;gap:8px;align-items:center;border:1.5px solid var(--line);background:var(--card);border-radius:14px;padding:12px 14px;font:inherit;font-size:14px;color:var(--ink);margin:10px 0}.bhome span{flex:1}.bhome.ok{border-color:#2d5a34;background:#eef5ee}
 .brow{display:block!important}.brow .bhd .ic{font-size:26px}.brow .bhd b{display:block;line-height:1.25}.brow .row .btn{width:auto}.cands{margin:6px 0 8px 20px;padding:0}.cands li{margin:3px 0}
 body.dlv #tayTip{display:none!important}body.brdl main{padding-bottom:90px}
-html,body{max-width:100%;overflow-x:hidden}#rdTxt{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}.coach{z-index:45!important;max-height:calc(100vh - 110px);overflow:auto}
+html,body{max-width:100%;overflow-x:hidden}#rdTxt{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}.coach{max-height:calc(100vh - 110px);overflow:auto}
 </style>
 <style id="wl03">
 /* === Wildlens 0.3: impaginazione e Taylor viva === */
@@ -2189,6 +2189,16 @@ if(NV){delete BRS.light;store.set('ms-clip',0);loadClip=()=>Promise.resolve();
  const _bSt2=bSt;bSt=k=>k==='vision'?'ready':_bSt2(k);
  NV.models().then(r=>{const m=(r.models||[]).join(', ');BRS.vision.s=tr('Included, no download')+' · '+m;renderBrains()}).catch(()=>{});
 }
+
+
+/* ===== Android app: no step-by-step tour bubbles (they covered other windows); test-phase status line ===== */
+(()=>{const APP=!!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform());
+ /* web too: never show a tour bubble over an open window */
+ const _cs=coachStep;coachStep=function(){if(APP||!$('modal').hidden||!$('qrModal').hidden){cq=[];$('coach').hidden=true;try{clearHl()}catch(e){}$('tayFab').hidden=!$('sheet').hidden;return}_cs()};
+ if(!APP)return;$('coach').hidden=true;
+ const d=document.createElement('div');d.id='dbg';d.style.cssText='position:fixed;left:4px;bottom:calc(76px + env(safe-area-inset-bottom));z-index:70;font:10px/1.2 monospace;color:#6b6358;background:rgba(255,255,255,.75);padding:2px 5px;border-radius:6px;pointer-events:none;max-width:70vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis';document.body.appendChild(d);
+ let beat=0,last='';document.addEventListener('pointerdown',e=>{const el=document.elementFromPoint(e.clientX,e.clientY);last=el?(el.id||el.tagName.toLowerCase()+(el.className&&typeof el.className==='string'?'.'+el.className.split(' ')[0]:'')):'?'},true);
+ setInterval(()=>{beat++;let b='';try{b=(typeof nativeState!=='undefined'?nativeState:'?')+(BP.native&&BP.native.pct!=null?' '+Math.round(BP.native.pct)+'%':'')+(BP.native&&BP.native.err?' ERR '+BP.native.err:'')}catch(e){}d.textContent=`♥${beat} · brain:${b} · tap:${last}`},1000)})();
 
 try{renderHome()}catch(e){}
 try{ensureMe();}catch(e){}
