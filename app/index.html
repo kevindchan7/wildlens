@@ -339,6 +339,9 @@ nav button svg{width:24px!important;height:24px!important}
 .item,.tile,#libList>.card{content-visibility:auto;contain-intrinsic-size:auto 110px}
 html{-webkit-tap-highlight-color:transparent}body{overscroll-behavior-y:none}
 </style>
+<script>(function(){var shown=0;function rep(m){if(shown>2)return;shown++;var d=document.createElement('div');d.style.cssText='position:fixed;left:8px;right:8px;top:8px;z-index:99999;background:#8f2f1e;color:#fff;padding:10px 12px;border-radius:12px;font:13px/1.35 system-ui;white-space:pre-wrap;word-break:break-word';d.textContent='⚠ Wildlens: '+m+'\n(tocca per chiudere · manda uno screenshot)';d.onclick=function(){d.remove()};(document.body||document.documentElement).appendChild(d)}
+window.addEventListener('error',function(e){if(e.message&&!/ResizeObserver|Script error/.test(e.message))rep(e.message+' @'+String(e.filename||'').split('/').pop()+':'+e.lineno+':'+e.colno)});
+window.addEventListener('unhandledrejection',function(e){var r=e.reason;var m=r&&(r.message||r)||'';if(/fetch|network|Load failed|abort|not downloaded|not loaded|busy/i.test(m))return;rep('promise: '+String(m).slice(0,200))})})();</script>
 </head>
 <body>
 <main>
@@ -2030,7 +2033,7 @@ const k=Object.keys(BRS).find(k=>bSt(k)==='loading');document.body.classList.tog
 function bToast(html,err){let t=$('brToast');if(!t){t=document.createElement('div');t.id='brToast';t.className='brToast';document.body.appendChild(t)}t.classList.toggle('err',!!err);t.innerHTML=html;t.hidden=false;clearTimeout(t._t);t._t=setTimeout(()=>t.hidden=true,err?10000:7000);t.onclick=()=>t.hidden=true}
 function bOk(k){BP[k]={done:1};bPill();bScan().then(renderBrains);bToast(`✓ <b>${tr(BRS[k].n)}</b><br>1 · ${tr('Saved on this phone')} ✓<br>2 · ${tr('Loaded and ready')} ✓<br>3 · ${tr('Works with no internet')} ✓`)}
 function bFail(k,m){BP[k]={err:m||'x'};bPill();renderBrains();bToast(`⚠ <b>${tr(BRS[k].n)}</b>: ${esc(tr(navigator.onLine?'Download failed: not enough memory or space.':'The first download needs internet (Wi-Fi recommended).'))}`,1)}
-function bHook(k,fn,kind){return function(onP){if(bSt(k)!=='none')return Promise.resolve(fn(onP));bPersist();BP[k]={pct:0,from:!!(BSAVED[k]&&BSAVED[k].n)};bPill();renderBrains();
+function bHook(k,fn,kind){return function(onP){if(!BRS[k]||bSt(k)!=='none')return Promise.resolve(fn(onP));bPersist();BP[k]={pct:0,from:!!(BSAVED[k]&&BSAVED[k].n)};bPill();renderBrains();
  const cb=kind==='msg'?(m,p)=>{if(p!=null){BP[k].pct=p;bPill();bRow(k)}onP&&onP(m,p)}:p=>{BP[k].pct=p;bPill();bRow(k);onP&&onP(p)};
  return Promise.resolve(fn(cb)).then(r=>{bOk(k);return r},e=>{bFail(k,e&&e.message);throw e})}}
 loadClip=bHook('light',loadClip,'msg');loadMini=bHook('mini',loadMini);loadSmart=bHook('smart',loadSmart);
@@ -2137,6 +2140,13 @@ if(NLM){delete BRS.mini;delete BRS.full;
  const _bd=bDelete;bDelete=async k=>{if(k!=='native')return _bd(k);try{await NLM.remove()}catch(e){}nativeState='none';store.set('ms-native',0);if(sample===nSample)sample=null;BP.native={};await bScan();renderBrains();try{aiStatus()}catch(e){}bToast(tr('Deleted from this phone. Restart the app to free the memory too.'))};
  nSync().then(s=>{renderBrains();if(s&&s.downloaded&&store.get('ms-native',0))nLoad()});
 }
+
+
+/* ===== Android app: camera and gallery through the native Camera plugin (more reliable than the file picker) ===== */
+(()=>{const C=(typeof NATIVE!=='undefined'&&NATIVE&&window.Capacitor&&Capacitor.Plugins)?Capacitor.Plugins.Camera:null;if(!C||!C.getPhoto)return;
+ const feed=async src=>{try{const ph=await C.getPhoto({resultType:'dataUrl',source:src,quality:82,width:1600,correctOrientation:true,saveToGallery:false});if(!ph||!ph.dataUrl)return;const blob=await (await fetch(ph.dataUrl)).blob();const f=new File([blob],'photo.jpg',{type:blob.type||'image/jpeg'});const inp=$('camIn');const dt=new DataTransfer();dt.items.add(f);inp.files=dt.files;inp.dispatchEvent(new Event('change'))}catch(e){if(!/cancel/i.test(e&&e.message||''))bToast('⚠ '+tr('Camera not available: use your phone camera app or paste the link.'),1)}};
+ $('camBtn').onclick=()=>{if(!store.get('ms-tips',0))return showTips(()=>feed('CAMERA'));feed('CAMERA')};$('galBtn').onclick=()=>feed('PHOTOS');
+ document.addEventListener('click',e=>{if(e.target.closest('[data-bcagain]')){e.stopImmediatePropagation();feed('CAMERA')}},true)})();
 
 try{renderHome()}catch(e){}
 try{ensureMe();}catch(e){}
