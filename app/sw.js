@@ -1,5 +1,5 @@
-const CORE='wildlens-core-v10',RUN='wildlens-run-v1';
-const CORE_FILES=['./','index.html','manifest.webmanifest','icon.svg','qr.js','https://unpkg.com/leaflet@1.9.4/dist/leaflet.css','https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'];
+const CORE='wildlens-core-v11',RUN='wildlens-run-v1';
+const CORE_FILES=['./','index.html','manifest.webmanifest','icon.svg','qr.js','accesso.js','https://unpkg.com/leaflet@1.9.4/dist/leaflet.css','https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CORE).then(c=>Promise.all(CORE_FILES.map(u=>c.add(u).catch(()=>{})))).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CORE&&k!==RUN).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
 self.addEventListener('fetch',e=>{const r=e.request;if(r.method!=='GET')return;const u=new URL(r.url);if(/huggingface|hf\.co|xethub/.test(u.hostname))return;

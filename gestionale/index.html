@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#14201a">
+<title>Wildlens · Gestionale</title>
+<link rel="icon" href="../icon.svg">
+<style>
+:root{--bg:#0e1712;--card:#14201a;--line:#2a3a2f;--tx:#efe9dd;--mut:#9fb0a4;--gold:#d9b46a;--ok:#86c79a;--red:#e2725b}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{position:sticky;top:0;z-index:5;background:var(--card);border-bottom:1px solid var(--line);padding:14px 16px;display:flex;align-items:center;gap:10px}
+header h1{font-size:19px;margin:0;flex:1}header small{color:var(--gold);font-weight:700;letter-spacing:.08em}
+main{max-width:980px;margin:0 auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.stats div{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px}
+.stats b{display:block;font-size:28px}.stats small{color:var(--mut)}
+@media(max-width:600px){.stats{grid-template-columns:repeat(2,1fr)}}
+button{font:inherit;border:0;border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer;background:#24352a;color:var(--tx)}
+button.gold{background:var(--gold);color:#14201a}button.red{background:var(--red);color:#fff}button.ok{background:var(--ok);color:#14201a}
+input,textarea{font:inherit;width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--tx)}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.sw{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.pill{display:inline-block;padding:2px 9px;border-radius:99px;font-size:13px;font-weight:700}
+.on{background:rgba(134,199,154,.18);color:var(--ok)}.off{background:rgba(226,114,91,.2);color:var(--red)}
+.u{display:grid;grid-template-columns:1fr auto;gap:8px;padding:12px 0;border-top:1px solid var(--line)}.u:first-child{border-top:0}
+.u .n{font-weight:700}.u .m{color:var(--mut);font-size:14px}.u .a{display:flex;gap:6px;align-items:start;flex-wrap:wrap;justify-content:flex-end}
+.u .a button{padding:8px 11px;font-size:14px}
+.note{color:var(--mut);font-size:14px}#err{color:var(--red)}
+.big{width:100%;padding:16px;font-size:17px}
+</style>
+</head>
+<body>
+<header><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#d9b46a" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><h1>Wildlens <small>GESTIONALE</small></h1><button id="out" hidden>Esci</button></header>
+<main>
+<section id="login" class="card" hidden>
+ <h2 style="margin-top:0">Accesso sviluppatore</h2>
+ <p class="note">Inserisci la chiave sviluppatore (la stessa del Gestionale ART). Resta salvata solo su questo dispositivo.</p>
+ <input id="key" type="password" placeholder="Chiave sviluppatore" autocomplete="current-password">
+ <p id="err"></p>
+ <button class="gold big" id="go">Entra</button>
+</section>
+
+<section id="app" hidden>
+ <div class="stats">
+  <div><small>Utenti</small><b id="sTot">0</b></div>
+  <div><small>Attivi oggi</small><b id="sDay">0</b></div>
+  <div><small>Attivi 7 giorni</small><b id="sWeek">0</b></div>
+  <div><small>Bloccati</small><b id="sBlk">0</b></div>
+ </div>
+ <div class="card" style="margin-top:14px">
+  <div class="sw"><div><b>Accesso all'app</b><div class="note" id="allTxt"></div></div><button id="allBtn"></button></div>
+  <p class="note" style="margin:14px 0 6px">Messaggio mostrato a chi è bloccato (vuoto = testo standard)</p>
+  <div class="row"><input id="msg" placeholder="Es. Wildlens è in manutenzione fino a domani" style="flex:1"><button id="msgSave">Salva</button></div>
+ </div>
+ <div class="card">
+  <div class="row" style="margin-bottom:6px"><input id="q" placeholder="Cerca nome, email, dispositivo" style="flex:1"><button id="csv">⬇ CSV</button><button id="ref">↻</button></div>
+  <div class="note" id="upd"></div>
+  <div id="list"></div>
+ </div>
+ <div class="card">
+  <b>Link da mandare agli amici</b>
+  <p class="note" style="margin:6px 0 10px">Web (iPhone e Android): <a id="lWeb" style="color:var(--gold)"></a><br>App Android (APK): <a id="lApk" style="color:var(--gold)"></a></p>
+  <div class="row"><button id="share" class="gold">Condividi link</button></div>
+ </div>
+ <p class="note">Bloccare = l'app si chiude su quel dispositivo alla prossima apertura o entro 15 minuti se è aperta e online. Offline l'app resta usabile fino a 30 giorni dall'ultimo controllo.</p>
+</section>
+</main>
+<script>
+const SB='https://lrdiktrvtzhucsujhtfd.supabase.co',PK='sb_publishable_QN0qyjbHmvfvGX6E8tIPSw_rUVRh-o5';
+const $=id=>document.getElementById(id);
+const BASE=location.origin;const WEB=BASE+'/app/',APK=BASE+'/Wildlens.apk';
+let K=(()=>{const h=new URLSearchParams(location.hash.slice(1)).get('k');if(h){localStorage.setItem('wl-dev',h);history.replaceState(null,'',location.pathname)}return localStorage.getItem('wl-dev')||''})();
+let D=null;
+async function rpc(fn,args){const r=await fetch(SB+'/rest/v1/rpc/'+fn,{method:'POST',headers:{apikey:PK,'Content-Type':'application/json'},body:JSON.stringify(args)});const j=await r.json().catch(()=>null);if(!r.ok)throw new Error(j&&j.message||('Errore '+r.status));return j}
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const ago=t=>{const s=(Date.now()-new Date(t))/1e3;if(s<90)return'adesso';if(s<3600)return Math.round(s/60)+' min fa';if(s<86400)return Math.round(s/3600)+' h fa';return Math.round(s/86400)+' g fa'};
+const dt=t=>new Date(t).toLocaleString('it-IT',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'});
+async function load(){try{D=await rpc('dev_wildlens',{chiave:K});$('login').hidden=true;$('app').hidden=false;$('out').hidden=false;draw()}catch(e){$('app').hidden=true;$('login').hidden=false;$('out').hidden=true;if(K)$('err').textContent=/chiave/.test(e.message)?'Chiave non valida.':'Connessione non riuscita: '+e.message}}
+function draw(){const u=D.utenti||[],now=Date.now();
+ $('sTot').textContent=u.length;$('sDay').textContent=u.filter(x=>now-new Date(x.ultimo_accesso)<864e5).length;$('sWeek').textContent=u.filter(x=>now-new Date(x.ultimo_accesso)<6048e5).length;$('sBlk').textContent=u.filter(x=>x.bloccato).length;
+ $('allTxt').innerHTML=D.chiuso?'<span class="pill off">CHIUSO A TUTTI</span> nessuno può usare l\'app':'<span class="pill on">APERTO</span> chi non è bloccato può usarla';
+ $('allBtn').textContent=D.chiuso?'Riapri a tutti':'Chiudi a tutti';$('allBtn').className=D.chiuso?'ok':'red';
+ if(document.activeElement!==$('msg'))$('msg').value=D.messaggio||'';
+ const q=$('q').value.trim().toLowerCase();const f=u.filter(x=>!q||[x.nome,x.email,x.piattaforma,x.nota].join(' ').toLowerCase().includes(q));
+ $('list').innerHTML=f.length?f.map(x=>`<div class="u"><div><div class="n">${esc(x.nome||'(senza nome)')} ${x.bloccato?'<span class="pill off">bloccato</span>':'<span class="pill on">attivo</span>'}</div><div class="m">${x.email?`<a href="mailto:${esc(x.email)}" style="color:inherit">${esc(x.email)}</a>`:'email non inserita'}</div><div class="m">${esc(x.piattaforma)} · v${esc(x.versione)} · ${x.aperture} aperture · ultimo: ${ago(x.ultimo_accesso)} · dal ${dt(x.primo_accesso)}</div>${x.nota?`<div class="m">📝 ${esc(x.nota)}</div>`:''}</div><div class="a">${x.bloccato?`<button class="ok" data-a="sblocca" data-id="${x.id}">Riapri</button>`:`<button class="red" data-a="blocca" data-id="${x.id}">Blocca</button>`}<button data-a="nota" data-id="${x.id}">Nota</button><button data-a="elimina" data-id="${x.id}">🗑</button></div></div>`).join(''):'<p class="note">Ancora nessun utente.</p>';
+ $('upd').textContent='Aggiornato '+new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'})+' · si aggiorna da solo ogni 30 secondi'}
+async function act(tipo,id,valore){try{await rpc('dev_wildlens_azione',{chiave:K,tipo,id:id||null,valore:valore??null});await load()}catch(e){alert(e.message)}}
+$('go').onclick=()=>{K=$('key').value.trim();localStorage.setItem('wl-dev',K);$('err').textContent='';load()};
+$('key').onkeydown=e=>{if(e.key==='Enter')$('go').click()};
+$('out').onclick=()=>{localStorage.removeItem('wl-dev');K='';D=null;$('key').value='';load()};
+$('allBtn').onclick=()=>{if(D.chiuso||confirm('Chiudere Wildlens a tutti gli utenti?'))act('chiudi_tutti',null,D.chiuso?'0':'1')};
+$('msgSave').onclick=()=>act('messaggio',null,$('msg').value.trim());
+$('q').oninput=()=>D&&draw();$('ref').onclick=load;
+$('list').onclick=e=>{const b=e.target.closest('[data-a]');if(!b)return;const x=D.utenti.find(u=>u.id===b.dataset.id),a=b.dataset.a;
+ if(a==='nota'){const v=prompt('Nota su '+(x.nome||'utente'),x.nota||'');if(v!==null)act('nota',x.id,v);return}
+ if(a==='elimina'){if(confirm('Eliminare '+(x.nome||'utente')+' dalla lista? Alla prossima apertura dovrà registrarsi di nuovo.'))act('elimina',x.id);return}
+ act(a,x.id)};
+$('csv').onclick=()=>{const rows=[['nome','email','piattaforma','versione','aperture','primo_accesso','ultimo_accesso','bloccato','nota'],...D.utenti.map(x=>[x.nome,x.email,x.piattaforma,x.versione,x.aperture,x.primo_accesso,x.ultimo_accesso,x.bloccato?'si':'no',x.nota])];const csv=rows.map(r=>r.map(c=>'"'+String(c??'').replace(/"/g,'""')+'"').join(';')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['﻿'+csv],{type:'text/csv'}));a.download='wildlens-utenti.csv';a.click()};
+$('lWeb').href=$('lWeb').textContent=WEB;$('lApk').href=$('lApk').textContent=APK;
+$('share').onclick=async()=>{const t=`Prova Wildlens, la guida da campo offline 🌿\nDal telefono (iPhone o Android): ${WEB}\nApp Android: ${APK}`;try{if(navigator.share)return await navigator.share({text:t})}catch(e){if(e.name==='AbortError')return}try{await navigator.clipboard.writeText(t);alert('Link copiati')}catch(e){prompt('Copia:',t)}};
+load();setInterval(()=>{if(D&&!document.hidden)load()},30000);
+</script>
+</body>
+</html>

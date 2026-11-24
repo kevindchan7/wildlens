@@ -2,7 +2,7 @@ name: Build Android app
 on:
   push:
     branches: [main]
-    paths: ['app/**', 'mobile/**', '.github/workflows/android.yml']
+    paths: ['app/**', 'mobile/**', 'gestionale/**', 'index.html', 'icon.svg', 'sw.js', '.github/workflows/android.yml']
   workflow_dispatch:
 permissions:
   contents: write
@@ -33,10 +33,16 @@ jobs:
       - name: Permissions
         run: |
           M=android/app/src/main/AndroidManifest.xml
-          for perm in ACCESS_FINE_LOCATION ACCESS_COARSE_LOCATION CAMERA FLASHLIGHT VIBRATE POST_NOTIFICATIONS WAKE_LOCK SCHEDULE_EXACT_ALARM; do
+          for perm in ACTIVITY_RECOGNITION ACCESS_FINE_LOCATION ACCESS_COARSE_LOCATION CAMERA FLASHLIGHT VIBRATE POST_NOTIFICATIONS WAKE_LOCK SCHEDULE_EXACT_ALARM; do
             grep -q "android.permission.$perm" $M || sed -i "s#</manifest>#    <uses-permission android:name=\"android.permission.$perm\" />\n</manifest>#" $M
           done
           grep -q 'android.hardware.location.gps' $M || sed -i 's#</manifest>#    <uses-feature android:name="android.hardware.location.gps" android:required="false" />\n    <uses-feature android:name="android.hardware.camera" android:required="false" />\n</manifest>#' $M
+      - name: Native sensors (barometer, step counter)
+        run: |
+          D=android/app/src/main/java/app/wildlens/field
+          mkdir -p $D && cp native-android/*.java $D/
+          M=android/app/src/main/AndroidManifest.xml
+          grep -q 'sensor.barometer' $M || sed -i 's#</manifest>#    <uses-feature android:name="android.hardware.sensor.barometer" android:required="false" />\n    <uses-feature android:name="android.hardware.sensor.stepcounter" android:required="false" />\n</manifest>#' $M
       - name: Icons and splash
         run: npm install @capacitor/assets --save-dev && npx capacitor-assets generate --android --iconBackgroundColor '#2d5a34' --splashBackgroundColor '#f3e3c9' || echo "assets skipped"
       - name: Sync
@@ -57,3 +63,15 @@ jobs:
           prerelease: true
           files: Wildlens.apk
           body: Test build of Wildlens for Android. Download Wildlens.apk on your phone and open it (allow installing from your browser).
+      - name: Publish website, web app, Gestionale and APK (branch "pubblico", served by Render)
+        working-directory: .
+        run: |
+          rm -rf /tmp/site && mkdir -p /tmp/site
+          cp -r index.html sw.js icon.svg app gestionale /tmp/site/
+          cp Wildlens.apk /tmp/site/Wildlens.apk
+          cd /tmp/site
+          git init -q -b pubblico
+          git config user.name "wildlens-bot"
+          git config user.email "actions@github.com"
+          git add -A && git commit -qm "Sito pubblico ${GITHUB_SHA::7}"
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" pubblico
