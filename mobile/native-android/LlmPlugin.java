@@ -48,6 +48,7 @@ public class LlmPlugin extends Plugin {
         File part = new File(f.getPath() + ".part");
         o.put("partial", part.exists() ? part.length() : 0);
         o.put("freeBytes", getContext().getFilesDir().getUsableSpace());
+        o.put("bundled", bundled());
         return o;
     }
 
@@ -110,14 +111,31 @@ public class LlmPlugin extends Plugin {
         }).start();
     }
 
+    private boolean bundled() {
+        try { String[] a = getContext().getAssets().list("models"); return a != null && java.util.Arrays.asList(a).contains(NAME); }
+        catch (Exception e) { return false; }
+    }
+
+    /** First start: copy the brain that ships inside the app to private storage (MediaPipe needs a file path). */
+    private void unpack(File f) throws Exception {
+        File tmp = new File(f.getPath() + ".unpack");
+        try (InputStream in = getContext().getAssets().open("models/" + NAME); FileOutputStream out = new FileOutputStream(tmp)) {
+            byte[] buf = new byte[1 << 20]; int n;
+            while ((n = in.read(buf)) > 0) out.write(buf, 0, n);
+        }
+        if (!tmp.renameTo(f)) throw new Exception("unpack rename failed");
+    }
+
     @PluginMethod
     public void load(PluginCall call) {
         if (llm != null) { call.resolve(state()); return; }
         File f = modelFile();
-        if (!f.exists()) { call.reject("not downloaded"); return; }
+        if (!f.exists() && !bundled()) { call.reject("not downloaded"); return; }
+        if (loading) { call.reject("busy"); return; }
         loading = true; lastError = null;
         new Thread(() -> {
             try {
+                if (!f.exists()) unpack(f);
                 LlmInferenceOptions opts = LlmInferenceOptions.builder()
                         .setModelPath(f.getAbsolutePath())
                         .setMaxTokens(1024)

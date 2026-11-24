@@ -52,7 +52,7 @@ jobs:
           grep -q 'tasks-genai' $G || sed -i "0,/^dependencies {/s//dependencies {\n    implementation 'com.google.mediapipe:tasks-genai:0.10.27'/" $G
           grep -q 'tasks-vision' $G || sed -i "0,/^dependencies {/s//dependencies {\n    implementation 'com.google.mediapipe:tasks-vision:0.10.26'/" $G
           grep -q 'abiFilters' $G || sed -i "0,/defaultConfig {/s//defaultConfig {\n        ndk { abiFilters 'arm64-v8a' }/" $G
-          grep -q 'noCompress' $G || sed -i "0,/^android {/s//android {\n    androidResources { noCompress += ['tflite'] }/" $G
+          grep -q 'noCompress' $G || sed -i "0,/^android {/s//android {\n    androidResources { noCompress += ['tflite', 'task'] }/" $G
       - name: Photo recognition models bundled in the app
         run: |
           A=android/app/src/main/assets/models && mkdir -p $A
@@ -61,6 +61,7 @@ jobs:
           get plants "https://tfhub.dev/google/lite-model/aiy/vision/classifier/plants_V1/3?lite-format=tflite"
           get birds "https://tfhub.dev/google/lite-model/aiy/vision/classifier/birds_V1/3?lite-format=tflite"
           get insects "https://tfhub.dev/google/lite-model/aiy/vision/classifier/insects_V1/3?lite-format=tflite"
+          curl -fsSL --retry 3 -o "$A/gemma3-1b-it-int4.task" "https://github.com/kevindchan7/wildlens/releases/download/models/gemma3-1b-it-int4.task" && echo "OK brain $(stat -c %s $A/gemma3-1b-it-int4.task)" || { echo "SKIP brain"; rm -f "$A/gemma3-1b-it-int4.task"; }
           ls -l $A
           grep -n "tasks-genai\|minSdk" $G android/variables.gradle || true
       - name: Icons and splash
