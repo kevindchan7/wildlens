@@ -138,7 +138,7 @@ public class LlmPlugin extends Plugin {
                 if (!f.exists()) unpack(f);
                 LlmInferenceOptions opts = LlmInferenceOptions.builder()
                         .setModelPath(f.getAbsolutePath())
-                        .setMaxTokens(1024)
+                        .setMaxTokens(2048)
                         .build();
                 llm = LlmInference.createFromOptions(getContext(), opts);
                 loading = false;
