@@ -16,8 +16,9 @@ const ls=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v??d}cat
 const lsSet=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
 const startLang=ls('ms-lang',null);
 const appLang=document.documentElement.lang||startLang||'en';
-let lang=startLang||(['it','es'].includes((navigator.language||'').slice(0,2))?(navigator.language||'').slice(0,2):'en');
+let lang=startLang||(['it','es','fr'].includes((navigator.language||'').slice(0,2))?(navigator.language||'').slice(0,2):'en');
 
+const WLFR={"tag": "Guide de terrain · fonctionne sans réseau", "hi": "Bonjour ! Je suis Taylor, votre agent de terrain. Choisissez votre langue et l'apparence de l'app : ensuite, on commence.", "langL": "Langue", "themeL": "Apparence", "day": "Jour", "night": "Nuit", "auto": "Auto", "cont": "Continuer", "by": "une app de", "askName": "Ravie de vous rencontrer ! Comment vous appelez-vous ? Je ne le demande qu'une fois.", "name": "Votre nom", "email": "Votre e-mail", "start": "Commencer", "back": "Retour", "badName": "Écrivez votre nom (au moins 2 lettres).", "badEmail": "Cet e-mail n'est pas écrit correctement.", "noDomain": "Le domaine de cet e-mail n'existe pas. Vérifiez ce que vous avez écrit.", "temp": "Les e-mails temporaires ne sont pas acceptés. Utilisez votre vrai e-mail.", "didYou": "Vouliez-vous dire", "checking": "Vérification…", "net": "Le premier démarrage nécessite internet. Connectez-vous et réessayez.", "welcomeBack": "Bon retour", "privacy": "Le nom et l'e-mail servent uniquement à gérer l'accès à l'app.", "terms": "Conditions d'utilisation", "locked": "Accès fermé", "lockedTxt": "L'accès à Wildlens a été fermé pour ce compte. Pour plus d'informations, contactez le développeur.", "paused": "Wildlens est en pause", "pausedTxt": "L'app est temporairement fermée. Réessayez plus tard.", "verify": "Connectez-vous pour vérifier", "verifyTxt": "Wildlens est hors ligne depuis longtemps. Connectez-vous une fois à internet pour continuer à l'utiliser.", "retry": "Réessayer", "listen": "Écouter Taylor"};
 const T={
  tag:['Field guide · works with no signal','Guida da campo · funziona senza rete','Guía de campo · funciona sin cobertura'],
  hi:["Hi! I'm Taylor, your field agent. Choose your language and how you like the app: then we start.","Ciao! Sono Taylor, la tua agente da campo. Scegli la lingua e come preferisci l'app: poi partiamo.","¡Hola! Soy Taylor, tu agente de campo. Elige el idioma y cómo prefieres la app: luego empezamos."],
@@ -44,7 +45,8 @@ const T={
  verifyTxt:['Wildlens has been offline for a long time. Connect to the internet once to keep using it.','Wildlens è offline da molto tempo. Collegati a internet una volta per continuare a usarla.','Wildlens lleva mucho tiempo sin conexión. Conéctate una vez para seguir usándola.'],
  retry:['Try again','Riprova','Reintentar'],listen:['Listen to Taylor','Ascolta Taylor','Escucha a Taylor']
 };
-const t=k=>T[k][lang==='it'?1:lang==='es'?2:0];
+for(const k in T)if(T[k].length<4)T[k][3]=WLFR[k]||T[k][0];
+const t=k=>T[k][lang==='it'?1:lang==='es'?2:lang==='fr'?3:0];
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const uuid=()=>(crypto.randomUUID?crypto.randomUUID():'10000000-1000-4000-8000-100000000000'.replace(/[018]/g,c=>(c^crypto.getRandomValues(new Uint8Array(1))[0]&15>>c/4).toString(16)));
 const native=!!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform());
@@ -113,7 +115,7 @@ function hide(){const g=document.getElementById('wlGate');if(g){g.remove();docum
 /* ---------- passo 1: lingua e tema ---------- */
 function stepLook(){
  const th=ls('ms-theme','');
- const g=frame(taylor(t('hi'))+`<div class="card"><div class="lbl">${t('langL')}</div><div class="seg" id="wlL">${[['it','🇮🇹','Italiano'],['en','🇬🇧','English'],['es','🇪🇸','Español']].map(([l,f,n])=>`<button data-l="${l}" aria-pressed="${l===lang}"><span>${f}</span>${n}</button>`).join('')}</div>
+ const g=frame(taylor(t('hi'))+`<div class="card"><div class="lbl">${t('langL')}</div><div class="seg" id="wlL">${[['it','🇮🇹','Italiano'],['en','🇬🇧','English'],['es','🇪🇸','Español'],['fr','🇫🇷','Français']].map(([l,f,n])=>`<button data-l="${l}" aria-pressed="${l===lang}"><span>${f}</span>${n}</button>`).join('')}</div>
  <div class="lbl">${t('themeL')}</div><div class="seg" id="wlT">${[['light','☀️',t('day')],['dark','🌙',t('night')],['','📱',t('auto')]].map(([v,i,n])=>`<button data-t="${v}" aria-pressed="${v===th}"><span>${i}</span>${n}</button>`).join('')}</div></div>
  <button class="go" id="wlGo">${t('cont')} →</button>`,0);
  g.querySelector('#wlL').onclick=e=>{const b=e.target.closest('[data-l]');if(!b)return;lang=b.dataset.l;lsSet('ms-lang',lang);stepLook();say(t('hi'))};

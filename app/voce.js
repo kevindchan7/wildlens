@@ -4,7 +4,7 @@
    Browser: Web Speech API. Mentre parla, ogni disegno di Taylor muove la bocca. */
 (function(){
 const P=(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform())?Capacitor.Plugins:{};
-const LOC={it:'it-IT',en:'en-US',es:'es-ES'};
+const LOC={it:'it-IT',en:'en-US',es:'es-ES',fr:'fr-FR'};
 const lang=()=>{try{return JSON.parse(localStorage.getItem('ms-lang'))||'it'}catch(e){return'it'}};
 const clean=t=>String(t||'').replace(/<[^>]+>/g,' ').replace(/[*_#`>•]/g,' ').replace(/https?:\/\/\S+/g,'').replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu,'').replace(/\s+/g,' ').trim();
 let webVoice=null;
