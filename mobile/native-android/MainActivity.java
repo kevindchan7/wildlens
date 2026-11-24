@@ -8,6 +8,7 @@ public class MainActivity extends BridgeActivity {
     public void onCreate(Bundle savedInstanceState) {
         registerPlugin(WildSensorsPlugin.class);
         registerPlugin(CampfirePlugin.class);
+        registerPlugin(LlmPlugin.class);
         super.onCreate(savedInstanceState);
     }
 }

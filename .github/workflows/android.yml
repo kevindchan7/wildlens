@@ -46,6 +46,11 @@ jobs:
           M=android/app/src/main/AndroidManifest.xml
           grep -q 'RecognitionService' $M || sed -i 's#<application#<queries>\n        <intent><action android:name="android.speech.RecognitionService" /></intent>\n        <intent><action android:name="android.intent.action.TTS_SERVICE" /></intent>\n    </queries>\n    <application#' $M
           grep -q 'sensor.barometer' $M || sed -i 's#</manifest>#    <uses-feature android:name="android.hardware.sensor.barometer" android:required="false" />\n    <uses-feature android:name="android.hardware.sensor.stepcounter" android:required="false" />\n</manifest>#' $M
+      - name: Native AI brain (MediaPipe LLM Inference)
+        run: |
+          G=android/app/build.gradle
+          grep -q 'tasks-genai' $G || sed -i "0,/^dependencies {/s//dependencies {\n    implementation 'com.google.mediapipe:tasks-genai:0.10.27'/" $G
+          grep -n "tasks-genai\|minSdk" $G android/variables.gradle || true
       - name: Icons and splash
         run: npm install @capacitor/assets --save-dev && npx capacitor-assets generate --android --iconBackgroundColor '#2d5a34' --splashBackgroundColor '#f3e3c9' || echo "assets skipped"
       - name: Sync
