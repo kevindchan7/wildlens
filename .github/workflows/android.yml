@@ -61,7 +61,6 @@ jobs:
           get plants "https://tfhub.dev/google/lite-model/aiy/vision/classifier/plants_V1/3?lite-format=tflite"
           get birds "https://tfhub.dev/google/lite-model/aiy/vision/classifier/birds_V1/3?lite-format=tflite"
           get insects "https://tfhub.dev/google/lite-model/aiy/vision/classifier/insects_V1/3?lite-format=tflite"
-          curl -fsSL --retry 3 -o "$A/gemma3-1b-it-int4.task" "https://github.com/kevindchan7/wildlens/releases/download/models/gemma3-1b-it-int4.task" && echo "OK brain $(stat -c %s $A/gemma3-1b-it-int4.task)" || { echo "SKIP brain"; rm -f "$A/gemma3-1b-it-int4.task"; }
           ls -l $A
           grep -n "tasks-genai\|minSdk" $G android/variables.gradle || true
       - name: Icons and splash
