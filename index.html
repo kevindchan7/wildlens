@@ -332,6 +332,32 @@ const G=[
 ['h','Outdoors'],['ul',['An old hut or barn can shelter you: check the roof and walls before going in.','A lean-to uses the same logic: a strong ridge pole, a slope to shed rain, insulation underneath.']],
 ['w','Avoid ruins with sagging roofs, big diagonal cracks or leaning walls, especially in wind or snow.']]}
 ];
+
+G.push(
+{id:'hand',ic:'body',t:'The hand',s:'27 bones that do all your work',k:'hand fingers finger thumb wrist palm cut frostbite',b:[
+['p','Each hand has 27 bones (8 in the wrist, 5 in the palm, 14 in the fingers), moved by tendons from muscles in the forearm. Outdoors your hands do everything, so protecting them protects your survival.'],
+['h','Common problems outdoors'],['ul',['<b>Cuts:</b> press hard with a clean cloth; clean with safe water; cover.','<b>Burns:</b> cool under cool running water for 20 minutes; do not pop blisters.','<b>Frostbite:</b> white, waxy, numb fingers. Rewarm in warm (not hot) water only if they will not freeze again. Never rub with snow.','<b>Jammed or dislocated finger:</b> do not pull it back yourself; tape it to the next finger and get it checked.','<b>Blisters from tools:</b> wear gloves when chopping, carving or hauling.']],
+['h','Habits'],['ul',['Wash or sanitize hands before eating and before touching a wound.','Keep a pair of dry gloves in a waterproof bag.']],
+['w','Deep cuts, numbness after an injury or a finger that cannot bend need medical care.']]},
+{id:'foot',ic:'body',t:'The foot',s:'26 bones that carry you home',k:'foot feet toes blister ankle socks trench',b:[
+['p','Each foot has 26 bones and over 30 joints. On a hike, foot problems are the most common reason people slow down or get stuck.'],
+['h','Common problems outdoors'],['ul',['<b>Blisters:</b> stop at the first hot spot and cover it with tape before it becomes a blister.','<b>Wet feet:</b> days in wet socks cause trench foot. Dry and air your feet every evening, change socks.','<b>Frostbite on toes:</b> keep boots loose enough for blood to flow; wiggle toes; change wet socks.','<b>Sprained ankle:</b> see the First aid page.']],
+['w','A foot you cannot put weight on may be broken: splint it and call for help.']]},
+{id:'head',ic:'body',t:'The head and face',s:'Protect the brain',k:'head face skull brain hit concussion helmet hat',b:[
+['p','The skull protects the brain, which uses about a fifth of your body\'s energy and is very sensitive to cold, heat, lack of water and blows.'],
+['h','Head injury warning signs'],['ul',['Confusion, repeated vomiting, worsening headache.','Very sleepy or hard to wake.','Unequal pupils, fluid from nose or ears, seizure.']],
+['h','Outdoors'],['ul',['Wear a helmet on via ferrata, scree and climbing routes.','In the cold cover head, ears and neck: they are often left exposed.','In the sun use a hat: heat illness starts with headache and confusion.']],
+['w','Any of the warning signs after a blow to the head: call emergency services.']]},
+{id:'eye',ic:'body',t:'The eye',s:'Snow, sun and splinters',k:'eye eyes vision snow blindness sun dust',b:[
+['p','The eye focuses light onto the retina. Its surface (the cornea) is easily burned by strong UV light and scratched by dust.'],
+['h','Outdoors'],['ul',['<b>Snow blindness:</b> UV reflected from snow burns the eyes; pain and gritty feeling hours later. Wear sunglasses on snow and at altitude.','<b>Something in the eye:</b> do not rub. Flush with clean water from the inner corner outward.','<b>Improvised sunglasses:</b> a strip of bark or cloth with narrow slits.']],
+['w','Chemicals, a sharp object stuck in the eye or sudden vision loss need urgent medical help.']]},
+{id:'skin',ic:'body',t:'The skin',s:'Your largest organ',k:'skin rash sunburn burn insect bite tick',b:[
+['p','Skin is the body\'s largest organ: it keeps germs out, holds water in and controls temperature with sweat and blood flow.'],
+['h','Outdoors'],['ul',['<b>Sunburn:</b> stronger at altitude, on snow and on water. Cover up and use sunscreen.','<b>Rashes:</b> plants like nettle and poison oak; wash with soap and cold water.','<b>Ticks:</b> check skin every evening.','<b>Wounds:</b> clean with safe water and cover to prevent infection.']],
+['w','Redness that spreads, heat, swelling or fever after a wound mean infection: get medical care.']]}
+);
+
 const AREAS=[
 {id:'oregon',t:'Oregon Cascades and Coast',r:'USA › Oregon',mb:190,ok:true,g:[
 {id:'or-risks',ic:'weather',t:'Oregon risks',s:'Rain, cold ocean, wildfire',k:'oregon risks rain hypothermia sneaker wave tsunami wildfire giardia',b:[
@@ -473,7 +499,7 @@ for(const c of COMBOS)c.in=c.in.filter(x=>SP.some(s=>s.id===x));
 const spG=SP.map(s=>{const b=[['p',s.d]];if(s.m)b.push(['h','What it is made of'],['p',s.m]);b.push(['h','Survival uses'],['ul',s.u]);if(s.f)b.push(['h','Fire'],['p',s.f]);b.push(['h','Origin'],['p',s.o],['h','Grow or produce'],['p',s.g],...s.w.map(x=>['w',x]));const r=RATE[s.id]||[50,'caution'];return{id:'sp-'+s.id,c:s.c,t:s.n,s:s.sc,k:(s.k||'')+' '+s.c,b,score:r[0],safety:r[1],tg:(TAGS[s.id]||'').split(' ').filter(Boolean)}});
 const spName=id=>(SP.find(s=>s.id===id)||{}).n||id;
 const comboG=COMBOS.map(c=>({id:'cb-'+c.id,c:'Combos',ic:'combo',t:c.n,s:c.out,k:'combine combination craft make '+c.in.map(spName).join(' '),b:[['p','<b>You get:</b> '+c.out+'. '+c.eff],['h','You need'],['ul',c.in.map(x=>`<button class="link" style="padding:0;min-height:0" data-open="sp-${x}">${spName(x)}</button>`)],['h','Steps'],['ol',c.steps],['w',c.warn]]}));
-for(const g of G)g.c=g.id==='body'?'Body':g.id==='build'?'Structures':'Survival';
+for(const g of G)g.c=g.id==='body'||g.ic==='body'?'Body':g.id==='build'?'Structures':'Survival';
 for(const a of AREAS)for(const g of a.g||[])g.c='Area';
 let inst=store.get('ms-areas',[]);
 const areaG=()=>AREAS.filter(a=>inst.includes(a.id)).flatMap(a=>a.g);
@@ -599,10 +625,11 @@ animal:[['What kind of animal?',[['Mammal','mammal'],['Snake or reptile','reptil
 mineral:[['What does it look like?',[['Black or dark','black dark'],['White or clear','white clear'],['Grey and speckled','grey speckled'],['Metallic or gold','metallic yellow'],['Soft brown, sticky','brown soft'],['Glassy','glassy']]]],
 material:[['What is it made of?',[['Plastic','plastic'],['Metal','metallic'],['Cloth','cloth'],['Black, burnt','black'],['Something else','']]]],
 structure:[['What is it built from?',[['Wood','wood'],['Stone','stone'],['Something else','']]]],water:[]};
-function guided(note){const out=$('scanOut');const st=pend.ans.length;const root=pend.ans[0];let q;if(root==='body'){out.innerHTML=`<div class="ans"><span class="lbl ai">${TAY()}Taylor</span><p><b>That's the human body.</b> Here is how it keeps you alive outdoors.</p></div>`+detHTML(G.find(g=>g.id==='body'));return}
+function guided(note){const out=$('scanOut');const st=pend.ans.length;const root=pend.ans[0];let q;if(root==='body'){if(st===1){out.innerHTML=`<div class="ans"><span class="lbl ai">${TAY()}Taylor</span><p><b>Which part of the body?</b></p><div class="chips" style="flex-wrap:wrap">${[['Hand','hand'],['Foot','foot'],['Head or face','head'],['Eye','eye'],['Skin','skin'],['Whole body','body']].map(o=>`<button type="button" data-g="${o[1]}">${o[0]}</button>`).join('')}</div></div>`;return}return bodyPage(pend.ans[1]||'body')}
 if(st===0)q=QS.root;else{const list=QS[root.split(' ')[0]]||[];q=list[st-1]}
 if(!q){return showCands()}
 out.innerHTML=`<div class="ans"><span class="lbl ai">${TAY()}Taylor</span>${note?`<p>${note}</p>`:''}<p><b>${q[0]}</b></p><div class="chips" style="flex-wrap:wrap">${q[1].map(o=>`<button type="button" data-g="${o[1]}">${o[0]}</button>`).join('')}</div>${st?'<button class="link" data-gback="1">← Back</button>':''}${brainState!=='ready'?'<p class="note">Tip: download Taylor\'s offline brain in Premium for automatic recognition.</p>':''}</div>`}
+function bodyPage(id){const g=G.find(x=>x.id===id)||G.find(x=>x.id==='body');if(pend){diary.unshift({id:'d'+Date.now(),img:pend.thumb,when:new Date().toISOString(),lat:pos?.lat,lon:pos?.lon,g,by:'you'});saveDiary()}$('scanOut').innerHTML=`<div class="ans"><span class="lbl ai">${TAY()}Taylor</span><p><b>${esc(g.t)}.</b> Here is what matters outdoors. Saved to your Journal.</p></div>`+detHTML(g,pend&&pend.thumb)}
 function showCands(){const tags=pend.ans.join(' ').split(' ').filter(Boolean);const root=tags[0];
 const c=spG.filter(s=>s.tg.includes(root)).map(s=>({s,sc:tags.reduce((a,t)=>a+(s.tg.includes(t)?1:0),0)})).sort((a,b)=>b.sc-a.sc||b.s.score-a.s.score).slice(0,6);
 $('scanOut').innerHTML=`<div class="ans"><span class="lbl ai">${TAY()}Taylor</span><p><b>${c.length?'It might be one of these.':'I have nothing that matches yet.'}</b> Tap one to compare with your photo.</p>${root==='fungus'?'<div class="warn">Never eat a wild mushroom based on this. Have it checked by an expert.</div>':''}${c.map(x=>itemHTML(x.s,`data-pick="${x.s.id}"`)).join('')}<button class="link" data-gback="1">← Change answers</button></div>`}
@@ -614,7 +641,7 @@ if(b.dataset.g!==undefined){pend.ans.push(b.dataset.g||'');guided()}else if(b.da
 
 /* LIGHT BRAIN: CLIP matches the photo against the whole library, runs on any phone (no WebGPU needed) */
 let clip=null,clipState='none';
-const EXTRA={'a human hand':'body','a human face':'body','a person':'body','a foot':'body','a dog':'other','a cat':'other','a car':'other','a phone':'other','food on a plate':'other','a bed or blanket':'other','a room indoors':'other','a computer':'other'};
+const EXTRA={'a human hand':'body:hand','a human face':'body:head','a person':'body:body','a human foot':'body:foot','a human eye':'body:eye','human skin with a rash or wound':'body:skin','a dog':'other','a cat':'other','a car':'other','a phone':'other','food on a plate':'other','a bed or blanket':'other','a room indoors':'other','a computer':'other'};
 function noBrain(){const out=$('scanOut');out.innerHTML=`<div class="ans"><span class="lbl ai">${TAY()}Taylor</span><p><b>To recognize photos by herself, Taylor needs her brain on this phone.</b> Download it once, then it works with no internet.</p>
 <button class="btn" data-brain="light">Light brain · about 150 MB · any phone</button><button class="btn alt" data-brain="full">Full brain · about 2 GB · newest phones</button><div class="prog" id="scanProg" hidden><i></i></div><p class="note" id="scanNote"></p>
 <p style="margin-top:14px"><b>Or tell me what it is:</b></p><div class="chips" style="flex-wrap:wrap">${QS.root[1].map(o=>`<button type="button" data-g="${o[1]}">${o[0]}</button>`).join('')}</div></div>`}
@@ -625,7 +652,7 @@ catch(e){clipState='none';onP(!navigator.onLine?'The first download needs intern
 async function clipScan(blob){const out=$('scanOut');out.innerHTML=`<div class="ans"><span class="lbl ai">${TAY()}Taylor</span><p>Taylor is looking at your photo…</p></div>`;
 try{const labels=[...spG.map(s=>s.t),...Object.keys(EXTRA)];const u=URL.createObjectURL(blob);let r;try{r=await clip(u,labels,{hypothesis_template:'a photo of {}'})}finally{URL.revokeObjectURL(u)}
 r=r.sort((a,b)=>b.score-a.score);const top=r[0];
-if(EXTRA[top.label]==='body'){pend.ans=['body'];return guided()}
+if((EXTRA[top.label]||'').startsWith('body:')){return bodyPage(EXTRA[top.label].slice(5))}
 if(EXTRA[top.label]){out.innerHTML=`<div class="ans"><span class="lbl ai">${TAY()}Taylor</span><p>This looks like <b>${esc(top.label.replace(/^an? /,''))}</b>, which is not in the field guide. Try a plant, mushroom, animal, rock, water or material.</p><p><b>Or tell me what it is:</b></p><div class="chips" style="flex-wrap:wrap">${QS.root[1].map(o=>`<button type="button" data-g="${o[1]}">${o[0]}</button>`).join('')}</div></div>`;return}
 const c=r.filter(x=>!EXTRA[x.label]).slice(0,4).map(x=>({s:spG.find(s=>s.t===x.label),p:Math.round(x.score*100)})).filter(x=>x.s);
 out.innerHTML=`<div class="ans"><span class="lbl ai">${TAY()}Taylor</span><p><b>I think it's ${esc(c[0].s.t)}</b> (${c[0].p}% match). Tap to compare, then confirm.</p>${c.some(x=>x.s.c==='Fungi')?'<div class="warn">Never eat a wild mushroom based on this. Have it checked by an expert.</div>':''}${c.map(x=>itemHTML(x.s,`data-pick="${x.s.id}"`,null,x.p+'% · ')).join('')}<button class="link" data-g-reset="1">None of these? Answer questions instead</button></div>`;
