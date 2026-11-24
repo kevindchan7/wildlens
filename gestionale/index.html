@@ -64,7 +64,7 @@ input,textarea{font:inherit;width:100%;padding:12px;border-radius:10px;border:1p
   <p class="note" style="margin:6px 0 10px">Web (iPhone e Android): <a id="lWeb" style="color:var(--gold)"></a><br>App Android (APK): <a id="lApk" style="color:var(--gold)"></a></p>
   <div class="row"><button id="share" class="gold">Condividi link</button></div>
  </div>
- <p class="note">Bloccare = l'app si chiude su quel dispositivo alla prossima apertura o entro 15 minuti se è aperta e online. Offline l'app resta usabile fino a 30 giorni dall'ultimo controllo.</p>
+ <p class="note">Bloccare una persona chiude l'app su tutti i suoi dispositivi (stessa email). L'app si chiude alla prossima apertura o entro 15 minuti se è aperta e online. Offline l'app resta usabile fino a 30 giorni dall'ultimo controllo.</p>
 </section>
 </main>
 <script>
@@ -83,8 +83,8 @@ function draw(){const u=D.utenti||[],now=Date.now();
  $('allTxt').innerHTML=D.chiuso?'<span class="pill off">CHIUSO A TUTTI</span> nessuno può usare l\'app':'<span class="pill on">APERTO</span> chi non è bloccato può usarla';
  $('allBtn').textContent=D.chiuso?'Riapri a tutti':'Chiudi a tutti';$('allBtn').className=D.chiuso?'ok':'red';
  if(document.activeElement!==$('msg'))$('msg').value=D.messaggio||'';
- const q=$('q').value.trim().toLowerCase();const f=u.filter(x=>!q||[x.nome,x.email,x.piattaforma,x.nota].join(' ').toLowerCase().includes(q));
- $('list').innerHTML=f.length?f.map(x=>`<div class="u"><div><div class="n">${esc(x.nome||'(senza nome)')} ${x.bloccato?'<span class="pill off">bloccato</span>':'<span class="pill on">attivo</span>'}</div><div class="m">${x.email?`<a href="mailto:${esc(x.email)}" style="color:inherit">${esc(x.email)}</a>`:'email non inserita'}</div><div class="m">${esc(x.piattaforma)} · v${esc(x.versione)} · ${x.aperture} aperture · ultimo: ${ago(x.ultimo_accesso)} · dal ${dt(x.primo_accesso)}</div>${x.nota?`<div class="m">📝 ${esc(x.nota)}</div>`:''}</div><div class="a">${x.bloccato?`<button class="ok" data-a="sblocca" data-id="${x.id}">Riapri</button>`:`<button class="red" data-a="blocca" data-id="${x.id}">Blocca</button>`}<button data-a="nota" data-id="${x.id}">Nota</button><button data-a="elimina" data-id="${x.id}">🗑</button></div></div>`).join(''):'<p class="note">Ancora nessun utente.</p>';
+ const cnt={};u.forEach(x=>{if(x.email)cnt[x.email]=(cnt[x.email]||0)+1});const q=$('q').value.trim().toLowerCase();const f=u.filter(x=>!q||[x.nome,x.email,x.piattaforma,x.nota].join(' ').toLowerCase().includes(q));
+ $('list').innerHTML=f.length?f.map(x=>`<div class="u"><div><div class="n">${esc(x.nome||'(senza nome)')} ${x.bloccato?'<span class="pill off">bloccato</span>':'<span class="pill on">attivo</span>'}</div><div class="m">${x.email?`<a href="mailto:${esc(x.email)}" style="color:inherit">${esc(x.email)}</a>${cnt[x.email]>1?` · <b>${cnt[x.email]} dispositivi</b>`:''}`:'email non inserita'}</div><div class="m">${esc(x.piattaforma)} · v${esc(x.versione)} · ${x.aperture} aperture · ultimo: ${ago(x.ultimo_accesso)} · dal ${dt(x.primo_accesso)}</div>${x.nota?`<div class="m">📝 ${esc(x.nota)}</div>`:''}</div><div class="a">${x.bloccato?`<button class="ok" data-a="sblocca" data-id="${x.id}">Riapri</button>`:`<button class="red" data-a="blocca" data-id="${x.id}">Blocca</button>`}<button data-a="nota" data-id="${x.id}">Nota</button><button data-a="elimina" data-id="${x.id}">🗑</button></div></div>`).join(''):'<p class="note">Ancora nessun utente.</p>';
  $('upd').textContent='Aggiornato '+new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'})+' · si aggiorna da solo ogni 30 secondi'}
 async function act(tipo,id,valore){try{await rpc('dev_wildlens_azione',{chiave:K,tipo,id:id||null,valore:valore??null});await load()}catch(e){alert(e.message)}}
 $('go').onclick=()=>{K=$('key').value.trim();localStorage.setItem('wl-dev',K);$('err').textContent='';load()};

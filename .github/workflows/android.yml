@@ -2,7 +2,7 @@ name: Build Android app
 on:
   push:
     branches: [main]
-    paths: ['app/**', 'mobile/**', 'gestionale/**', 'index.html', 'icon.svg', 'sw.js', '.github/workflows/android.yml']
+    paths: ['app/**', 'mobile/**', 'gestionale/**', 'scripts/**', 'index.html', 'condizioni.html', 'icon.svg', 'sw.js', '.github/workflows/android.yml']
   workflow_dispatch:
 permissions:
   contents: write
@@ -25,15 +25,17 @@ jobs:
         run: npm install @capacitor/core@latest @capacitor/cli@latest @capacitor/android@latest @capacitor/local-notifications@latest @capacitor/haptics@latest @capacitor/splash-screen@latest
       - name: Install optional sensor plugins (skipped if unavailable)
         run: |
-          for p in @capawesome/capacitor-torch @capgo/capacitor-flash; do npm install "$p@latest" || echo "skip $p"; done
+          for p in @capawesome/capacitor-torch @capgo/capacitor-flash @capacitor-community/text-to-speech @capacitor-community/speech-recognition; do npm install "$p@latest" || echo "skip $p"; done
       - name: Copy web app
         run: npm run copy-web
+      - name: Protect code inside the app
+        run: npm install --no-save terser@5 && cp ../scripts/proteggi.mjs ./proteggi.mjs && node proteggi.mjs www && rm proteggi.mjs
       - name: Add Android platform
         run: npx cap add android
       - name: Permissions
         run: |
           M=android/app/src/main/AndroidManifest.xml
-          for perm in ACTIVITY_RECOGNITION ACCESS_FINE_LOCATION ACCESS_COARSE_LOCATION CAMERA FLASHLIGHT VIBRATE POST_NOTIFICATIONS WAKE_LOCK SCHEDULE_EXACT_ALARM; do
+          for perm in RECORD_AUDIO ACTIVITY_RECOGNITION ACCESS_FINE_LOCATION ACCESS_COARSE_LOCATION CAMERA FLASHLIGHT VIBRATE POST_NOTIFICATIONS WAKE_LOCK SCHEDULE_EXACT_ALARM; do
             grep -q "android.permission.$perm" $M || sed -i "s#</manifest>#    <uses-permission android:name=\"android.permission.$perm\" />\n</manifest>#" $M
           done
           grep -q 'android.hardware.location.gps' $M || sed -i 's#</manifest>#    <uses-feature android:name="android.hardware.location.gps" android:required="false" />\n    <uses-feature android:name="android.hardware.camera" android:required="false" />\n</manifest>#' $M
@@ -42,6 +44,7 @@ jobs:
           D=android/app/src/main/java/app/wildlens/field
           mkdir -p $D && cp native-android/*.java $D/
           M=android/app/src/main/AndroidManifest.xml
+          grep -q 'RecognitionService' $M || sed -i 's#<application#<queries>\n        <intent><action android:name="android.speech.RecognitionService" /></intent>\n        <intent><action android:name="android.intent.action.TTS_SERVICE" /></intent>\n    </queries>\n    <application#' $M
           grep -q 'sensor.barometer' $M || sed -i 's#</manifest>#    <uses-feature android:name="android.hardware.sensor.barometer" android:required="false" />\n    <uses-feature android:name="android.hardware.sensor.stepcounter" android:required="false" />\n</manifest>#' $M
       - name: Icons and splash
         run: npm install @capacitor/assets --save-dev && npx capacitor-assets generate --android --iconBackgroundColor '#2d5a34' --splashBackgroundColor '#f3e3c9' || echo "assets skipped"
@@ -67,8 +70,9 @@ jobs:
         working-directory: .
         run: |
           rm -rf /tmp/site && mkdir -p /tmp/site
-          cp -r index.html sw.js icon.svg app gestionale /tmp/site/
+          cp -r index.html sw.js icon.svg condizioni.html app gestionale /tmp/site/
           cp Wildlens.apk /tmp/site/Wildlens.apk
+          npm install --silent --no-save --prefix /tmp/prot terser@5 && cp scripts/proteggi.mjs /tmp/prot/ && node /tmp/prot/proteggi.mjs /tmp/site
           cd /tmp/site
           git init -q -b pubblico
           git config user.name "wildlens-bot"

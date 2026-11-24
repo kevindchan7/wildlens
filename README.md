@@ -28,3 +28,11 @@ Native extras already wired in the web code (`NATIVE` bridge): phone torch, time
 - `app/accesso.js`: first start asks name + email (needs internet once), then every start pings Supabase (`wl_ping`). Blocked devices, or "closed to everyone", see a lock screen. Offline grace: 30 days.
 - `gestionale/`: developer panel (same developer key as the ART Gestionale): users, last access, block/unblock, close to everyone, lock message, CSV.
 - Every build publishes site + web app + Gestionale + `Wildlens.apk` to the `pubblico` branch, served by Render at https://wildlens-y5z2.onrender.com
+
+## 0.3 (24 Nov 2026)
+
+- Welcome screen with brand and Taylor: language and day/night chosen first; registration with real email checks (format, typo suggestions, domain lookup, no temporary emails); returning emails recognised; blocking a person blocks all their devices.
+- Taylor talks (`app/voce.js`: speech synthesis + voice input; Android via @capacitor-community/text-to-speech and speech-recognition), hops when tapped, gives tips.
+- Real photos of species from Wikipedia/Wikimedia Commons, cached for offline.
+- Layout fixes and full IT/ES translations; language and theme switch in the header.
+- Published code is minified/protected (`scripts/proteggi.mjs`), legal notice and `condizioni.html`.

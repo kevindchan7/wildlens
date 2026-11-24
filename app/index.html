@@ -263,6 +263,53 @@ nav button[data-v=sos][aria-current],nav button[data-v=sos]{color:var(--sos)}
 @media(max-width:400px){h1{font-size:38px}.item{grid-template-columns:60px minmax(0,1fr)}.av{width:60px;height:60px;font-size:30px}.kv b{font-size:20px}}
 @media(prefers-reduced-motion:no-preference){.item,.btn{transition:transform .12s}.item:active,.btn:active{transform:scale(.98)}}
 </style>
+<style id="wl03">
+/* === Wildlens 0.3: impaginazione e Taylor viva === */
+.tay-talking .tsp .t-mouth{transform-box:fill-box;transform-origin:center top;animation:tTalk .2s ease-in-out infinite alternate}
+@keyframes tTalk{from{transform:scaleY(.45)}to{transform:scaleY(1.7)}}
+.tay-talking .tayFab{animation:fabTalk .9s ease-in-out infinite}@keyframes fabTalk{50%{box-shadow:0 0 0 8px rgba(217,180,106,.35),0 6px 18px rgba(0,0,0,.28)}}
+.tay-hop{animation:tayHop .6s cubic-bezier(.3,1.6,.5,1)}@keyframes tayHop{0%,100%{transform:none}40%{transform:translateY(-14px) rotate(-5deg)}70%{transform:translateY(0) rotate(3deg)}}
+.introAv.tay-hop{animation:tayHopC .6s cubic-bezier(.3,1.6,.5,1)}@keyframes tayHopC{0%,100%{transform:translateX(-50%)}40%{transform:translateX(-50%) translateY(-14px) rotate(-5deg)}}
+.tsp{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.tayFab #fabSp .tsp .t-bob{animation:tbob 2.4s ease-in-out infinite}
+.tayTip{position:fixed;right:16px;bottom:160px;z-index:7;max-width:min(300px,calc(100vw - 32px));background:var(--card);border:2px solid var(--green);border-radius:18px 18px 4px 18px;padding:12px 14px;box-shadow:0 10px 26px rgba(0,0,0,.22);animation:pop .25s ease-out}
+.tayTip p{margin:0 0 4px;font-size:15px;line-height:1.4}.tayTip .row{margin-top:6px;gap:8px;align-items:center}
+/* wizard: Taylor intera, nessun taglio, scorre dentro */
+.intro{place-items:center;padding:16px 16px calc(16px + env(safe-area-inset-bottom));z-index:40;background:rgba(14,20,15,.62)}
+.introCard{overflow:visible!important;position:relative;max-height:calc(100dvh - 104px)!important;display:flex;flex-direction:column;margin:62px 0 0;padding:58px 20px 18px;box-shadow:0 18px 50px rgba(0,0,0,.35)}
+.introAv{position:absolute;top:-68px;left:50%;margin:0;transform:translateX(-50%);width:112px;height:120px;filter:drop-shadow(0 8px 14px rgba(0,0,0,.3))}
+#introBody{overflow-y:auto;min-height:0;flex:1 1 auto;-webkit-overflow-scrolling:touch;padding:0 2px 4px}
+.introCard h2{font-size:26px;margin:0}
+.introCard .row{flex-wrap:nowrap}
+.opt>div{flex:1 1 auto;min-width:0}.opt small{display:block;line-height:1.35;margin-top:2px}.opt .sz{flex:none;padding-left:6px}
+/* intestazione: niente sovrapposizioni */
+.head{align-items:center!important}.head>div:first-child{min-width:0;flex:1 1 auto}
+.head .eye{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#appName{font-size:clamp(28px,8.4vw,40px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.head>div:last-child{gap:6px!important;flex:none}
+.head .help.hq{width:36px;height:36px;font-size:16px!important;flex:none;padding:0;display:inline-flex;align-items:center;justify-content:center;position:relative}
+.head .hq span{font-size:12.5px;font-weight:800;letter-spacing:.02em}
+.head .hq select{position:absolute;inset:0;opacity:0;width:100%;height:100%;font-size:16px}
+.head #net{display:none}
+@media(max-width:370px){.head .help.hq{width:33px;height:33px}#helpBtn{display:none!important}}
+/* barra in basso: etichette leggibili e separate */
+nav button{font-family:Inter,system-ui,-apple-system,sans-serif!important;font-size:11px!important;letter-spacing:-.1px;line-height:1.15;padding:9px 1px 12px!important;min-width:0;overflow:hidden;white-space:nowrap}
+nav button svg{width:24px!important;height:24px!important}
+/* finestre d'aiuto: Taylor accanto, non sopra i bottoni */
+.coach .tsp{width:82px!important;height:90px!important}.coach .bub{min-width:0;position:relative;z-index:1}
+/* strumenti: descrizioni su due righe invece di "…" */
+.tile small{white-space:normal!important;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.25}
+/* chat: microfono */
+.sheet form .mic{flex:none;width:46px;height:46px;border-radius:50%;border:1.5px solid var(--line);background:var(--card);color:var(--green);display:grid;place-items:center;padding:0}
+.sheet form .mic.on{background:#d1492a;border-color:#d1492a;color:#fff;animation:micP 1s ease-in-out infinite}@keyframes micP{50%{box-shadow:0 0 0 8px rgba(209,73,42,.25)}}
+.sheet header .spk{margin-left:auto;width:38px;height:38px;font-size:17px;flex:none}
+/* foto vere */
+.av.hasph{background:var(--line)!important;font-size:0!important;position:relative}.av.hasph>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:phIn .45s ease-out}.av.hasph>svg{display:none}
+.hero{display:none}.hero.hasph{display:block;position:relative;margin:0 0 14px;border-radius:22px;overflow:hidden;aspect-ratio:4/3;background:var(--line);box-shadow:0 8px 24px rgba(0,0,0,.15)}
+.hero>img{width:100%;height:100%;object-fit:cover;display:block;animation:phIn .5s ease-out}
+.phc{position:absolute;right:10px;bottom:10px;background:rgba(0,0,0,.55);color:#fff!important;font-size:12px;padding:5px 10px;border-radius:99px;text-decoration:none}
+@keyframes phIn{from{opacity:0;transform:scale(1.03)}to{opacity:1;transform:none}}
+</style>
 </head>
 <body>
 <main>
@@ -402,7 +449,7 @@ nav button[data-v=sos][aria-current],nav button[data-v=sos]{color:var(--sos)}
 <div class="plan"><h3>Free</h3><ul><li>10 AI scans a month</li><li>Full survival guide, offline</li><li>Ask Taylor, Map, Journal, SOS</li></ul></div>
 <div class="plan p"><h3 style="color:#f3efe8">Premium</h3><div class="price">$2.99 <small style="font-size:18px">/ month</small></div><ul><li>Unlimited AI scans</li><li>Every offline area pack: species, risks, rules, maps</li><li>Offline AI recognition (coming)</li></ul><button class="btn" id="buy" style="background:#f3efe8;color:#2d5a34">Get Premium</button><p class="note" id="buyNote" style="color:#dfe9df"></p></div>
 <h2 style="margin-top:22px">Taylor's offline brain</h2>
-<div class="card" id="brainCard"><p style="margin:0">Download <b>Gemma 4</b>, Google's open AI model, into your phone once (about 2 GB, use Wi-Fi). Then Taylor recognizes your photos and answers questions <b>with no internet at all</b>.</p>
+<div class="card" id="brainCard"><p style="margin:0" data-trh>Download <b>Gemma 4</b>, Google's open AI model, into your phone once (about 2 GB, use Wi-Fi). Then Taylor recognizes your photos and answers questions <b>with no internet at all</b>.</p>
 <p class="note">Needs a recent phone with Chrome (WebGPU) and at least 6–8 GB of RAM. On older phones Taylor uses the guided questions and the offline library.</p>
 <button class="btn" id="brainBtn">Download Taylor's brain</button><div class="prog" id="brainProg" hidden><i></i></div><p class="note" id="brainNote"></p></div>
 <h2 style="margin-top:22px">Area packs</h2>
@@ -427,7 +474,7 @@ nav button[data-v=sos][aria-current],nav button[data-v=sos]{color:var(--sos)}
 <div class="card"><h3>Taylor's brain</h3><p class="note" id="setBrain" style="margin-top:0"></p><div class="row"><button class="btn sm" id="setLight">Light brain</button><button class="btn sm alt" id="setFull">Full brain · Gemma 4</button></div></div>
 <div class="card"><h3>Taylor's tips</h3><div class="row"><button class="btn sm alt" id="setTour">Replay the tour on every screen</button><button class="btn sm alt" id="setSetup">Run the setup again</button></div><p class="note">Swipe left or right to move between tabs.</p></div>
 <div class="card"><h3>Your data</h3><div class="row"><button class="btn sm alt" id="setCopy">Copy my journal</button><button class="btn sm alt" id="setDel" style="color:var(--sos)">Delete my journal</button></div><p class="note" id="setNote"></p></div>
-<div class="card"><h3>About</h3><p style="margin:0">Wildlens · Taylor. Map data © OpenStreetMap contributors. AI: Gemma 4 (Google), CLIP.</p><a class="link" href="../">Website</a></div>
+<div class="card"><h3>About</h3><p style="margin:0">Wildlens · Taylor. Map data © OpenStreetMap contributors. AI: Gemma 4 (Google), CLIP.</p><p class="note" style="margin:8px 0 0">© 2026 ART&amp; CREATION LLC. Wildlens e Taylor sono marchi di ART&amp; CREATION LLC. Tutti i diritti riservati. Codice e contenuti protetti da copyright: vietati copia, modifica e ridistribuzione senza autorizzazione scritta.</p><a class="link" href="../condizioni.html">Website</a></div>
 </section>
 <footer class="disc">Wildlens is an informational field guide. It does not replace experts, doctors or rescue services: in an emergency call 112 (Europe) or 911 (North America). Never eat wild mushrooms or plants based on this app.</footer>
 </main>
@@ -456,6 +503,7 @@ nav button[data-v=sos][aria-current],nav button[data-v=sos]{color:var(--sos)}
 <div class="modal" id="modal" hidden></div>
 <div class="modal" id="qrModal" hidden></div>
 <div class="flash" id="flash"><button id="stopFlash">Stop</button></div>
+<script src="voce.js"></script>
 <script src="qr.js"></script>
 <script>
 /* I18N: English source strings -> Italian, Spanish */
@@ -527,7 +575,7 @@ new MutationObserver(ms=>{if(LANG==='en')return;for(const m of ms)for(const n of
 const $=id=>document.getElementById(id);
 const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}}};
 
-const TSPRITE=(wave=true)=>`<svg class="tsp" viewBox="0 0 140 150" aria-hidden="true"><g class="t-bob"><g fill="#b4532a"><circle cx="46" cy="58" r="15"/><circle cx="94" cy="58" r="15"/><circle cx="42" cy="80" r="14"/><circle cx="98" cy="80" r="14"/><circle cx="46" cy="100" r="12"/><circle cx="94" cy="100" r="12"/><circle cx="70" cy="36" r="22"/><circle cx="52" cy="40" r="15"/><circle cx="88" cy="40" r="15"/></g><path d="M30 150c3-26 20-42 40-42s37 16 40 42z" fill="#5a5b2c"/><path d="M56 110l14 13 14-13-5-4-9 8-9-8z" fill="#4a4b24"/><rect x="64" y="90" width="12" height="16" rx="5" fill="#f2c9b1"/><ellipse cx="70" cy="66" rx="22" ry="25" fill="#f6d6c2"/><g fill="#c9662f"><circle cx="56" cy="45" r="10"/><circle cx="69" cy="41" r="10"/><circle cx="82" cy="44" r="10"/><circle cx="49" cy="54" r="6"/><circle cx="91" cy="53" r="6"/></g><circle cx="58" cy="74" r="4" fill="#ef9e8a" opacity=".55"/><circle cx="82" cy="74" r="4" fill="#ef9e8a" opacity=".55"/><ellipse class="t-eye" cx="61" cy="66" rx="2.6" ry="3.4" fill="#3a2a22"/><ellipse class="t-eye" cx="79" cy="66" rx="2.6" ry="3.4" fill="#3a2a22"/><path d="M62 78q8 7 16 0" stroke="#3a2a22" stroke-width="2.2" fill="#fff" stroke-linecap="round"/><path class="t-leaf" d="M88 34c4-7 11-8 15-5-3 1-7 3-8 8z" fill="#7fb069"/>${wave?'<g class="t-arm"><path d="M100 122 L118 88" stroke="#5a5b2c" stroke-width="10" stroke-linecap="round"/><circle cx="120" cy="82" r="7" fill="#f6d6c2"/></g>':''}</g></svg>`;
+window.TSPRITE=(wave=true)=>TSPRITE(wave);const TSPRITE=(wave=true)=>`<svg class="tsp" viewBox="0 0 140 150" aria-hidden="true"><g class="t-bob"><g fill="#b4532a"><circle cx="46" cy="58" r="15"/><circle cx="94" cy="58" r="15"/><circle cx="42" cy="80" r="14"/><circle cx="98" cy="80" r="14"/><circle cx="46" cy="100" r="12"/><circle cx="94" cy="100" r="12"/><circle cx="70" cy="36" r="22"/><circle cx="52" cy="40" r="15"/><circle cx="88" cy="40" r="15"/></g><path d="M30 150c3-26 20-42 40-42s37 16 40 42z" fill="#5a5b2c"/><path d="M56 110l14 13 14-13-5-4-9 8-9-8z" fill="#4a4b24"/><rect x="64" y="90" width="12" height="16" rx="5" fill="#f2c9b1"/><ellipse cx="70" cy="66" rx="22" ry="25" fill="#f6d6c2"/><g fill="#c9662f"><circle cx="56" cy="45" r="10"/><circle cx="69" cy="41" r="10"/><circle cx="82" cy="44" r="10"/><circle cx="49" cy="54" r="6"/><circle cx="91" cy="53" r="6"/></g><circle cx="58" cy="74" r="4" fill="#ef9e8a" opacity=".55"/><circle cx="82" cy="74" r="4" fill="#ef9e8a" opacity=".55"/><ellipse class="t-eye" cx="61" cy="66" rx="2.6" ry="3.4" fill="#3a2a22"/><ellipse class="t-eye" cx="79" cy="66" rx="2.6" ry="3.4" fill="#3a2a22"/><path class="t-mouth" d="M62 78q8 7 16 0" stroke="#3a2a22" stroke-width="2.2" fill="#fff" stroke-linecap="round"/><path class="t-leaf" d="M88 34c4-7 11-8 15-5-3 1-7 3-8 8z" fill="#7fb069"/>${wave?'<g class="t-arm"><path d="M100 122 L118 88" stroke="#5a5b2c" stroke-width="10" stroke-linecap="round"/><circle cx="120" cy="82" r="7" fill="#f6d6c2"/></g>':''}</g></svg>`;
 
 const BGT=(sky='#22382a')=>`<rect width="160" height="120" fill="${sky}"/><circle cx="20" cy="18" r=".8" fill="#e9dcc0" opacity=".6"/><circle cx="130" cy="12" r="1" fill="#e9dcc0" opacity=".5"/><circle cx="96" cy="26" r=".7" fill="#e9dcc0" opacity=".5"/><path d="M0 70l26-22 18 12 26-26 30 26 20-14 40 26v48H0z" fill="#365541"/><path d="M0 84l30-14 30 10 34-18 30 14 36-8v52H0z" fill="#2b4535"/><path d="M6 92l6-16 6 16zM20 96l7-20 7 20zM132 94l7-19 7 19zM146 98l6-15 6 15z" fill="#1c2f23"/>`;
 const ILL={
@@ -828,7 +876,7 @@ const deacc=s=>String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
 
 let view='scan',prev='scan';
 const ORDER=['scan','libreria','tools','mappa','diario','sos'];
-function show(v){if(toolStop&&v!=='tool'){try{toolStop()}catch(e){}toolStop=null}if(v==='tools')renderTools();if(v==='diario')renderPlates();if(v==='settings')renderKit();if(v==='sos')initSOS();if(v==='comm')renderComm();if(v==='dl')renderDl();if(v==='settings'){try{renderAcc()}catch(e){}}if(v==='scan'){renderStatus();try{renderHome()}catch(e){}}const from=ORDER.indexOf(view),to=ORDER.indexOf(v);if(!['scheda','premium','settings','tool','comm','dl'].includes(v))prev=v;else if(!['scheda','premium','settings','tool','comm','dl'].includes(view))prev=view;view=v;for(const s of document.querySelectorAll('main>section')){s.hidden=s.id!=='v-'+v;if(!s.hidden){s.classList.remove('fromR','fromL');void s.offsetWidth;if(from>=0&&to>=0&&from!==to)s.classList.add(to>from?'fromR':'fromL')}}for(const b of $('nav').children){if(b.dataset.v===v)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')}if(v==='mappa'){drawMap();stats();fillTargets();updateBack()}if(v==='diario')renderDiary();if(v==='libreria')renderLib();setTimeout(()=>coach(v),350);if(v==='sos')$('sosPos').textContent=pos?'Last known position: '+pos.lat.toFixed(5)+', '+pos.lon.toFixed(5):'Find your position in the Map tab so you can read it to rescuers.';scrollTo(0,0)}
+function show(v){try{if(typeof cq!=='undefined')cq=[];$('coach').hidden=true;clearHl();$('tayTip')&&($('tayTip').hidden=true)}catch(e){}if(toolStop&&v!=='tool'){try{toolStop()}catch(e){}toolStop=null}if(v==='tools')renderTools();if(v==='diario')renderPlates();if(v==='settings')renderKit();if(v==='sos')initSOS();if(v==='comm')renderComm();if(v==='dl')renderDl();if(v==='settings'){try{renderAcc()}catch(e){}}if(v==='scan'){renderStatus();try{renderHome()}catch(e){}}const from=ORDER.indexOf(view),to=ORDER.indexOf(v);if(!['scheda','premium','settings','tool','comm','dl'].includes(v))prev=v;else if(!['scheda','premium','settings','tool','comm','dl'].includes(view))prev=view;view=v;for(const s of document.querySelectorAll('main>section')){s.hidden=s.id!=='v-'+v;if(!s.hidden){s.classList.remove('fromR','fromL');void s.offsetWidth;if(from>=0&&to>=0&&from!==to)s.classList.add(to>from?'fromR':'fromL')}}for(const b of $('nav').children){if(b.dataset.v===v)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')}if(v==='mappa'){drawMap();stats();fillTargets();updateBack()}if(v==='diario')renderDiary();if(v==='libreria')renderLib();setTimeout(()=>coach(v),350);if(v==='sos')$('sosPos').textContent=pos?tr('Last known position:')+' '+pos.lat.toFixed(5)+', '+pos.lon.toFixed(5):tr('Find your position in the Map tab so you can read it to rescuers.');scrollTo(0,0)}
 $('nav').onclick=e=>{const b=e.target.closest('button');if(b)show(b.dataset.v)};
 $('back').onclick=()=>show(prev);$('back2').onclick=()=>show(prev);
 function net(){const on=navigator.onLine;$('net').textContent=on?'Online':'Offline';$('net').classList.toggle('off',!on)}
@@ -859,16 +907,16 @@ function openScheda(id){const g=ALL().find(x=>x.id===id);if(!g)return;$('det').i
 let cat='All';
 function renderLib(){const cats=['All',...(inst.length?['Area']:[]),'Survival','Combos','Body','Structures','Flora','Fungi','Fauna','Minerals','Water','Materials'];if(!cats.includes(cat))cat='All';$('catChips').innerHTML=cats.map(c=>`<button type="button" data-c="${c}" aria-pressed="${c===cat}">${c}</button>`).join('');
 const q=deacc($('libQ').value.trim());let l=ALL();if(cat!=='All')l=l.filter(g=>g.c===cat);if(q)l=l.filter(g=>deacc(g.t+' '+g.s+' '+g.k+' '+JSON.stringify(g.b)).includes(q));
-$('libCount').textContent=`${diary.length} of yours · ${ALL().length} curated`;
+$('libCount').textContent=`${diary.length} ${tr('of yours')} · ${ALL().length} ${tr('curated')}`;
 $('libList').innerHTML=l.length?l.map(g=>itemHTML(g,`data-open="${g.id}"`)).join(''):'<div class="empty"><b>Nothing found</b>Try another word or category.</div>';
-const act=AREAS.filter(a=>inst.includes(a.id));$('areaBox').innerHTML=act.length?`<div class="banner"><div><small>Active area</small><br><b>${act.map(a=>a.t).join(', ')}</b></div><button data-area="1">Manage</button></div>`:`<div class="banner"><div><small>No area downloaded</small><br><b>Download your area before you go</b></div><button data-area="1">Choose area</button></div>`}
+const act=AREAS.filter(a=>inst.includes(a.id));$('areaBox').innerHTML=act.length?`<div class="banner"><div><small>${tr('Active area')}</small><br><b>${act.map(a=>tr(a.t)).join(', ')}</b></div><button data-area="1">${tr('Manage')}</button></div>`:`<div class="banner"><div><small>${tr('No area downloaded')}</small><br><b>${tr('Download your area before you go')}</b></div><button data-area="1">${tr('Choose area')}</button></div>`}
 $('catChips').onclick=e=>{const b=e.target.closest('button');if(!b)return;cat=b.dataset.c;renderLib()};
 $('libQ').oninput=()=>renderLib();
 $('libList').onclick=e=>{const b=e.target.closest('[data-open]');if(b)openScheda(b.dataset.open)};
 $('areaBox').onclick=e=>{if(e.target.dataset.area){renderAreas();show('premium')}};
 
 /* AREAS */
-function renderAreas(){$('areaList').innerHTML=AREAS.map(a=>`<div class="card"><div class="area"><div><b>${a.t}</b><small>${a.r} · about ${a.mb} MB</small></div>${!a.ok?'<span class="pill">Soon</span>':inst.includes(a.id)?`<button class="btn sm alt" data-rm="${a.id}">Remove</button>`:`<button class="btn sm" data-dl="${a.id}">Download</button>`}</div><div class="prog" id="p-${a.id}" hidden><i></i></div></div>`).join('')}
+function renderAreas(){$('areaList').innerHTML=AREAS.map(a=>`<div class="card"><div class="area"><div><b>${tr(a.t)}</b><small>${tr(a.r)} · ${tr('about')} ${a.mb} MB</small></div>${!a.ok?'<span class="pill">Soon</span>':inst.includes(a.id)?`<button class="btn sm alt" data-rm="${a.id}">${tr('Remove')}</button>`:`<button class="btn sm" data-dl="${a.id}">${tr('Download')}</button>`}</div><div class="prog" id="p-${a.id}" hidden><i></i></div></div>`).join('')}
 $('areaList').onclick=e=>{const d=e.target.dataset;if(d.rm){inst=inst.filter(x=>x!==d.rm);store.set('ms-areas',inst);renderAreas();return}if(!d.dl)return;e.target.disabled=true;e.target.textContent='Downloading…';const p=$('p-'+d.dl);p.hidden=false;let v=0;const t=setInterval(()=>{v+=8+Math.random()*14;p.firstChild.style.width=Math.min(v,100)+'%';if(v>=100){clearInterval(t);inst.push(d.dl);store.set('ms-areas',inst);renderAreas()}},180)};
 
 /* PREMIUM */
@@ -891,11 +939,11 @@ const md=t=>esc(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').split(/\n+/).map(l=>/^\
 function offline(q,el){const r=retrieve(q);const u=URG.test(deacc(q))?'<div class="urgent">If it is serious or someone is hurt: call 112 (Europe) or 911 (US) now. See the SOS tab.</div>':'';
 if(!r.length){const miss=AREAS.filter(a=>a.ok&&!inst.includes(a.id)).find(a=>retrieve(q,a.g).length);if(miss){el.innerHTML=u+`<div class="ans"><span class="lbl">Offline guide</span><p>The answer is in the <b>${miss.t}</b> pack, which you have not downloaded yet.</p><button class="btn sm" data-goarea="1">Download area</button></div>`;return''}el.innerHTML=u+'<div class="ans"><span class="lbl">Offline guide</span><p>No answer in the offline guide yet. Try words like water, fire, cold, snake, storm, lost, mushrooms, body.</p></div>';return''}
 const groups=[];for(const c of r){let gr=groups.find(x=>x.g===c.g);if(!gr)groups.push(gr={g:c.g,cs:[]});gr.cs.push(c)}
-el.innerHTML=u+groups.map(gr=>`<div class="ans"><span class="lbl">Offline guide</span><div class="src">From: ${esc(gr.g.t)}</div>${gr.cs.map((c,j)=>(c.h&&!c.w&&c.h!==gr.cs[j-1]?.h?`<b>${c.h}</b>`:'')+(c.w?`<div class="warn">${c.items[0]}</div>`:c.items.length>1?`<ul>${c.items.map(i=>`<li>${i}</li>`).join('')}</ul>`:`<p>${c.items[0]}</p>`)).join('')}<button class="link" data-open="${gr.g.id}">Open the full page →</button></div>`).join('');
+el.innerHTML=u+groups.map(gr=>`<div class="ans"><span class="lbl">Offline guide</span><div class="src">${tr('From:')} ${esc(tr(gr.g.t))}</div>${gr.cs.map((c,j)=>(c.h&&!c.w&&c.h!==gr.cs[j-1]?.h?`<b>${c.h}</b>`:'')+(c.w?`<div class="warn">${c.items[0]}</div>`:c.items.length>1?`<ul>${c.items.map(i=>`<li>${i}</li>`).join('')}</ul>`:`<p>${c.items[0]}</p>`)).join('')}<button class="link" data-open="${gr.g.id}">Open the full page →</button></div>`).join('');
 return r.map(c=>`[${c.g.t}${c.h?' › '+c.h:''}] `+c.items.map(strip).join(' ')).join('\n')}
 let sample=null,imgOK=false;
 (async()=>{try{sample=await window.claude?.use?.('sample')??null;if(sample){try{imgOK=!!(await sample.limits()).images}catch(e){}}}catch(e){sample=null}aiStatus()})();
-function aiStatus(){$('aiDot').classList.toggle('on',!!sample);$('aiState').textContent=brainState==='ready'?'Field agent · offline brain on (Gemma 4)':sample?'Field agent · AI on'+(imgOK?' · photo scans on':''):'Field agent · offline guide (download my brain in Premium for full AI)'}
+function aiStatus(){$('aiDot').classList.toggle('on',!!sample);$('aiState').textContent=brainState==='ready'?tr('Field agent · offline brain on (Gemma 4)'):sample?tr('Field agent · AI on')+(imgOK?' · '+tr('photo scans on'):''):tr('Field agent · offline guide (download my brain in Premium for full AI)')}
 const SYS='You are Taylor, the field agent of the Wildlens app: a field guide for hikers and people living off-grid. Answer in the language of the question (English by default), short and practical: at most 8 lines, numbered steps when useful, **bold** only for the single most important thing. Safety first: for emergencies remind 112 in Europe or 911 in North America and mountain rescue. Never say a wild mushroom, berry or plant is edible or safe to eat from a photo or description: name dangerous look-alikes and send the user to a local mycologist or expert. Never say water is drinkable from a photo: explain how to make it safe. If unsure, say so. Use the guide excerpts when relevant.';
 async function ai(prompt,el){if(!sample)return;const box=document.createElement('div');box.className='ans';box.innerHTML='<span class="lbl ai">'+TAY()+'Taylor · AI</span><div class="out"><p>Taylor is thinking…</p></div><p class="note">Prototype: Taylor\'s AI needs a connection here. In the installable version it runs on the phone, offline.</p>';el.appendChild(box);const out=box.querySelector('.out');try{const r=await sample(prompt,{cache:false,onText:({text})=>{out.innerHTML=md(text)}});out.innerHTML=md(r.text)}catch(e){if(e&&e.code==='not_granted'){box.remove();sample=null;return}out.innerHTML='<p>'+(e&&e.code==='rate_limited'?'Too many questions in a row: try again shortly. The offline answer above still stands.':'Taylor\'s AI is not available right now. The offline answer above still stands.')+'</p>'}}
 let hist=[];
@@ -907,7 +955,7 @@ $('askF').onsubmit=e=>{e.preventDefault();const q=$('askQ').value.trim();if(!q)r
 const EX=['How do I make water safe to drink?','A snake bit me','How do I start a fire?','I\'m lost','A storm is coming','I saw a bear','I\'m cold and it\'s getting dark','Can I eat this mushroom?','What is the human body made of?'];
 $('exChips').innerHTML=EX.map(x=>`<button type="button">${esc(x)}</button>`).join('');
 $('exChips').onclick=e=>{const b=e.target.closest('button');if(b)ask(b.textContent)};
-function openTay(){$('sheet').hidden=false;$('tayFab').hidden=true;if(!$('msgs').children.length)bubble('ans',`<span class="lbl ai">${TAY()}Taylor</span><p>Hi, I'm Taylor, your field agent. Ask me about water, fire, shelter, bites, storms, plants, the body or how things are built. I answer from the offline guide right away${sample?', then add my own advice':''}.</p>`);setTimeout(()=>$('askQ').focus(),50)}
+function openTay(){try{cq=[];$('coach').hidden=true;clearHl()}catch(e){}$('sheet').hidden=false;$('tayFab').hidden=true;if(!$('msgs').children.length)bubble('ans',`<span class="lbl ai">${TAY()}Taylor</span><p>${tr("Hi, I'm Taylor, your field agent. Ask me about water, fire, shelter, bites, storms, plants, the body or how things are built. I answer from the offline guide right away.")}</p>`);setTimeout(()=>$('askQ').focus(),50)}
 function closeTay(){$('sheet').hidden=true;$('tayFab').hidden=false}
 $('tayFab').onclick=openTay;$('openTay').onclick=openTay;$('closeTay').onclick=closeTay;
 
@@ -1032,7 +1080,7 @@ stats();fillTargets();updateBack();
 /* BEFORE YOU GO: trip message + 10 essentials */
 const ESS=['Navigation: map, compass, phone with GPS','Headlamp and spare batteries','Sun protection: hat, sunglasses, sunscreen','First aid kit','Knife or multitool','Fire: lighter, matches, fire starter','Emergency shelter: space blanket or bivy','Extra food','Extra water and a way to treat it','Extra clothes: warm layer and rain shell'];
 let ess=store.get('ms-ess',[]);
-function drawEss(){$('ess').innerHTML=ESS.map((x,i)=>`<label class="chk"><input type="checkbox" data-e="${i}" ${ess.includes(i)?'checked':''}><span>${x}</span></label>`).join('');$('essNote').textContent=ess.length===ESS.length?'All packed. Have a great hike!':`${ess.length} of ${ESS.length} packed.`}
+function drawEss(){$('ess').innerHTML=ESS.map((x,i)=>`<label class="chk"><input type="checkbox" data-e="${i}" ${ess.includes(i)?'checked':''}><span>${x}</span></label>`).join('');$('essNote').textContent=ess.length===ESS.length?tr('All packed. Have a great hike!'):`${ess.length} ${tr('of')} ${ESS.length} ${tr('packed.')}`}
 $('ess').onchange=e=>{const i=+e.target.dataset.e;ess=e.target.checked?[...new Set([...ess,i])]:ess.filter(x=>x!==i);store.set('ms-ess',ess);drawEss();renderBadges()};drawEss();
 function tripMsg(){const r=$('tripRoute').value.trim()||'a hike',b=$('tripBack').value,n=$('tripN').value||1;let m=`I'm going on ${r} (${n} ${n==1?'person':'people'}).`;if(b)m+=` I plan to be back by ${b}. If you haven't heard from me 1 hour after that, call 112 (or 911) and ask for mountain rescue.`;if(pos)m+=` Last known position: ${pos.lat.toFixed(5)}, ${pos.lon.toFixed(5)} https://www.openstreetmap.org/?mlat=${pos.lat.toFixed(5)}&mlon=${pos.lon.toFixed(5)}#map=15/${pos.lat.toFixed(5)}/${pos.lon.toFixed(5)}`;return m+' (sent with Wildlens)'}
 function tripLinks(){const m=encodeURIComponent(tripMsg());$('tripWa').href='https://wa.me/?text='+m;$('tripWa').onclick=$('tripSms').onclick=()=>store.set('ms-tripsent',1);$('tripSms').href='sms:?&body='+m}
@@ -1046,8 +1094,8 @@ const BADGES=[['F','First find',d=>d.length>=1],['5','5 finds',d=>d.length>=5],[
 /* JOURNAL */
 function saveDiary(){if(!store.set('ms-diary',diary)){for(const d of diary.slice(10))d.img=null;store.set('ms-diary',diary)}}
 const when=s=>{try{return new Date(s).toLocaleString('en-GB',{dateStyle:'medium',timeStyle:'short'})}catch(e){return''}};
-function renderDiary(){renderBadges();try{renderPlates()}catch(e){}$('diary').innerHTML=diary.length?diary.map(d=>itemHTML(d.g,`data-d="${d.id}"`,d.img,esc(when(d.when))+(d.lat!=null?' · located':'')+' · ')).join(''):'<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 109-9 9 9 0 00-7 3.4"/><path d="M3 4v4h4M12 8v4l3 2"/></svg><b>No scans yet</b>Point the camera at something and your discoveries will live here.</div>';
-const n=diary.length;$('syncNote').textContent=n?`${n} discover${n===1?'y':'ies'} ready to share.`:'Your journal is empty.'}
+function renderDiary(){renderBadges();try{renderPlates()}catch(e){}$('diary').innerHTML=diary.length?diary.map(d=>itemHTML(d.g,`data-d="${d.id}"`,d.img,esc(when(d.when))+(d.lat!=null?' · located':'')+' · ')).join(''):'<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 109-9 9 9 0 00-7 3.4"/><path d="M3 4v4h4M12 8v4l3 2"/></svg><b>'+tr('No scans yet')+'</b>'+tr('Point the camera at something and your discoveries will live here.')+'</div>';
+const n=diary.length;$('syncNote').textContent=n?`${n} ${tr(n===1?'discovery ready to share.':'discoveries ready to share.')}`:tr('Your journal is empty.')}
 function openDiary(id){const d=diary.find(x=>x.id===id);if(!d)return;$('det').innerHTML=(d.cf!=null||d.g.score!=null?yukaHTML(d.g,d.img,d.cf):detHTML(d.g,d.img)+(d.img?`<img class="photo" src="${d.img}" alt="${esc(d.g.t)}">`:''))+`<p class="note">${esc(when(d.when))}${d.lat!=null?' · '+d.lat.toFixed(5)+', '+d.lon.toFixed(5):''}</p><button class="btn sm alt" data-del="${d.id}">Delete from journal</button>`;show('scheda')}
 $('diary').onclick=e=>{const b=e.target.closest('[data-d]');if(b)openDiary(b.dataset.d)};
 $('det').onclick=e=>{const sv=e.target.closest('[data-saveas]');if(sv){saveAs(sv.dataset.saveas);return}const op=e.target.closest('[data-open]');if(op&&!e.target.dataset.open){openScheda(op.dataset.open);return}const del=e.target.dataset.del;if(del){diary=diary.filter(x=>x.id!==del);saveDiary();show('diario');return}const o=e.target.dataset.open;if(o)openScheda(o)};
@@ -1055,12 +1103,12 @@ $('sync').onclick=()=>{$('syncNote').textContent='Sharing is simulated in this p
 
 /* MAP */
 let lmap=null,llayer=null;
-function drawLeaflet(){const pts=diary.filter(d=>d.lat!=null);$('mapCount').textContent=`${pts.length} pinned discover${pts.length===1?'y':'ies'}`;const box=$('map');
+function drawLeaflet(){const pts=diary.filter(d=>d.lat!=null);$('mapCount').textContent=`${pts.length} ${tr(pts.length===1?'pinned discovery':'pinned discoveries')}`;const box=$('map');
 if(!lmap){box.innerHTML='';lmap=L.map(box,{zoomControl:true,attributionControl:true}).setView(pos?[pos.lat,pos.lon]:[45.5,-122.0],pos?14:6);L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap contributors'}).addTo(lmap);llayer=L.layerGroup().addTo(lmap)}
 llayer.clearLayers();const ll=[];for(const d of pts){const m=L.circleMarker([d.lat,d.lon],{radius:9,color:'#fff',weight:2,fillColor:'#c49a6c',fillOpacity:1}).addTo(llayer);m.bindTooltip(esc(d.g.t));m.on('click',()=>openDiary(d.id));ll.push([d.lat,d.lon])}
 if(track.length>1){L.polyline(track.map(p=>[p.lat,p.lon]),{color:'#d1492a',weight:4,opacity:.8}).addTo(llayer);ll.push([track[0].lat,track[0].lon])}for(const m of marks){L.circleMarker([m.lat,m.lon],{radius:7,color:'#fff',weight:2,fillColor:'#2d5a34',fillOpacity:1}).addTo(llayer).bindTooltip(esc(m.n));ll.push([m.lat,m.lon])}if(pos){L.circleMarker([pos.lat,pos.lon],{radius:8,color:'#fff',weight:2,fillColor:'#d1492a',fillOpacity:1}).addTo(llayer).bindTooltip('You');ll.push([pos.lat,pos.lon])}
 setTimeout(()=>{lmap.invalidateSize();if(ll.length>1)lmap.fitBounds(ll,{padding:[40,40],maxZoom:16});else if(ll.length)lmap.setView(ll[0],15)},60)}
-function drawMap(){if(window.L&&navigator.onLine!==false||lmap){try{return drawLeaflet()}catch(e){}}const pts=diary.filter(d=>d.lat!=null);$('mapCount').textContent=`${pts.length} pinned discover${pts.length===1?'y':'ies'}`;const box=$('map');const all=[...pts.map(d=>({lat:d.lat,lon:d.lon,n:d.g.t,id:d.id})),...(pos?[{lat:pos.lat,lon:pos.lon,me:1}]:[])];
+function drawMap(){if(window.L&&navigator.onLine!==false||lmap){try{return drawLeaflet()}catch(e){}}const pts=diary.filter(d=>d.lat!=null);$('mapCount').textContent=`${pts.length} ${tr(pts.length===1?'pinned discovery':'pinned discoveries')}`;const box=$('map');const all=[...pts.map(d=>({lat:d.lat,lon:d.lon,n:d.g.t,id:d.id})),...(pos?[{lat:pos.lat,lon:pos.lon,me:1}]:[])];
 if(!all.length){box.innerHTML='<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/></svg><b>No pinned scans yet</b>Find your location below, then scan: each discovery lands on the map.</div>';return}
 const W=box.clientWidth||340,H=box.clientHeight||320,la=all.map(p=>p.lat),lo=all.map(p=>p.lon),la0=(Math.min(...la)+Math.max(...la))/2,lo0=(Math.min(...lo)+Math.max(...lo))/2,k=Math.cos(la0*Math.PI/180);
 const sx=Math.max((Math.max(...lo)-Math.min(...lo))*k,.004),sy=Math.max(Math.max(...la)-Math.min(...la),.004),sc=Math.min((W-80)/sx,(H-80)/sy);
@@ -1091,12 +1139,11 @@ $('lens').innerHTML=SCENE();$('introAv').innerHTML=TSPRITE(true);$('fabSp').inne
 const isPhoneOk=()=>!!navigator.gpu&&((navigator.deviceMemory||8)>=6);
 let wz=0;const wsel={brain:isPhoneOk()?'full':'light',areas:AREAS.filter(a=>a.ok).map(a=>a.id).slice(0,1)};
 const WZ=[
-()=>`<div class="lens scn" style="margin:0 auto 10px">${SCENE()}</div><h2>Hi, I'm Taylor</h2><p>I'm your field agent. Let's get Wildlens <b>field-ready</b> in one minute, while you still have signal: then it works with none.</p>`,
-()=>`<h2>Choose my brain</h2><p>I run on your phone, so your photos and questions never leave it.</p>${[['none','Guide only','Answers from the offline guide, guided questions','0 MB'],['light','Light brain','Recognizes photos against the library · any phone','~150 MB'],['full','Full brain · Gemma 4','Recognizes anything, writes full answers · recent phones'+(isPhoneOk()?'':' (may not run on this one)'),'~2 GB']].map(o=>`<button class="opt" data-wb="${o[0]}" aria-pressed="${wsel.brain===o[0]}"><div><b>${o[1]}</b><small>${o[2]}</small></div><span class="sz">${o[3]}</span></button>`).join('')}`,
-()=>`<h2>Pick your areas</h2><p>Local species, risks and rules for where you hike.</p>${AREAS.map(a=>`<button class="opt" ${a.ok?`data-wa="${a.id}"`:'disabled'} aria-pressed="${wsel.areas.includes(a.id)}"><div><b>${a.t}</b><small>${a.r}${a.ok?'':' · coming soon'}</small></div><span class="sz">~${a.mb} MB</span></button>`).join('')}`,
-()=>`<h2>Find your position</h2><p>GPS works with no signal. I use it for the map, sunset time and to guide you back.</p><button class="btn" data-wl="1">${pos?'Location found ✓':'Allow location'}</button><p class="note" id="wlNote">${pos?pos.lat.toFixed(4)+', '+pos.lon.toFixed(4):''}</p>`,
-()=>{const mb={none:0,light:150,full:2000}[wsel.brain]+wsel.areas.reduce((s,id)=>s+(AREAS.find(a=>a.id===id)||{mb:0}).mb,0);return`<h2>Review your downloads</h2><ul style="text-align:left">${wsel.brain!=='none'?`<li>${wsel.brain==='full'?'Full brain (Gemma 4)':'Light brain'}</li>`:''}${wsel.areas.map(id=>`<li>${AREAS.find(a=>a.id===id).t}</li>`).join('')}<li>Field guide, 100+ pages (included)</li></ul><p><b>Total: about ${mb>=1000?(mb/1000).toFixed(1)+' GB':mb+' MB'}</b>. Use Wi-Fi. You can keep using the app while it downloads.</p>`}];
-function drawIntro(){$('introBody').innerHTML=WZ[wz]();$('introDots').innerHTML=WZ.map((_,i)=>`<i class="${i===wz?'on':''}"></i>`).join('');$('introBack').style.visibility=wz?'visible':'hidden';$('introNext').textContent=wz===WZ.length-1?'Start':'Next'}
+()=>`<h2>${tr('Choose my brain')}</h2><p>${tr('I run on your phone, so your photos and questions never leave it.')}</p>${[['none','Guide only','Answers from the offline guide, guided questions','0 MB'],['light','Light brain','Recognizes photos against the library · any phone','~150 MB'],['full','Full brain · Gemma 4','Recognizes anything, writes full answers · recent phones','~2 GB']].map(o=>`<button class="opt" data-wb="${o[0]}" aria-pressed="${wsel.brain===o[0]}"><div><b>${tr(o[1])}</b><small>${tr(o[2])}${o[0]==='full'&&!isPhoneOk()?' '+tr('(may not run on this phone)'):''}</small></div><span class="sz">${o[3]}</span></button>`).join('')}`,
+()=>`<h2>${tr('Pick your areas')}</h2><p>${tr('Local species, risks and rules for where you hike.')}</p>${AREAS.map(a=>`<button class="opt" ${a.ok?`data-wa="${a.id}"`:'disabled'} aria-pressed="${wsel.areas.includes(a.id)}"><div><b>${tr(a.t)}</b><small>${tr(a.r)}${a.ok?'':' · '+tr('coming soon')}</small></div><span class="sz">~${a.mb} MB</span></button>`).join('')}`,
+()=>`<h2>${tr('Find your position')}</h2><p>${tr('GPS works with no signal. I use it for the map, sunset time and to guide you back.')}</p><button class="btn" data-wl="1">${pos?tr('Location found ✓'):tr('Allow location')}</button><p class="note" id="wlNote">${pos?pos.lat.toFixed(4)+', '+pos.lon.toFixed(4):''}</p>`,
+()=>{const mb={none:0,light:150,full:2000}[wsel.brain]+wsel.areas.reduce((s,id)=>s+(AREAS.find(a=>a.id===id)||{mb:0}).mb,0);return`<h2>${tr('Review your downloads')}</h2><ul style="text-align:left">${wsel.brain!=='none'?`<li>${tr(wsel.brain==='full'?'Full brain (Gemma 4)':'Light brain')}</li>`:''}${wsel.areas.map(id=>`<li>${tr(AREAS.find(a=>a.id===id).t)}</li>`).join('')}<li>${tr('Field guide, 100+ pages (included)')}</li></ul><p><b>${tr('Total: about')} ${mb>=1000?(mb/1000).toFixed(1)+' GB':mb+' MB'}</b>. ${tr('Use Wi-Fi. You can keep using the app while it downloads.')}</p>`}];
+function drawIntro(){$('introBody').innerHTML=WZ[wz]();$('introDots').innerHTML=WZ.map((_,i)=>`<i class="${i===wz?'on':''}"></i>`).join('');$('introBack').style.visibility=wz?'visible':'hidden';$('introNext').textContent=tr(wz===WZ.length-1?'Start':'Next');trNode($('intro'))}
 function openIntro(){wz=0;drawIntro();$('intro').hidden=false}
 function finishSetup(apply){$('intro').hidden=true;store.set('ms-setup',1);if(apply){for(const id of wsel.areas)if(!inst.includes(id))inst.push(id);store.set('ms-areas',inst);renderAreas();if(wsel.brain==='light')loadClip(m=>{$('rdTxt').textContent='Light brain: '+m}).then(renderReady).catch(()=>{});if(wsel.brain==='full'){loadBrain().then?.(renderReady)}}renderReady();setTimeout(()=>coach(view),400)}
 $('introNext').onclick=()=>{if(wz<WZ.length-1){wz++;drawIntro()}else finishSetup(true)};
@@ -1121,7 +1168,7 @@ $('helpBtn').onclick=()=>coach(view,true);
 function readiness(){return[["Taylor's brain",clipState==='ready'||brainState==='ready'],['Area pack',inst.length>0],['Location found',!!pos],['10 essentials packed',ess.length===ESS.length],['Someone knows your plan',!!store.get('ms-tripsent',0)],['Installed as an app',matchMedia('(display-mode: standalone)').matches]]}
 function renderReady(){const r=readiness(),ok=r.filter(x=>x[1]).length,pct=Math.round(ok/r.length*100),next=r.find(x=>!x[1]);$('rdPct').textContent=pct+'%';$('rdRing').style.background=`conic-gradient(#9fd3a8 ${pct}%, rgba(255,255,255,.18) 0)`;$('rdTitle').textContent=tr(pct===100?'Field-ready':'Get field-ready');if(!/Light brain:|Downloading/.test($('rdTxt').textContent)||pct===100)$('rdTxt').textContent=pct===100?tr('Everything works with no signal.'):`${ok} ${tr('of')} ${r.length} ${tr('done · next:')} ${tr(next[0])}`}
 $('readyBtn').onclick=openIntro;setInterval(()=>{if(view==='scan')renderReady()},3000);renderReady();
-if(!store.get('ms-setup',0))setTimeout(openIntro,300);else setTimeout(()=>coach('scan'),600);
+window.WL_AFTER_GATE=()=>{if(!store.get('ms-setup',0))setTimeout(openIntro,250);else setTimeout(()=>coach('scan'),600)};
 if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('sw.js').catch(()=>{});
 
 /* SETTINGS */
@@ -1613,7 +1660,7 @@ $('brOn').onclick=async()=>{try{const a=await ws.available();if(!a.pressure){$('
 $('brOn').click();toolStop=()=>{try{ws.stopPressure();h&&h.remove()}catch(e){}}};
 const today=()=>new Date().toDateString();
 T_.steps=b=>{let st=store.get('ms-steps',{}),len=store.get('ms-steplen',.75);if(st.day!==today())st={day:today(),n:0,base:null};
-b.innerHTML=`<div class="card" style="text-align:center"><small>${tr('Steps today')}</small><div class="bigdeg" id="spN" style="font-size:56px">0</div><div class="kv"><div><small>${tr('Distance')}</small><b id="spD">0 m</b></div><div><small>${tr('Step length')}</small><b><input id="spL" type="number" step="0.05" min="0.3" max="1.5" value="${len}" style="width:70px;font:inherit;text-align:center"> m</b></div></div></div>${B('spOn','Turn on step counter')}<div class="row"><button class="btn sm alt" id="spR">↺ ${tr('Reset today')}</button></div><p class="note" id="spNote"></p>`;
+b.innerHTML=`<div class="card" style="text-align:center"><small>${tr('Steps today')}</small><div class="bigdeg" id="spN" style="font-size:56px">0</div><div class="kv"><div><small>${tr('Distance')}</small><b id="spD">0 m</b></div><div><small>${tr('Step length')}</small><b><input id="spL" type="number" step="0.05" min="0.3" max="1.5" value="${len}" style="width:52px;font:inherit;text-align:center;padding:2px"> m</b></div></div></div>${B('spOn','Turn on step counter')}<div class="row"><button class="btn sm alt" id="spR">↺ ${tr('Reset today')}</button></div><p class="note" id="spNote"></p>`;
 const draw=()=>{$('spN').textContent=st.n.toLocaleString();const m=st.n*len;$('spD').textContent=IMP()?(m/1609).toFixed(2)+' mi':m<1000?Math.round(m)+' m':(m/1000).toFixed(2)+' km'};const sv=()=>store.set('ms-steps',st);
 $('spL').oninput=()=>{len=+$('spL').value||.75;store.set('ms-steplen',len);draw()};$('spR').onclick=()=>{st.n=0;st.base=null;st.day=today();sv();draw()};draw();
 const ws=WS();let h=null,stopW=null;
@@ -1652,6 +1699,104 @@ const _rdl=renderDl;renderDl=function(){_rdl();const c=$('dlBody').querySelector
 c.insertAdjacentHTML('beforeend',row('🪶','Mini brain · Gemma 3 1B','About 1–1.7 GB · works without WebGPU, older phones · chat only','dlMini',miniState)+row('🔎','Smart search','About 120 MB · finds guides by meaning, in any language','dlSmart',smartState));
 const go=(id,fn)=>{$(id).onclick=()=>{$(id).textContent='…';$(id+'P').hidden=false;fn(p=>{$(id+'P').firstChild.style.width=p+'%'}).then(renderDl).catch(e=>{$(id).textContent='!';$(id+'P').insertAdjacentHTML('afterend',`<small style="color:var(--sos)">${navigator.onLine?tr('Download failed: not enough memory or space.'):tr('The first download needs internet (Wi-Fi recommended).')}</small>`)})}};go('dlMini',loadMini);go('dlSmart',loadSmart);trNode(c)};
 
+/* ===== WILDLENS 0.3: traduzioni, intestazione, voce e Taylor interattiva, foto vere ===== */
+Object.assign(I18N,{
+'Answers from the offline guide, guided questions':['Risposte dalla guida offline, domande guidate','Respuestas de la guía sin conexión, preguntas guiadas'],
+'Recognizes photos against the library · any phone':['Riconosce le foto confrontandole con la libreria · qualsiasi telefono','Reconoce fotos comparándolas con la biblioteca · cualquier móvil'],
+'Recognizes anything, writes full answers · recent phones':['Riconosce qualsiasi cosa, risposte complete · telefoni recenti','Reconoce cualquier cosa, respuestas completas · móviles recientes'],
+'Full brain · Gemma 4':['Cervello completo · Gemma 4','Cerebro completo · Gemma 4'],'(may not run on this phone)':['(potrebbe non funzionare su questo telefono)','(puede que no funcione en este móvil)'],
+'Pick your areas':['Scegli le tue zone','Elige tus zonas'],'Local species, risks and rules for where you hike.':['Specie, rischi e regole locali delle zone dove cammini.','Especies, riesgos y normas locales de donde caminas.'],
+'coming soon':['in arrivo','próximamente'],'Find your position':['Trova la tua posizione','Encuentra tu posición'],
+'GPS works with no signal. I use it for the map, sunset time and to guide you back.':['Il GPS funziona anche senza rete. Lo uso per la mappa, l’ora del tramonto e per riportarti indietro.','El GPS funciona sin cobertura. Lo uso para el mapa, la hora de la puesta de sol y para guiarte de vuelta.'],
+'Location found ✓':['Posizione trovata ✓','Posición encontrada ✓'],'Allow location':['Consenti posizione','Permitir ubicación'],
+'Review your downloads':['Riepilogo dei download','Resumen de descargas'],'Full brain (Gemma 4)':['Cervello completo (Gemma 4)','Cerebro completo (Gemma 4)'],'Light brain':['Cervello leggero','Cerebro ligero'],
+'Field guide, 100+ pages (included)':['Guida da campo, oltre 100 schede (inclusa)','Guía de campo, más de 100 fichas (incluida)'],'Total: about':['Totale: circa','Total: unos'],
+'Use Wi-Fi. You can keep using the app while it downloads.':['Usa il Wi-Fi. Puoi continuare a usare l’app durante il download.','Usa Wi-Fi. Puedes seguir usando la app mientras descarga.'],
+'Start':['Inizia','Empezar'],'Next':['Avanti','Siguiente'],
+'of yours':['tue','tuyas'],'curated':['schede curate','fichas'],'Active area':['Zona attiva','Zona activa'],'Manage':['Gestisci','Gestionar'],'about':['circa','unos'],
+'USA › Oregon':['USA › Oregon','EE. UU. › Oregón'],'Italy › Trentino-Alto Adige and Veneto':['Italia › Trentino-Alto Adige e Veneto','Italia › Trentino-Alto Adigio y Véneto'],
+'Italy › Abruzzo, Lazio, Marche, Umbria':['Italia › Abruzzo, Lazio, Marche, Umbria','Italia › Abruzos, Lacio, Marcas, Umbría'],'Central Apennines':['Appennino centrale','Apeninos centrales'],
+'Field agent · offline brain on (Gemma 4)':['Agente da campo · cervello offline attivo (Gemma 4)','Agente de campo · cerebro sin conexión activo (Gemma 4)'],'Field agent · AI on':['Agente da campo · AI attiva','Agente de campo · IA activa'],'photo scans on':['scansione foto attiva','escaneo de fotos activo'],
+'Field agent · offline guide (download my brain in Premium for full AI)':['Agente da campo · guida offline','Agente de campo · guía sin conexión'],
+"Hi, I'm Taylor, your field agent. Ask me about water, fire, shelter, bites, storms, plants, the body or how things are built. I answer from the offline guide right away.":["Ciao, sono Taylor, la tua agente da campo. Chiedimi di acqua, fuoco, ripari, morsi, temporali, piante, del corpo o di come sono fatte le cose. Rispondo subito dalla guida offline. Puoi anche parlarmi: tocca il microfono.","Hola, soy Taylor, tu agente de campo. Pregúntame por agua, fuego, refugio, mordeduras, tormentas, plantas, el cuerpo o cómo están hechas las cosas. Respondo al momento con la guía sin conexión. También puedes hablarme: toca el micrófono."],
+'No scans yet':['Ancora nessuna scansione','Aún no hay escaneos'],'Point the camera at something and your discoveries will live here.':['Inquadra qualcosa con la fotocamera: le tue scoperte finiranno qui.','Apunta la cámara a algo y tus hallazgos aparecerán aquí.'],
+'Your journal is empty.':['Il tuo diario è vuoto.','Tu diario está vacío.'],'discovery ready to share.':['scoperta pronta da condividere.','hallazgo listo para compartir.'],'discoveries ready to share.':['scoperte pronte da condividere.','hallazgos listos para compartir.'],
+'Last known position:':['Ultima posizione nota:','Última posición conocida:'],'Find your position in the Map tab so you can read it to rescuers.':['Trova la tua posizione nella scheda Mappa, così potrai dettarla ai soccorritori.','Busca tu posición en la pestaña Mapa para poder dictársela a los rescatistas.'],
+'All packed. Have a great hike!':['Tutto nello zaino. Buona escursione!','Todo en la mochila. ¡Buena excursión!'],'packed.':['nello zaino.','en la mochila.'],
+'Needs a recent phone with Chrome (WebGPU) and at least 6–8 GB of RAM. On older phones Taylor uses the guided questions and the offline library.':['Serve un telefono recente con Chrome (WebGPU) e almeno 6–8 GB di RAM. Sui telefoni più vecchi Taylor usa le domande guidate e la libreria offline.','Necesita un móvil reciente con Chrome (WebGPU) y al menos 6–8 GB de RAM. En móviles antiguos Taylor usa las preguntas guiadas y la biblioteca sin conexión.'],
+'Survival, first aid, body, buildings, common species · always on':['Sopravvivenza, primo soccorso, corpo, costruzioni, specie comuni · sempre attivo','Supervivencia, primeros auxilios, cuerpo, construcciones, especies comunes · siempre activo'],
+'Prototype: packs are already inside the app and the download is simulated. Sizes are estimates for the full version.':['Prototipo: i pacchetti sono già dentro l’app e il download è simulato. Le dimensioni sono stime della versione completa.','Prototipo: los paquetes ya están en la app y la descarga es simulada. Los tamaños son estimaciones de la versión completa.'],
+'Base pack':['Pacchetto base','Paquete base'],'Installed':['Installato','Instalado'],'Download':['Scarica','Descargar'],'Remove':['Rimuovi','Quitar'],'Soon':['Presto','Pronto'],
+'OFFLINE':['OFFLINE','SIN CONEXIÓN'],'ACCOUNT':['PROFILO','PERFIL'],'Read GPS altitude':['Leggi l’altitudine GPS','Leer altitud GPS'],'Volume':['Volume','Volumen'],'Community':['Comunità','Comunidad'],'Premium':['Premium','Premium'],
+'Wikipedia offline':['Wikipedia offline','Wikipedia sin conexión'],'pinned discoveries':['scoperte sulla mappa','hallazgos en el mapa'],'pinned discovery':['scoperta sulla mappa','hallazgo en el mapa'],'Swap':['Inverti','Invertir'],'From:':['Da:','De:'],'No area downloaded':['Nessuna zona scaricata','Ninguna zona descargada'],'Download your area before you go':['Scarica la tua zona prima di partire','Descarga tu zona antes de salir'],'Choose area':['Scegli la zona','Elegir zona'],'Downloads':['Download','Descargas'],'Offline guide':['Guida offline','Guía sin conexión'],
+'Robin · Porcini · Fern':['Pettirosso · Porcino · Felce','Petirrojo · Boleto · Helecho'],
+'Account':['Profilo','Perfil'],'How Wildlens works':['Come funziona Wildlens','Cómo funciona Wildlens'],'Search the library':['Cerca nella libreria','Buscar en la biblioteca'],'Destination':['Destinazione','Destino'],'Compass':['Bussola','Brújula'],'Question':['Domanda','Pregunta'],'Welcome to Wildlens':['Benvenuto in Wildlens','Bienvenido a Wildlens'],'Sections':['Sezioni','Secciones'],'Zoom out':['Riduci','Alejar'],'Zoom in':['Ingrandisci','Acercar'],
+'Language':['Lingua','Idioma'],'Day / night':['Giorno / notte','Día / noche'],'Talk to Taylor':['Parla con Taylor','Habla con Taylor'],'Taylor speaks':['Taylor parla','Taylor habla'],'Taylor is silent':['Taylor in silenzio','Taylor en silencio'],
+'Listening…':['Ti ascolto…','Te escucho…'],'I did not catch that. Try again.':['Non ho capito. Riprova.','No te he entendido. Inténtalo otra vez.'],'Allow the microphone to talk to Taylor.':['Consenti il microfono per parlare con Taylor.','Permite el micrófono para hablar con Taylor.'],'Voice input is not available on this phone.':['Il riconoscimento vocale non è disponibile su questo telefono.','El reconocimiento de voz no está disponible en este móvil.'],
+'Photo':['Foto','Foto'],
+'Download <b>Gemma 4</b>, Google\'s open AI model, into your phone once (about 2 GB, use Wi-Fi). Then Taylor recognizes your photos and answers questions <b>with no internet at all</b>.':['Scarica <b>Gemma 4</b>, il modello AI aperto di Google, sul telefono una volta sola (circa 2 GB, usa il Wi-Fi). Poi Taylor riconosce le tue foto e risponde alle domande <b>senza internet</b>.','Descarga <b>Gemma 4</b>, el modelo de IA abierto de Google, en tu móvil una sola vez (unos 2 GB, usa Wi-Fi). Luego Taylor reconoce tus fotos y responde preguntas <b>sin internet</b>.'],
+'© 2026 ART& CREATION LLC. Wildlens and Taylor are trademarks of ART& CREATION LLC. All rights reserved. Code and content are protected by copyright: copying, modification and redistribution without written permission are prohibited.':['© 2026 ART& CREATION LLC. Wildlens e Taylor sono marchi di ART& CREATION LLC. Tutti i diritti riservati. Codice e contenuti protetti da copyright: vietati copia, modifica e ridistribuzione senza autorizzazione scritta.','© 2026 ART& CREATION LLC. Wildlens y Taylor son marcas de ART& CREATION LLC. Todos los derechos reservados. Código y contenidos protegidos por derechos de autor: prohibidas la copia, modificación y redistribución sin autorización escrita.'],
+'Terms of use':['Condizioni d’uso','Condiciones de uso'],
+'The barometer needs the Wildlens Android app and a phone with a pressure sensor. In the browser it is not available.':["Il barometro funziona nell'app Wildlens per Android, su telefoni con sensore di pressione. Nel browser non c'è.",'El barómetro funciona en la app Wildlens para Android, en móviles con sensor de presión. En el navegador no está.']
+});
+/* testi con HTML interno */
+document.querySelectorAll('[data-trh]').forEach(e=>{if(!e.dataset.src)e.dataset.src=e.innerHTML.trim();const k=e.dataset.src;if(LANG!=='en'&&I18N[k])e.innerHTML=I18N[k][LI[LANG]]});
+
+/* ===== intestazione: lingua e giorno/notte a portata di dito ===== */
+(()=>{const box=$('meBtn')&&$('meBtn').parentNode;if(!box)return;
+ const lb=document.createElement('label');lb.className='help hq';lb.setAttribute('aria-label',tr('Language'));lb.innerHTML=`<span>${LANG.toUpperCase()}</span><select aria-label="${tr('Language')}">${[['it','🇮🇹 Italiano'],['en','🇬🇧 English'],['es','🇪🇸 Español']].map(([l,n])=>`<option value="${l}" ${l===LANG?'selected':''}>${n}</option>`).join('')}</select>`;
+ lb.querySelector('select').onchange=e=>{applyLang(e.target.value);setTimeout(()=>location.reload(),80)};
+ const th=document.createElement('button');th.className='help hq';th.setAttribute('aria-label',tr('Day / night'));
+ const dark=()=>{const t=document.documentElement.dataset.theme;return t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches};
+ const ico=()=>{th.textContent=dark()?'☀️':'🌙'};ico();th.onclick=()=>{setTheme(dark()?'light':'dark');ico();try{renderSettings()}catch(e){}};
+ box.insertBefore(th,box.firstChild);box.insertBefore(lb,box.firstChild);
+ $('meBtn').classList.add('hq');$('helpBtn').classList.add('hq');$('setBtn').classList.add('hq');
+ const tf=$('setTheme');if(tf)tf.addEventListener('click',()=>setTimeout(ico,0));})();
+
+/* ===== Taylor interattiva: si muove, reagisce al tocco, parla ===== */
+const TAY_TIPS={en:['Tap me any time: I answer even with no signal.','Before you go, tell someone your route and when you will be back.','Water first: you can last weeks without food, only days without water.','If you are lost: stop, think, observe, plan. Stay put if no one knows your route.','In a storm, get off ridges and summits and avoid lone trees.','Never eat a mushroom unless an expert has confirmed it in person.'],
+ it:['Toccami quando vuoi: rispondo anche senza rete.','Prima di partire, di’ a qualcuno il tuo percorso e quando torni.','Prima l’acqua: senza cibo resisti settimane, senz’acqua pochi giorni.','Se ti perdi: fermati, pensa, osserva, poi decidi. Resta dove sei se qualcuno conosce il tuo percorso.','Con il temporale scendi da creste e cime ed evita gli alberi isolati.','Non mangiare mai un fungo se non te lo ha confermato di persona un esperto.'],
+ es:['Tócame cuando quieras: respondo incluso sin cobertura.','Antes de salir, dile a alguien tu ruta y cuándo volverás.','Primero el agua: sin comida aguantas semanas, sin agua solo días.','Si te pierdes: para, piensa, observa y planifica. Quédate quieto si alguien conoce tu ruta.','Con tormenta baja de crestas y cumbres y evita los árboles aislados.','Nunca comas una seta si un experto no te la ha confirmado en persona.']};
+let tipI=Math.floor(Math.random()*6);
+function tayPoke(el){if(!el)return;el.classList.remove('tay-hop');void el.getBoundingClientRect();el.classList.add('tay-hop');setTimeout(()=>el.classList.remove('tay-hop'),650)}
+function tayTip(anchor){const tips=TAY_TIPS[LANG]||TAY_TIPS.en;const tip=tips[tipI++%tips.length];let b=$('tayTip');if(!b){b=document.createElement('div');b.id='tayTip';b.className='tayTip';document.body.appendChild(b)}
+ b.innerHTML=`<p>${esc(tip)}</p><div class="row"><button class="btn sm" id="tayTipAsk">${tr('Talk to Taylor')}</button><button class="link" id="tayTipX">✕</button></div>`;b.hidden=false;
+ $('tayTipX').onclick=e=>{e.stopPropagation();b.hidden=true;WLVoice&&WLVoice.stop()};$('tayTipAsk').onclick=e=>{e.stopPropagation();b.hidden=true;openTay()};
+ clearTimeout(b._t);b._t=setTimeout(()=>{b.hidden=true},9000);if(window.WLVoice&&WLVoice.on())WLVoice.speak(tip)}
+/* tocco sul FAB: Taylor salta e apre la chat; ogni tanto ti dà un consiglio da sola */
+(()=>{const f=$('tayFab');if(!f)return;f.onclick=()=>{tayPoke(f);$('tayTip')&&($('tayTip').hidden=true);setTimeout(openTay,260)};
+ setInterval(()=>{if(document.hidden||f.hidden||!$('sheet').hidden||document.getElementById('wlGate')||!$('intro').hidden||$('coach')&&!$('coach').hidden)return;if(Date.now()-(window._tipLast||0)<90000)return;window._tipLast=Date.now();tayPoke(f);const tips=TAY_TIPS[LANG]||TAY_TIPS.en;let b=$('tayTip');if(!b){b=document.createElement('div');b.id='tayTip';b.className='tayTip';document.body.appendChild(b)}b.innerHTML=`<p>${esc(tips[tipI++%tips.length])}</p>`;b.hidden=false;b.onclick=()=>{b.hidden=true;openTay()};clearTimeout(b._t);b._t=setTimeout(()=>{b.hidden=true},7000)},15000)})();
+/* ogni Taylor disegnata nell'app saluta quando la tocchi */
+document.addEventListener('click',e=>{const t=e.target.closest('.tsp,.introAv,.coach .tsp');if(!t||e.target.closest('#tayFab'))return;tayPoke(t.closest('.introAv')||t);const tips=TAY_TIPS[LANG]||TAY_TIPS.en;if(window.WLVoice&&WLVoice.on())WLVoice.speak(tips[tipI++%tips.length])});
+/* la bocca si muove quando parla (classe globale da voce.js); il FAB pulsa */
+
+/* ===== chat di Taylor a voce ===== */
+(()=>{const f=$('askF');if(!f||!window.WLVoice)return;
+ const mic=document.createElement('button');mic.type='button';mic.className='mic';mic.setAttribute('aria-label',tr('Talk to Taylor'));mic.innerHTML='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg>';
+ f.insertBefore(mic,f.querySelector('button[type=submit]'));
+ mic.onclick=async()=>{if(mic.classList.contains('on'))return;const q=$('askQ');const ph=q.placeholder;mic.classList.add('on');q.value='';q.placeholder=tr('Listening…');
+  try{const txt=await WLVoice.listen();if(txt&&txt.trim()){q.value=txt.trim();WLVoice.setOn(true);syncSpk();f.requestSubmit?f.requestSubmit():f.dispatchEvent(new Event('submit',{cancelable:true}))}else{q.placeholder=tr('I did not catch that. Try again.')}}
+  catch(e){q.placeholder=tr(e.message==='perm'?'Allow the microphone to talk to Taylor.':e.message==='na'?'Voice input is not available on this phone.':'I did not catch that. Try again.')}
+  finally{mic.classList.remove('on');setTimeout(()=>{if(!q.value)q.placeholder=ph},3500)}};
+ if(!WLVoice.canListen())mic.hidden=true;
+ const hd=$('sheet').querySelector('header'),cls=$('closeTay');const spk=document.createElement('button');spk.className='help hq spk';spk.type='button';
+ const syncSpk=()=>{const o=WLVoice.on();spk.textContent=o?'🔊':'🔇';spk.setAttribute('aria-label',tr(o?'Taylor speaks':'Taylor is silent'));spk.title=spk.getAttribute('aria-label')};syncSpk();
+ spk.onclick=()=>{WLVoice.setOn(!WLVoice.on());syncSpk()};cls.parentNode.insertBefore(spk,cls);
+ /* legge ad alta voce ogni nuova risposta, quando ha finito di scriversi */
+ let tmr,lastSpoken=null;new MutationObserver(()=>{clearTimeout(tmr);tmr=setTimeout(()=>{if(!WLVoice.on()||$('sheet').hidden)return;const a=[...$('msgs').querySelectorAll('.ans')].pop();if(!a||a===lastSpoken&&a.dataset.len==a.textContent.length)return;lastSpoken=a;a.dataset.len=a.textContent.length;const c=a.cloneNode(true);c.querySelectorAll('.lbl,.note,button,.chips,.src,.tag').forEach(x=>x.remove());c.querySelectorAll('p,li,h3,h4,div').forEach(x=>x.append(' '));WLVoice.speak(c.textContent.replace(/\s+/g,' ').slice(0,900))},900)}).observe($('msgs'),{childList:true,subtree:true,characterData:true});
+ cls.addEventListener('click',()=>WLVoice.stop());
+})();
+
+/* ===== foto vere per piante, funghi, animali e rocce (Wikipedia / Wikimedia Commons) ===== */
+const PH=store.get('ms-photos2',{});let phQ=Promise.resolve();
+function phKey(g){if(!g)return null;if(!/^sp-/.test(g.id||''))return null;return g.s&&/^[A-Z][a-z]+ [a-z-]+/.test(g.s)?g.s:(g.t||null)}
+async function phFetch(title){if(title in PH)return PH[title];if(!navigator.onLine)return null;
+ try{const r=await fetch('https://en.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(title.replace(/ /g,'_')));if(!r.ok){if(r.status===404){PH[title]='';store.set('ms-photos2',PH);return''}return null}const j=await r.json();const src=(j.thumbnail&&j.thumbnail.source||'').replace(/\/\d+px-/,'/480px-');PH[title]=src?src+'|'+((j.content_urls&&j.content_urls.mobile&&j.content_urls.mobile.page)||''):'';store.set('ms-photos2',PH);return PH[title]}catch(e){return null}}
+function phHydrate(root){(root||document).querySelectorAll('[data-wph]:not([data-phd])').forEach(el=>{el.dataset.phd=1;const k=el.dataset.wph;phQ=phQ.then(()=>phFetch(k)).then(v=>{if(!v)return;const[src,page]=v.split('|');const im=new Image();im.alt='';im.decoding='async';im.onload=()=>{el.classList.add('hasph');el.insertBefore(im,el.firstChild);if(el.classList.contains('hero')&&page){const c=document.createElement('a');c.className='phc';c.href=page;c.target='_blank';c.rel='noopener';c.textContent='📷 Wikipedia';el.appendChild(c)}};im.src=src})})}
+const _av0=avatar;avatar=function(g,img){const h=_av0(g,img);const k=!img&&phKey(g);return k?h.replace('<div class="av','<div data-wph="'+esc(k)+'" class="av'):h};
+const _yk0=yukaHTML;yukaHTML=function(g,img,cf){const h=_yk0(g,img,cf);const k=!img&&phKey(g);return k?`<div class="hero" data-wph="${esc(k)}"></div>`+h:h};const _det0=detHTML;detHTML=function(g,img,extra){const h=_det0(g,img,extra);const k=!img&&phKey(g);return k?`<div class="hero" data-wph="${esc(k)}"></div>`+h:h};
+new MutationObserver(()=>{clearTimeout(window._phT);window._phT=setTimeout(()=>phHydrate(),120)}).observe(document.body,{childList:true,subtree:true});
+setTimeout(()=>phHydrate(),800);
 /* ===== NATIVE BRIDGE (Capacitor app) ===== */
 const NATIVE=!!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform());const NP=NATIVE?Capacitor.Plugins:{};
 if(NATIVE){const TQ=NP.Torch,FL=NP.CapacitorFlash;if(TQ||FL){const on=v=>{try{TQ?(v?TQ.enable():TQ.disable()):(v?FL.switchOn({intensity:1}):FL.switchOff())}catch(e){}};ledInit=async()=>{ledTrack={applyConstraints:o=>{on(!!(o.advanced&&o.advanced[0].torch));return Promise.resolve()},stop:()=>on(false),getCapabilities:()=>({torch:true})};return true}}
