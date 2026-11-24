@@ -158,7 +158,13 @@ function stepReg(msg){
 }
 
 /* ---------- blocchi ---------- */
-function stepMsg(title,txt){const g=frame(taylor(title)+`<div class="card"><h2>${esc(title)}</h2><p class="t">${esc(txt)}</p><button class="go" id="wlRetry">${t('retry')}</button></div>`);g.querySelector('#wlRetry').onclick=()=>{g.querySelector('#wlRetry').textContent='…';check()}}
+const SOSX={emg:['EMERGENCY · ALWAYS AVAILABLE','EMERGENZA · SEMPRE DISPONIBILE','EMERGENCIA · SIEMPRE DISPONIBLE','URGENCE · TOUJOURS DISPONIBLE'],call:['Call 112','Chiama il 112','Llama al 112','Appeler le 112'],pos:['My position','La mia posizione','Mi posición','Ma position'],sms:['Send my position by SMS','Invia la posizione per SMS','Enviar mi posición por SMS','Envoyer ma position par SMS'],wait:['Finding your position…','Cerco la tua posizione…','Buscando tu posición…','Recherche de votre position…'],nopos:['Position not available: go outdoors and try again.','Posizione non disponibile: vai all’aperto e riprova.','Posición no disponible: sal al exterior e inténtalo de nuevo.','Position indisponible : sortez et réessayez.'],help:['I need help. My position:','Ho bisogno di aiuto. La mia posizione:','Necesito ayuda. Mi posición:','J’ai besoin d’aide. Ma position :'],off:['Continue offline','Continua offline','Continuar sin conexión','Continuer hors ligne'],offT:['You can keep using Wildlens with no signal. We will verify the next time you are online.','Puoi continuare a usare Wildlens senza campo. Verificheremo la prossima volta che sei online.','Puedes seguir usando Wildlens sin cobertura. Verificaremos la próxima vez que tengas conexión.','Vous pouvez continuer à utiliser Wildlens sans réseau. Nous vérifierons la prochaine fois que vous serez en ligne.']};
+const tx=k=>SOSX[k][lang==='it'?1:lang==='es'?2:lang==='fr'?3:0];
+function stepMsg(title,txt,soft){const g=frame(taylor(title)+`<div class="card"><h2>${esc(title)}</h2><p class="t">${esc(txt)}</p><button class="go" id="wlRetry">${t('retry')}</button>${soft?`<button class="go" id="wlOff" style="background:transparent;color:inherit;border:1.5px solid currentColor;margin-top:8px">${tx('off')}</button><p class="t" style="font-size:13px;opacity:.8">${tx('offT')}</p>`:''}</div>
+<div class="card" style="border:2px solid #b8432c"><div class="lbl" style="color:#b8432c">🆘 ${tx('emg')}</div><a class="go" href="tel:112" style="display:block;text-align:center;background:#b8432c;color:#fff;text-decoration:none">📞 ${tx('call')}</a><button class="go" id="wlPos" style="background:transparent;color:inherit;border:1.5px solid currentColor;margin-top:8px">📍 ${tx('pos')}</button><p class="t" id="wlPosT" style="font-size:15px"></p></div>`);
+ g.querySelector('#wlRetry').onclick=()=>{g.querySelector('#wlRetry').textContent='…';check()};
+ if(soft)g.querySelector('#wlOff').onclick=()=>{const s=get();s.softUntil=Date.now()+3*864e5;put(s);release()};
+ g.querySelector('#wlPos').onclick=()=>{const o=g.querySelector('#wlPosT');o.textContent=tx('wait');if(!navigator.geolocation){o.textContent=tx('nopos');return}navigator.geolocation.getCurrentPosition(p=>{const la=p.coords.latitude.toFixed(5),lo=p.coords.longitude.toFixed(5),msg=tx('help')+' '+la+', '+lo+' https://maps.google.com/?q='+la+','+lo;o.innerHTML=`<b style="font-size:20px">${la}, ${lo}</b><br>± ${Math.round(p.coords.accuracy)} m<br><a class="go" style="display:block;text-align:center;margin-top:8px;text-decoration:none" href="sms:?body=${encodeURIComponent(msg)}">✉ ${tx('sms')}</a>`},()=>{o.textContent=tx('nopos')},{enableHighAccuracy:true,timeout:20000,maximumAge:60000})}}
 
 /* ---------- server ---------- */
 async function ping(extra){
@@ -175,7 +181,7 @@ function render(){
  st=get();lang=ls('ms-lang',lang);
  if(!st.email)return st.look?stepReg():stepLook();
  if(st.blocked){const all=st.closedAll;return stepMsg(t(all?'paused':'locked'),st.msg||t(all?'pausedTxt':'lockedTxt'))}
- if(!st.lastOk||Date.now()-st.lastOk>GRACE_DAYS*864e5)return stepMsg(t('verify'),t('verifyTxt'));
+ if((!st.lastOk||Date.now()-st.lastOk>GRACE_DAYS*864e5)&&!(st.softUntil>Date.now()))return stepMsg(t('verify'),t('verifyTxt'),true);
  release()}
 
 let busy=false;
