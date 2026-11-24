@@ -1,0 +1,10 @@
+{
+  "appId": "app.wildlens.field",
+  "appName": "Wildlens",
+  "webDir": "www",
+  "android": { "allowMixedContent": false },
+  "plugins": {
+    "LocalNotifications": { "iconColor": "#2d5a34" },
+    "SplashScreen": { "backgroundColor": "#f3e3c9", "launchShowDuration": 800 }
+  }
+}

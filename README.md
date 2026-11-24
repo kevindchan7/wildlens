@@ -11,3 +11,14 @@ Offline field guide with Taylor, the field agent.
 Static site: no build step. Installable as a PWA.
 
 Wildlens is an informational field guide. It does not replace experts, doctors or rescue services.
+
+## Native app (Capacitor)
+
+The `mobile/` folder wraps the web app in `app/` as a native Android/iPhone app.
+
+- **Android, automatic:** every push to `main` runs `.github/workflows/android.yml`, which builds a debug APK and publishes it to the `android-latest` release: https://github.com/kevindchan7/wildlens/releases/tag/android-latest
+- **Android, by hand:** `cd mobile && npm install @capacitor/core @capacitor/cli @capacitor/android @capacitor/local-notifications @capacitor/haptics @capacitor/splash-screen @capawesome/capacitor-torch && npm run copy-web && npx cap add android && npx cap open android`
+- **iPhone:** needs a Mac with Xcode: `npm install @capacitor/ios && npx cap add ios && npx cap open ios`. Publishing needs an Apple Developer account.
+- Store release (Play Store) needs a signing key; the CI build is a debug test build.
+
+Native extras already wired in the web code (`NATIVE` bridge): phone torch, timers as system notifications. Next: barometer, step counter, Campfire local server, offline map packs.
