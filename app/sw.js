@@ -1,4 +1,4 @@
-const CORE='wildlens-core-v18',RUN='wildlens-run-v1',LIB='wildlens-lib-v1';
+const CORE='wildlens-core-v19',RUN='wildlens-run-v1',LIB='wildlens-lib-v1';
 const CORE_FILES=['./','index.html','manifest.webmanifest','icon.svg','qr.js','accesso.js','voce.js','https://unpkg.com/leaflet@1.9.4/dist/leaflet.css','https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CORE).then(c=>Promise.all(CORE_FILES.map(u=>c.add(u).catch(()=>{})))).then(()=>self.skipWaiting()))});
 /* Only old app-shell caches are removed. AI brains (transformers-cache), the AI library (LIB) and map tiles (RUN) are kept across updates. */
