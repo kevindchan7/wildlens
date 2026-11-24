@@ -1,8 +1,8 @@
-const CORE='wildlens-core-v1',RUN='wildlens-run-v1';
+const CORE='wildlens-core-v2',RUN='wildlens-run-v1';
 const CORE_FILES=['./','index.html','manifest.webmanifest','icon.svg','https://unpkg.com/leaflet@1.9.4/dist/leaflet.css','https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CORE).then(c=>Promise.all(CORE_FILES.map(u=>c.add(u).catch(()=>{})))).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CORE&&k!==RUN).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
-self.addEventListener('fetch',e=>{const r=e.request;if(r.method!=='GET')return;const u=new URL(r.url);
+self.addEventListener('fetch',e=>{const r=e.request;if(r.method!=='GET')return;const u=new URL(r.url);if(/huggingface|hf\.co|xethub/.test(u.hostname))return;
  if(r.mode==='navigate'){e.respondWith(fetch(r).then(res=>{caches.open(CORE).then(c=>c.put('index.html',res.clone()));return res}).catch(()=>caches.match('index.html')));return}
  const tile=u.hostname.endsWith('tile.openstreetmap.org');
  e.respondWith(caches.match(r).then(hit=>{const net=fetch(r).then(res=>{if(res&&(res.ok||res.type==='opaque')){const cp=res.clone();caches.open(tile?RUN:CORE).then(c=>c.put(r,cp))}return res}).catch(()=>hit);return hit||net}))});
