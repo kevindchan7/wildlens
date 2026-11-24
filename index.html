@@ -51,6 +51,7 @@ main{max-width:680px;margin:0 auto;padding:18px max(4vw,16px)}
 .btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border:0;border-radius:18px;padding:14px 18px;min-height:56px;font-weight:700;font-size:18px;background:var(--greenbg);color:#f3efe8;margin-top:12px}
 .btn svg{width:24px;height:24px}
 .btn.alt{background:var(--card);color:var(--brown);border:1.5px solid var(--line)}
+a.btn{text-decoration:none}
 .btn.sm{width:auto;min-height:44px;font-size:15px;padding:10px 16px;border-radius:12px;margin-top:0}
 .btn.sos{background:var(--sos)}
 .hint{font-size:14px;font-style:italic;color:var(--mute);text-align:center;margin:12px 0 0}
@@ -66,6 +67,9 @@ main{max-width:680px;margin:0 auto;padding:18px max(4vw,16px)}
 .lbl.ai{background:var(--brown)}
 .src{font-size:13px;color:var(--mute)}
 .tay{display:flex;gap:12px;align-items:center}.tav{flex:none;width:56px;height:56px}.tav img{width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid var(--green);display:block}.lbl .mini{width:18px;height:18px;border-radius:50%;object-fit:cover;vertical-align:-4px;margin:0 6px 0 -4px}
+.back{display:flex;gap:14px;align-items:center;margin-top:14px;padding:12px;border-radius:16px;background:var(--bg)}.back svg{width:72px;height:72px;flex:none;transition:transform .3s}.back select{display:block;width:100%;margin:4px 0;padding:8px;border-radius:10px;border:1.5px solid var(--line);background:var(--card);font-size:16px}.back b{font-family:"Source Serif 4",serif;font-size:20px;font-weight:500}
+.badges{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:12px}.bdg{text-align:center;font-size:12px;line-height:1.25;color:var(--mute)}.bdg i{display:grid;place-items:center;width:56px;height:56px;margin:0 auto 6px;border-radius:50%;background:var(--line);font-style:normal;font-family:"Source Serif 4",serif;font-size:22px;color:var(--mute)}.bdg.on{color:var(--ink)}.bdg.on i{background:var(--greenbg);color:#f3efe8}
+.chk{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-top:1px solid var(--line)}.chk input{width:22px;height:22px;flex:none;margin-top:2px;accent-color:#2d5a34}
 .disc{font-size:13px;color:var(--mute);border-top:1.5px solid var(--line);margin-top:28px;padding-top:14px;line-height:1.5}
 .askcard{display:flex;gap:14px;align-items:center;text-align:left;width:100%;margin-top:26px}
 .tayFab{position:fixed;right:16px;bottom:86px;z-index:6;width:64px;height:64px;border-radius:50%;border:3px solid #f3efe8;box-shadow:0 6px 18px rgba(0,0,0,.28);padding:0;background:#2d5a34}
@@ -201,6 +205,15 @@ nav button[data-v=sos][aria-current],nav button[data-v=sos]{color:var(--sos)}
 <div class="kv"><div><small>Sunrise</small><b id="rise">—</b></div><div><small>Sunset</small><b id="set">—</b></div><div><small>Daylight left</small><b id="left">—</b></div></div>
 <p class="note" id="sunNote">No GPS? Hold your arm out toward the sun: each finger between sun and horizon is about 15 minutes of light.</p>
 </div>
+<div class="card" id="trackCard">
+<h3>Track and TracBack</h3>
+<p class="note" style="margin-top:0">Record your route like AllTrails, then let Taylor guide you back to the start or to a saved spot, with no signal.</p>
+<div class="kv"><div><small>Distance</small><b id="tDist">0 m</b></div><div><small>Time</small><b id="tTime">0:00</b></div><div><small>Climb</small><b id="tUp">0 m</b></div></div>
+<div class="row"><button class="btn sm" id="tBtn">Start recording</button><button class="btn sm alt" id="tMark">Mark this spot</button><button class="btn sm alt" id="tClear">Clear</button></div>
+<div class="back" id="backBox" hidden><svg viewBox="0 0 100 100" id="backArrow" aria-hidden="true"><path d="M50 8 L72 70 L50 58 L28 70Z" fill="#d1492a"/></svg><div><small>Way back to</small><select id="backTo" aria-label="Destination"></select><b id="backTxt"></b></div></div>
+<p class="note" id="tNote">Keep the screen on while recording: phones may pause GPS in the background.</p>
+<a class="link" id="geoLink" href="#" style="display:inline-block">Open my position in an offline maps app (Organic Maps, OsmAnd) →</a>
+</div>
 <div class="card">
 <h3>Compass</h3>
 <svg class="dial" viewBox="0 0 200 200" aria-label="Compass"><circle cx="100" cy="100" r="92" fill="none" stroke="currentColor" stroke-opacity=".25" stroke-width="2"/>
@@ -213,12 +226,14 @@ nav button[data-v=sos][aria-current],nav button[data-v=sos]{color:var(--sos)}
 
 <section id="v-diario" hidden>
 <div class="eye">YOUR FINDINGS</div><h1>Journal</h1>
+<div class="card"><h3>Badges</h3><div class="badges" id="badges"></div></div>
 <div id="diary"></div>
 <div class="card"><h3>Back in town?</h3><p style="margin:6px 0 0">Share your finds with the community on <b>Borgo</b> and plan the next outing on <b>Barfront</b>.</p><p class="note" id="syncNote"></p><button class="btn sm" id="sync" style="margin-top:10px">Prepare sharing</button></div>
 </section>
 
 <section id="v-sos" hidden>
 <div class="eye" style="color:var(--sos)">EMERGENCY</div><h1 style="color:var(--sos)">SOS</h1>
+
 <div class="card">
 <div class="big" style="color:var(--sos)">112 · 911</div>
 <p style="margin:6px 0 0"><b>112</b> works across Europe, <b>911</b> in the US and Canada. Both often work with no credit and on another carrier's network. In the mountains ask for mountain rescue.</p>
@@ -232,6 +247,11 @@ nav button[data-v=sos][aria-current],nav button[data-v=sos]{color:var(--sos)}
 <p class="note">Alpine distress signal: 6 signals a minute, a minute's pause, repeat. Reply: 3 a minute.</p>
 <ul><li>Helicopter: <b>both arms up in a Y</b> = "yes, we need help". One arm up, one down = "no".</li><li>Three fires, three whistles or three of anything mean distress.</li></ul>
 </div>
+<div class="card"><h3>Before you go</h3><p class="note" style="margin-top:0">Most rescues start because nobody knew where you went. Tell someone, like AllTrails Lifeline or GeoResQ tracking.</p>
+<input class="search" id="tripRoute" placeholder="Route or area (e.g. Brenta, Rifugio Tuckett)" style="margin-top:8px"><div class="row"><label class="note" style="margin:0">Back by <input type="time" id="tripBack" style="font-size:16px;padding:8px;border-radius:10px;border:1.5px solid var(--line);background:var(--card)"></label><label class="note" style="margin:0">People <input type="number" id="tripN" value="1" min="1" style="width:64px;font-size:16px;padding:8px;border-radius:10px;border:1.5px solid var(--line);background:var(--card)"></label></div>
+<div class="row"><button class="btn sm" id="tripShare">Send to a contact</button><a class="btn sm alt" id="tripWa" href="#" target="_blank" rel="noopener">WhatsApp</a><a class="btn sm alt" id="tripSms" href="#">SMS</a></div><p class="note" id="tripNote"></p>
+<h3 style="margin-top:18px">The 10 essentials</h3><div id="ess"></div><p class="note" id="essNote"></p></div>
+<div class="card"><h3>In Italy: GeoResQ</h3><p style="margin:6px 0 0">The free app of the Soccorso Alpino (CNSAS) and CAI: sends your exact position to mountain rescue and tracks your route. Install it before you go, and still call 112.</p><a class="link" href="https://www.georesq.it" target="_blank" rel="noopener">georesq.it →</a></div>
 </section>
 
 <section id="v-premium" hidden>
@@ -510,7 +530,7 @@ const strip=s=>String(s).replace(/<[^>]+>/g,'');
 const deacc=s=>String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
 
 let view='scan',prev='scan';
-function show(v){if(v!=='scheda'&&v!=='premium')prev=v;else if(view!=='scheda'&&view!=='premium')prev=view;view=v;for(const s of document.querySelectorAll('main>section'))s.hidden=s.id!=='v-'+v;for(const b of $('nav').children){if(b.dataset.v===v)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')}if(v==='mappa')drawMap();if(v==='diario')renderDiary();if(v==='libreria')renderLib();if(v==='sos')$('sosPos').textContent=pos?'Last known position: '+pos.lat.toFixed(5)+', '+pos.lon.toFixed(5):'Find your position in the Map tab so you can read it to rescuers.';scrollTo(0,0)}
+function show(v){if(v!=='scheda'&&v!=='premium')prev=v;else if(view!=='scheda'&&view!=='premium')prev=view;view=v;for(const s of document.querySelectorAll('main>section'))s.hidden=s.id!=='v-'+v;for(const b of $('nav').children){if(b.dataset.v===v)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')}if(v==='mappa'){drawMap();stats();fillTargets();updateBack()}if(v==='diario')renderDiary();if(v==='libreria')renderLib();if(v==='sos')$('sosPos').textContent=pos?'Last known position: '+pos.lat.toFixed(5)+', '+pos.lon.toFixed(5):'Find your position in the Map tab so you can read it to rescuers.';scrollTo(0,0)}
 $('nav').onclick=e=>{const b=e.target.closest('button');if(b)show(b.dataset.v)};
 $('back').onclick=()=>show(prev);$('back2').onclick=()=>show(prev);
 function net(){const on=navigator.onLine;$('net').textContent=on?'Online':'Offline';$('net').classList.toggle('off',!on)}
@@ -688,10 +708,47 @@ catch(e){brainState='none';brainUI(!navigator.onLine?'The first download needs i
 $('brainBtn').onclick=loadBrain;brainUI();
 if(store.get('ms-brain',0)&&navigator.gpu)setTimeout(loadBrain,2500);
 
+
+/* TRACK + TRACBACK (inspired by AllTrails and Garmin TracBack) */
+var lastHead=null;let track=store.get('ms-track',[]),marks=store.get('ms-marks',[]),watchId=null,wake=null,tStart=store.get('ms-tstart',0);
+const R=Math.PI/180,hav=(a,b)=>{const dLa=(b.lat-a.lat)*R,dLo=(b.lon-a.lon)*R,x=Math.sin(dLa/2)**2+Math.cos(a.lat*R)*Math.cos(b.lat*R)*Math.sin(dLo/2)**2;return 12742e3*Math.asin(Math.sqrt(x))};
+const brg=(a,b)=>{const y=Math.sin((b.lon-a.lon)*R)*Math.cos(b.lat*R),x=Math.cos(a.lat*R)*Math.sin(b.lat*R)-Math.sin(a.lat*R)*Math.cos(b.lat*R)*Math.cos((b.lon-a.lon)*R);return(Math.atan2(y,x)/R+360)%360};
+const dir=d=>['N','NE','E','SE','S','SW','W','NW'].at(Math.round(d/45)%8);const fmtD=m=>m>=1000?(m/1000).toFixed(2)+' km':Math.round(m)+' m';
+function stats(){let d=0,up=0;for(let i=1;i<track.length;i++){d+=hav(track[i-1],track[i]);const da=(track[i].alt??null)!=null&&(track[i-1].alt??null)!=null?track[i].alt-track[i-1].alt:0;if(da>0)up+=da}$('tDist').textContent=fmtD(d);$('tUp').textContent=Math.round(up)+' m';const s=tStart&&track.length?Math.round(((watchId!=null?Date.now():track.at(-1).t)-tStart)/1000):0;$('tTime').textContent=Math.floor(s/3600)+':'+String(Math.floor(s%3600/60)).padStart(2,'0');return d}
+function targets(){const t=[];if(track.length)t.push({n:'Start of the route',lat:track[0].lat,lon:track[0].lon});for(const m of marks)t.push(m);return t}
+function fillTargets(){const s=$('backTo'),v=s.value;s.innerHTML=targets().map((x,i)=>`<option value="${i}">${esc(x.n)}</option>`).join('');if(v&&s.options[v])s.value=v}
+function updateBack(){const tg=targets(),box=$('backBox');if(!tg.length||!pos){box.hidden=true;return}box.hidden=false;const t=tg[+$('backTo').value||0]||tg[0];const d=hav(pos,t),b=brg(pos,t);$('backTxt').textContent=`${fmtD(d)} to the ${dir(b)} (${Math.round(b)}°)`;$('backArrow').style.transform=`rotate(${lastHead!=null?b-lastHead:b}deg)`}
+$('backTo').onchange=updateBack;
+function onFix(p){const f={lat:p.coords.latitude,lon:p.coords.longitude,alt:p.coords.altitude,t:Date.now()};pos={lat:f.lat,lon:f.lon,acc:p.coords.accuracy,t:f.t};store.set('ms-pos',pos);showPos();
+if(watchId!=null&&p.coords.accuracy<60){const last=track.at(-1);if(!last||hav(last,f)>5){track.push(f);store.set('ms-track',track)}}stats();fillTargets();updateBack();if(view==='mappa'&&lmap)drawMap()}
+async function startTrack(){if(!navigator.geolocation){$('tNote').textContent='No GPS available on this device.';return}if(!track.length){tStart=Date.now();store.set('ms-tstart',tStart)}
+watchId=navigator.geolocation.watchPosition(onFix,()=>{$('tNote').textContent='GPS not available: allow location for this site and go outdoors.'},{enableHighAccuracy:true,maximumAge:2000,timeout:30000});
+try{wake=await navigator.wakeLock?.request('screen')}catch(e){}$('tBtn').textContent='Stop recording';$('tNote').textContent='Recording… keep the screen on. You can lock it briefly, but some phones pause GPS.'}
+function stopTrack(){if(watchId!=null)navigator.geolocation.clearWatch(watchId);watchId=null;try{wake&&wake.release()}catch(e){}wake=null;$('tBtn').textContent=track.length?'Resume recording':'Start recording';$('tNote').textContent=track.length?`Saved: ${fmtD(stats())}. TracBack still works.`:'';}
+$('tBtn').onclick=()=>watchId!=null?stopTrack():startTrack();
+$('tMark').onclick=()=>{if(!pos){$('tNote').textContent='Find your location first (button above).';return}const n=['Car','Camp','Water','Hut','Viewpoint','Spot'].at(marks.length%6)+' '+(marks.length+1);marks.push({n,lat:pos.lat,lon:pos.lon,t:Date.now()});store.set('ms-marks',marks);fillTargets();$('backTo').value=String(targets().length-1);updateBack();$('tNote').textContent=`Saved "${n}". Taylor can guide you back to it.`;if(lmap)drawMap()};
+$('tClear').onclick=()=>{stopTrack();track=[];marks=[];tStart=0;store.set('ms-track',[]);store.set('ms-marks',[]);store.set('ms-tstart',0);stats();fillTargets();updateBack();$('tBtn').textContent='Start recording';$('tNote').textContent='Cleared.';if(lmap)drawMap()};
+$('geoLink').onclick=e=>{if(!pos){e.preventDefault();$('tNote').textContent='Find your location first.';return}$('geoLink').href=`geo:${pos.lat.toFixed(6)},${pos.lon.toFixed(6)}?q=${pos.lat.toFixed(6)},${pos.lon.toFixed(6)}(Wildlens)`};
+stats();fillTargets();updateBack();
+
+/* BEFORE YOU GO: trip message + 10 essentials */
+const ESS=['Navigation: map, compass, phone with GPS','Headlamp and spare batteries','Sun protection: hat, sunglasses, sunscreen','First aid kit','Knife or multitool','Fire: lighter, matches, fire starter','Emergency shelter: space blanket or bivy','Extra food','Extra water and a way to treat it','Extra clothes: warm layer and rain shell'];
+let ess=store.get('ms-ess',[]);
+function drawEss(){$('ess').innerHTML=ESS.map((x,i)=>`<label class="chk"><input type="checkbox" data-e="${i}" ${ess.includes(i)?'checked':''}><span>${x}</span></label>`).join('');$('essNote').textContent=ess.length===ESS.length?'All packed. Have a great hike!':`${ess.length} of ${ESS.length} packed.`}
+$('ess').onchange=e=>{const i=+e.target.dataset.e;ess=e.target.checked?[...new Set([...ess,i])]:ess.filter(x=>x!==i);store.set('ms-ess',ess);drawEss();renderBadges()};drawEss();
+function tripMsg(){const r=$('tripRoute').value.trim()||'a hike',b=$('tripBack').value,n=$('tripN').value||1;let m=`I'm going on ${r} (${n} ${n==1?'person':'people'}).`;if(b)m+=` I plan to be back by ${b}. If you haven't heard from me 1 hour after that, call 112 (or 911) and ask for mountain rescue.`;if(pos)m+=` Last known position: ${pos.lat.toFixed(5)}, ${pos.lon.toFixed(5)} https://www.openstreetmap.org/?mlat=${pos.lat.toFixed(5)}&mlon=${pos.lon.toFixed(5)}#map=15/${pos.lat.toFixed(5)}/${pos.lon.toFixed(5)}`;return m+' (sent with Wildlens)'}
+function tripLinks(){const m=encodeURIComponent(tripMsg());$('tripWa').href='https://wa.me/?text='+m;$('tripSms').href='sms:?&body='+m}
+for(const id of ['tripRoute','tripBack','tripN'])$(id).oninput=tripLinks;tripLinks();
+$('tripShare').onclick=async()=>{const m=tripMsg();try{if(navigator.share){await navigator.share({text:m});return}}catch(e){if(e&&e.name==='AbortError')return}try{await navigator.clipboard.writeText(m);$('tripNote').textContent='Message copied: paste it to a friend.'}catch(e){$('tripNote').textContent=m}};
+
+/* BADGES (inspired by Seek) */
+const BADGES=[['F','First find',d=>d.length>=1],['5','5 finds',d=>d.length>=5],['10','10 finds',d=>d.length>=10],['B','Botanist',d=>d.filter(x=>x.g.c==='Flora').length>=5],['M','Mushroom spotter',d=>d.filter(x=>x.g.c==='Fungi').length>=3],['W','Wildlife',d=>d.filter(x=>x.g.c==='Fauna').length>=3],['G','Geologist',d=>d.filter(x=>x.g.c==='Minerals').length>=3],['P','Prepared',()=>ess.length===ESS.length]];
+function renderBadges(){$('badges').innerHTML=BADGES.map(b=>`<div class="bdg ${b[2](diary)?'on':''}"><i>${b[0]}</i>${b[1]}</div>`).join('')}
+
 /* JOURNAL */
 function saveDiary(){if(!store.set('ms-diary',diary)){for(const d of diary.slice(10))d.img=null;store.set('ms-diary',diary)}}
 const when=s=>{try{return new Date(s).toLocaleString('en-GB',{dateStyle:'medium',timeStyle:'short'})}catch(e){return''}};
-function renderDiary(){$('diary').innerHTML=diary.length?diary.map(d=>itemHTML(d.g,`data-d="${d.id}"`,d.img,esc(when(d.when))+(d.lat!=null?' · located':'')+' · ')).join(''):'<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 109-9 9 9 0 00-7 3.4"/><path d="M3 4v4h4M12 8v4l3 2"/></svg><b>No scans yet</b>Point the camera at something and your discoveries will live here.</div>';
+function renderDiary(){renderBadges();$('diary').innerHTML=diary.length?diary.map(d=>itemHTML(d.g,`data-d="${d.id}"`,d.img,esc(when(d.when))+(d.lat!=null?' · located':'')+' · ')).join(''):'<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 109-9 9 9 0 00-7 3.4"/><path d="M3 4v4h4M12 8v4l3 2"/></svg><b>No scans yet</b>Point the camera at something and your discoveries will live here.</div>';
 const n=diary.length;$('syncNote').textContent=n?`${n} discover${n===1?'y':'ies'} ready to share.`:'Your journal is empty.'}
 function openDiary(id){const d=diary.find(x=>x.id===id);if(!d)return;$('det').innerHTML=(d.cf!=null||d.g.score!=null?yukaHTML(d.g,d.img,d.cf):detHTML(d.g,d.img)+(d.img?`<img class="photo" src="${d.img}" alt="${esc(d.g.t)}">`:''))+`<p class="note">${esc(when(d.when))}${d.lat!=null?' · '+d.lat.toFixed(5)+', '+d.lon.toFixed(5):''}</p><button class="btn sm alt" data-del="${d.id}">Delete from journal</button>`;show('scheda')}
 $('diary').onclick=e=>{const b=e.target.closest('[data-d]');if(b)openDiary(b.dataset.d)};
@@ -703,7 +760,7 @@ let lmap=null,llayer=null;
 function drawLeaflet(){const pts=diary.filter(d=>d.lat!=null);$('mapCount').textContent=`${pts.length} pinned discover${pts.length===1?'y':'ies'}`;const box=$('map');
 if(!lmap){box.innerHTML='';lmap=L.map(box,{zoomControl:true,attributionControl:true}).setView(pos?[pos.lat,pos.lon]:[45.5,-122.0],pos?14:6);L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap contributors'}).addTo(lmap);llayer=L.layerGroup().addTo(lmap)}
 llayer.clearLayers();const ll=[];for(const d of pts){const m=L.circleMarker([d.lat,d.lon],{radius:9,color:'#fff',weight:2,fillColor:'#c49a6c',fillOpacity:1}).addTo(llayer);m.bindTooltip(esc(d.g.t));m.on('click',()=>openDiary(d.id));ll.push([d.lat,d.lon])}
-if(pos){L.circleMarker([pos.lat,pos.lon],{radius:8,color:'#fff',weight:2,fillColor:'#d1492a',fillOpacity:1}).addTo(llayer).bindTooltip('You');ll.push([pos.lat,pos.lon])}
+if(track.length>1){L.polyline(track.map(p=>[p.lat,p.lon]),{color:'#d1492a',weight:4,opacity:.8}).addTo(llayer);ll.push([track[0].lat,track[0].lon])}for(const m of marks){L.circleMarker([m.lat,m.lon],{radius:7,color:'#fff',weight:2,fillColor:'#2d5a34',fillOpacity:1}).addTo(llayer).bindTooltip(esc(m.n));ll.push([m.lat,m.lon])}if(pos){L.circleMarker([pos.lat,pos.lon],{radius:8,color:'#fff',weight:2,fillColor:'#d1492a',fillOpacity:1}).addTo(llayer).bindTooltip('You');ll.push([pos.lat,pos.lon])}
 setTimeout(()=>{lmap.invalidateSize();if(ll.length>1)lmap.fitBounds(ll,{padding:[40,40],maxZoom:16});else if(ll.length)lmap.setView(ll[0],15)},60)}
 function drawMap(){if(window.L&&navigator.onLine!==false||lmap){try{return drawLeaflet()}catch(e){}}const pts=diary.filter(d=>d.lat!=null);$('mapCount').textContent=`${pts.length} pinned discover${pts.length===1?'y':'ies'}`;const box=$('map');const all=[...pts.map(d=>({lat:d.lat,lon:d.lon,n:d.g.t,id:d.id})),...(pos?[{lat:pos.lat,lon:pos.lon,me:1}]:[])];
 if(!all.length){box.innerHTML='<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/></svg><b>No pinned scans yet</b>Find your location below, then scan: each discovery lands on the map.</div>';return}
@@ -720,7 +777,7 @@ function showPos(){if(!pos)return;$('coords').textContent=pos.lat.toFixed(5)+', 
 $('gps').onclick=()=>{if(!navigator.geolocation){$('gpsNote').textContent='This device does not offer location.';return}$('gpsNote').textContent='Looking for GPS… faster outdoors.';try{navigator.geolocation.getCurrentPosition(p=>{pos={lat:p.coords.latitude,lon:p.coords.longitude,acc:p.coords.accuracy,t:Date.now()};store.set('ms-pos',pos);showPos();drawMap()},()=>{$('gpsNote').textContent='Location unavailable: allow location for this site in your browser settings and try again outdoors.'},{enableHighAccuracy:true,timeout:20000})}catch(e){$('gpsNote').textContent='Location not available on this device or browser.'}};
 $('copy').onclick=async()=>{if(!pos){$('gpsNote').textContent='Find your location first.';return}try{await navigator.clipboard.writeText(pos.lat.toFixed(5)+', '+pos.lon.toFixed(5));$('gpsNote').textContent='Coordinates copied.'}catch(e){$('gpsNote').textContent='Copy failed: read them aloud from the screen.'}};
 showPos();
-function heading(e){const h=e.webkitCompassHeading??(e.absolute&&e.alpha!=null?360-e.alpha:null);if(h==null)return;$('needle').setAttribute('transform',`rotate(${-h} 100 100)`);$('cmpNote').textContent='Heading: '+Math.round(h)+'° · hold the phone flat, away from metal.'}
+function heading(e){const h=e.webkitCompassHeading??(e.absolute&&e.alpha!=null?360-e.alpha:null);if(h==null)return;lastHead=h;updateBack();$('needle').setAttribute('transform',`rotate(${-h} 100 100)`);$('cmpNote').textContent='Heading: '+Math.round(h)+'° · hold the phone flat, away from metal.'}
 $('cmp').onclick=async()=>{try{if(typeof DeviceOrientationEvent!=='undefined'&&DeviceOrientationEvent.requestPermission){const r=await DeviceOrientationEvent.requestPermission();if(r!=='granted')throw 0}addEventListener('deviceorientationabsolute',heading);addEventListener('deviceorientation',heading);$('cmpNote').textContent='Compass on. If the needle does not move, your phone has no compass sensor available: use the shadow-stick method.'}catch(e){$('cmpNote').textContent='Sensor blocked here. Use the shadow stick: two marks 15 minutes apart, the first is west.'}};
 
 /* SOS */
