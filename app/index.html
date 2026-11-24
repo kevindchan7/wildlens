@@ -1658,7 +1658,7 @@ if(NATIVE){const TQ=NP.Torch,FL=NP.CapacitorFlash;if(TQ||FL){const on=v=>{try{TQ
 if(NP.LocalNotifications){try{NP.LocalNotifications.requestPermissions()}catch(e){}const _ts=tmStart;tmStart=function(l,dur,rep){_ts(l,dur,rep);const x=TMS[TMS.length-1];x.nid=Math.floor(Math.random()*2e9);tmSave();try{NP.LocalNotifications.schedule({notifications:[{id:x.nid,title:'Wildlens ⏱',body:tr(l),schedule:{at:new Date(x.end),allowWhileIdle:true}}]})}catch(e){}};
 document.addEventListener('click',e=>{const b=e.target.closest('[data-tx]');if(!b)return;const x=TMS[+b.dataset.tx];if(x&&x.nid)try{NP.LocalNotifications.cancel({notifications:[{id:x.nid}]})}catch(er){}},true)}
 document.documentElement.classList.add('native')}
-const APKURL='https://wildlens.onrender.com/Wildlens.apk';
+const APKURL='https://wildlens-y5z2.onrender.com/Wildlens.apk';
 const _rdl2=renderDl;renderDl=function(){_rdl2();$('dlBody').insertAdjacentHTML('afterbegin',`<div class="card" style="background:#14201a;color:#efe9dd;border:0"><div class="eye" style="color:#d9b46a">${tr('APP')}</div><h3 style="color:#fff">${NATIVE?tr('You are using the Wildlens app ✓'):tr('Wildlens for Android')}</h3><p style="margin:6px 0 0;opacity:.85">${tr(NATIVE?'Torch, notifications and offline storage work like a native app.':'The installable app: phone torch, timers that ring with the screen off, more storage. iPhone version coming.')}</p>${NATIVE?'':`<a class="btn" href="${APKURL}" download="Wildlens.apk">⬇ ${tr('Download for Android (APK)')}</a><p class="note" style="color:#bcc8bf">${tr('Test version: your phone will ask to allow installing apps from your browser.')}</p>`}</div>`);trNode($('dlBody'))};
 try{renderHome()}catch(e){}
 try{ensureMe();$('meBtn').textContent=me.e}catch(e){}

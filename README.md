@@ -27,4 +27,4 @@ Native extras already wired in the web code (`NATIVE` bridge): phone torch, time
 
 - `app/accesso.js`: first start asks name + email (needs internet once), then every start pings Supabase (`wl_ping`). Blocked devices, or "closed to everyone", see a lock screen. Offline grace: 30 days.
 - `gestionale/`: developer panel (same developer key as the ART Gestionale): users, last access, block/unblock, close to everyone, lock message, CSV.
-- Every build publishes site + web app + Gestionale + `Wildlens.apk` to the `pubblico` branch, served by Render at https://wildlens.onrender.com
+- Every build publishes site + web app + Gestionale + `Wildlens.apk` to the `pubblico` branch, served by Render at https://wildlens-y5z2.onrender.com
