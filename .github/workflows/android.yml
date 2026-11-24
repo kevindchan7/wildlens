@@ -2,7 +2,7 @@ name: Build Android app
 on:
   push:
     branches: [main]
-    paths: ['app/**', 'mobile/**', 'gestionale/**', 'scripts/**', 'index.html', 'condizioni.html', 'icon.svg', 'sw.js', '.github/workflows/android.yml']
+    paths: ['app/**', 'mobile/**', 'gestionale/**', 'scripts/**', 'index.html', 'condizioni.html', 'poster.html', 'icon.svg', 'sw.js', '.github/workflows/android.yml']
   workflow_dispatch:
 permissions:
   contents: write
@@ -70,7 +70,7 @@ jobs:
         working-directory: .
         run: |
           rm -rf /tmp/site && mkdir -p /tmp/site
-          cp -r index.html sw.js icon.svg condizioni.html app gestionale /tmp/site/
+          cp -r index.html sw.js icon.svg condizioni.html poster.html app gestionale /tmp/site/
           cp Wildlens.apk /tmp/site/Wildlens.apk
           npm install --silent --no-save --prefix /tmp/prot terser@5 && cp scripts/proteggi.mjs /tmp/prot/ && node /tmp/prot/proteggi.mjs /tmp/site
           cd /tmp/site
