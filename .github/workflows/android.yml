@@ -50,6 +50,17 @@ jobs:
         run: |
           G=android/app/build.gradle
           grep -q 'tasks-genai' $G || sed -i "0,/^dependencies {/s//dependencies {\n    implementation 'com.google.mediapipe:tasks-genai:0.10.27'/" $G
+          grep -q 'tasks-vision' $G || sed -i "0,/^dependencies {/s//dependencies {\n    implementation 'com.google.mediapipe:tasks-vision:0.10.26'/" $G
+          grep -q 'noCompress' $G || sed -i "0,/^android {/s//android {\n    androidResources { noCompress += ['tflite'] }/" $G
+      - name: Photo recognition models bundled in the app
+        run: |
+          A=android/app/src/main/assets/models && mkdir -p $A
+          get(){ curl -fsSL --retry 2 -o "$A/$1.tflite" "$2" && python3 -c "import sys;d=open('$A/$1.tflite','rb').read(8);sys.exit(0 if d[4:8]==b'TFL3' else 1)" && echo "OK $1 $(stat -c %s $A/$1.tflite)" || { echo "SKIP $1"; rm -f "$A/$1.tflite"; }; }
+          get general "https://storage.googleapis.com/mediapipe-models/image_classifier/efficientnet_lite2/float32/latest/efficientnet_lite2.tflite"
+          get plants "https://tfhub.dev/google/lite-model/aiy/vision/classifier/plants_V1/3?lite-format=tflite"
+          get birds "https://tfhub.dev/google/lite-model/aiy/vision/classifier/birds_V1/3?lite-format=tflite"
+          get insects "https://tfhub.dev/google/lite-model/aiy/vision/classifier/insects_V1/3?lite-format=tflite"
+          ls -l $A
           grep -n "tasks-genai\|minSdk" $G android/variables.gradle || true
       - name: Icons and splash
         run: npm install @capacitor/assets --save-dev && npx capacitor-assets generate --android --iconBackgroundColor '#2d5a34' --splashBackgroundColor '#f3e3c9' || echo "assets skipped"

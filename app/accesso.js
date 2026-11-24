@@ -175,7 +175,7 @@ function apply(res){st=get();st.lastCheck=Date.now();st.msg=res.messaggio||'';st
 
 let released=false;
 function release(){hide();if(released)return;released=true;
- if(ls('ms-lang',appLang)!==appLang){location.reload();return}
+ if(ls('ms-lang',appLang)!==appLang&&!sessionStorage.getItem('wl-rl')){sessionStorage.setItem('wl-rl','1');location.reload();return}
  try{window.WL_AFTER_GATE&&WL_AFTER_GATE()}catch(e){}}
 function render(){
  st=get();lang=ls('ms-lang',lang);
