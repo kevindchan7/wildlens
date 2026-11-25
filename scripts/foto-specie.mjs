@@ -32,7 +32,7 @@ const strip = (s) => String(s || '').replace(/<[^>]*>/g, '').replace(/\s+/g, ' '
 let ok = 0, miss = [];
 for (const s of SP) {
   const file = `${dir}/${s.id}.jpg`;
-  if (fs.existsSync(file) && credits[s.id]) { ok++; continue; }
+  if (fs.existsSync(file) && credits[s.id] && !/[?]|px-/.test(credits[s.id].file)) { ok++; continue; }
   try {
     let sum = null;
     for (const q of [s.sc, s.n]) {
@@ -45,7 +45,8 @@ for (const s of SP) {
     const img = await fetch(src, { headers: UA });
     if (!img.ok) { miss.push(s.id); if (miss.length < 3) console.log('image', s.id, img.status, src); continue; }
     fs.writeFileSync(file, Buffer.from(await img.arrayBuffer()));
-    const fname = decodeURIComponent((sum.originalimage || sum.thumbnail).source.split('/').pop());
+    const segs = new URL((sum.originalimage || sum.thumbnail).source).pathname.split('/');
+    const fname = decodeURIComponent(segs.includes('thumb') ? segs[segs.length - 2] : segs[segs.length - 1]);
     let artist = '', lic = '';
     try {
       const m = await (await fetch(`https://commons.wikimedia.org/w/api.php?action=query&titles=File:${encodeURIComponent(fname)}&prop=imageinfo&iiprop=extmetadata&format=json`, { headers: UA })).json();
