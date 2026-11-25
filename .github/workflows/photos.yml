@@ -1,0 +1,24 @@
+name: Library photos (Wikimedia Commons)
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['scripts/foto-specie.mjs', '.github/workflows/photos.yml']
+permissions:
+  contents: write
+jobs:
+  photos:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: node scripts/foto-specie.mjs
+      - name: Save the photos in the repository
+        run: |
+          git config user.name "wildlens-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add app/img/sp
+          git diff --cached --quiet && echo "nothing new" && exit 0
+          git commit -m "Library: species photos from Wikimedia Commons (with credits)"
+          for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done
