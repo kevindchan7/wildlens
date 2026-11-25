@@ -2156,14 +2156,10 @@ if(NLM){delete BRS.mini;delete BRS.full;store.set('ms-mini',0);loadMini=()=>Prom
  const _bd=bDelete;bDelete=async k=>{if(k!=='native')return _bd(k);try{await NLM.remove({name:NM.name})}catch(e){}nativeState='none';store.set('ms-native',0);if(sample===nSample)sample=null;BP.native={};await bScan();renderBrains();try{aiStatus()}catch(e){}bToast(tr('Deleted from this phone. Restart the app to free the memory too.'))};
  (async()=>{let s=await NLM.status({name:NMOD.big.name}).catch(()=>null);if(!s)return;const ramOK=(s.ram||0)>=7e9;const haveBig=s.downloaded,haveSmall=(s.files||'').split(',').includes(NMOD.small.name);
   setModel(haveBig||ramOK?NMOD.big:NMOD.small);
-  /* while the big brain downloads, the small one (if already here) keeps Taylor working */
-  if(NM===NMOD.big&&!haveBig&&haveSmall){setModel(NMOD.small);await nSync();renderBrains();setTimeout(nLoad,2500);setTimeout(()=>{if(navigator.onLine&&!(navigator.connection&&/cellular/.test(navigator.connection.type||''))){const big=NMOD.big;NLM.download({name:big.name,urls:big.urls,sha256:big.sha256}).catch(()=>{});bToast('🧠 '+tr('Downloading Taylor\'s bigger brain that sees photos (about 3.1 GB) in the background. Taylor keeps working meanwhile.'));const iv=setInterval(async()=>{const b=await NLM.status({name:big.name}).catch(()=>null);if(b&&b.downloaded){clearInterval(iv);setModel(big);nativeState='none';await nSync();nLoad()}if(b&&b.error&&!b.downloading)clearInterval(iv)},5000)}},15000);return}
-  s=await nSync();renderBrains();if(!s)return;if(s.downloaded){setTimeout(nLoad,2500);return}
-  if(s.downloading)return;const cell=navigator.connection&&/cellular/.test(navigator.connection.type||'');
-  const go=()=>{store.set('ms-native',1);Promise.resolve(bLoad.native()).catch(()=>{})};
-  const sz=mb(NM.mb*1e6);
-  if(!cell&&navigator.onLine){setTimeout(()=>{go();bToast('🧠 '+tr('Preparing Taylor\'s brain: it downloads once in the background')+' ('+sz+'). '+tr('You can keep using the app.'))},3000)}
-  else setTimeout(()=>{bToast(`🧠 ${tr('Taylor\'s brain is not on this phone yet')} (${sz}). <button class="btn sm" id="brGo" style="margin-top:8px;background:#fff;color:#2d5a34">${tr('Download now')}</button>`);const x=$('brGo');if(x)x.onclick=e=>{e.stopPropagation();$('brToast').hidden=true;go()}},3000)})();
+  /* nothing is downloaded by itself: the offline brain is optional (Downloads → Taylor's brain) */
+  if(NM===NMOD.big&&!haveBig&&haveSmall)setModel(NMOD.small);
+  s=await nSync();renderBrains();if(s&&s.downloaded&&store.get('ms-native',0))setTimeout(nLoad,2500);
+})();
 }
 /* ===== Android app: camera and gallery through the native Camera plugin (more reliable than the file picker) ===== */
 (()=>{const C=(!!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform())&&window.Capacitor&&Capacitor.Plugins)?Capacitor.Plugins.Camera:null;if(!C||!C.getPhoto)return;
