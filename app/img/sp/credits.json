@@ -1,1 +1,428 @@
-{}
+{
+ "oak": {
+  "file": "Quercus_robur.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Quercus_robur.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "dandelion": {
+  "file": "Taraxacum_officinale_-_Köhler–s_Medizinal-Pflanzen-135.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Taraxacum_officinale_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-135.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "nettle": {
+  "file": "Fen_nettle_(Urtica_dioica_ssp._galeopsifolia)_-_geograph.org.uk_-_5423125.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Fen_nettle_(Urtica_dioica_ssp._galeopsifolia)_-_geograph.org.uk_-_5423125.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "birch": {
+  "file": "Betula_pendula_Finland.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Betula_pendula_Finland.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "spruce": {
+  "file": "Kuusk_Keila-Paldiski_rdt_ääres.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Kuusk_Keila-Paldiski_rdt_%C3%A4%C3%A4res.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "yew": {
+  "file": "3840px-Taxus_baccata_MHNT.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:3840px-Taxus_baccata_MHNT.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail"
+ },
+ "monkshood": {
+  "file": "Aconitum_napellus_230705.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Aconitum_napellus_230705.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "false-hellebore": {
+  "file": "Veratrum_album_Aubrac.JPG?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Veratrum_album_Aubrac.JPG%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "wild-garlic": {
+  "file": "Photo_of_Allium_Ursinum,_wild_garlic,_north-west_Hampshire,_UK,_May_2014.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Photo_of_Allium_Ursinum%2C_wild_garlic%2C_north-west_Hampshire%2C_UK%2C_May_2014.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "bramble": {
+  "file": "3840px-Blackberry_(Rubus_fruticosus).jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:3840px-Blackberry_(Rubus_fruticosus).jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail"
+ },
+ "porcini": {
+  "file": "Boletus_edulis_IT.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Boletus_edulis_IT.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "death-cap": {
+  "file": "Amanita_phalloides_1.JPG?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Amanita_phalloides_1.JPG%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "fly-agaric": {
+  "file": "Amanita_muscaria_Aberystwyth_2023.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Amanita_muscaria_Aberystwyth_2023.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "tinder-fungus": {
+  "file": "Fomes_fomentarius_2010_G2.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Fomes_fomentarius_2010_G2.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "viper": {
+  "file": "3840px-Asp_Viper_(Vipera_aspis)_female_(found_by_Jean_NICOLAS)_(35565228091).jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:3840px-Asp_Viper_(Vipera_aspis)_female_(found_by_Jean_NICOLAS)_(35565228091).jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail"
+ },
+ "tick": {
+  "file": "Ixodes_ricinus_on_dry_grass.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Ixodes_ricinus_on_dry_grass.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "bear": {
+  "file": "2010-kodiak-bear-1.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:2010-kodiak-bear-1.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "flint": {
+  "file": "Miorcani_flint.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Miorcani_flint.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "pet": {
+  "file": "500px-PET_Structural_Formula_V1.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:500px-PET_Structural_Formula_V1.svg.png%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail"
+ },
+ "h2o": {
+  "file": "960px-H2O_2D_labelled.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:960px-H2O_2D_labelled.svg.png%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail"
+ },
+ "log-cabin": {
+  "file": "Norskfolkemuseum_1.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Norskfolkemuseum_1.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "dry-stone": {
+  "file": "Dry_stone_fences_in_the_Yorkshire_Dales,_England.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Dry_stone_fences_in_the_Yorkshire_Dales%2C_England.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "scots-pine": {
+  "file": "Skuleskogen_pine.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Skuleskogen_pine.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "douglas-fir": {
+  "file": "3840px-Pseudotsuga_menziesii_4584.JPG?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:3840px-Pseudotsuga_menziesii_4584.JPG%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail"
+ },
+ "red-cedar": {
+  "file": "Thuja_plicata_Vancouver.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Thuja_plicata_Vancouver.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "beech": {
+  "file": "1920px-Fagus-sylvatica-cansiglio-forest-italy.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:1920px-Fagus-sylvatica-cansiglio-forest-italy.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail"
+ },
+ "chestnut": {
+  "file": "Chestnuts.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Chestnuts.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "hazel": {
+  "file": "Corylus_avellana.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Corylus_avellana.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "willow": {
+  "file": "Salix_alba_Morton.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Salix_alba_Morton.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "elder": {
+  "file": "Sambucus_nigra_004.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Sambucus_nigra_004.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "wild-strawberry": {
+  "file": "Illustration_Fragaria_vesca0.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Illustration_Fragaria_vesca0.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "bilberry": {
+  "file": "203_Vaccinum_myrtillus_L.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:203_Vaccinum_myrtillus_L.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "dog-rose": {
+  "file": "Divlja_ruza_cvijet_270508.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Divlja_ruza_cvijet_270508.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "plantain": {
+  "file": "Grote_weegbree_bloeiwijze_Plantago_major_subsp._major.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Grote_weegbree_bloeiwijze_Plantago_major_subsp._major.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "yarrow": {
+  "file": "Achillea_millefolium_(bright).jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Achillea_millefolium_(bright).jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "cattail": {
+  "file": "Bulrush_(Typha_latifolia)_(8139113636).jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Bulrush_(Typha_latifolia)_(8139113636).jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "poison-oak": {
+  "file": "PoisonOak_wb_biggerLeaves.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:PoisonOak_wb_biggerLeaves.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "poison-hemlock": {
+  "file": "Conium.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Conium.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "water-hemlock": {
+  "file": "Illustration_Cicuta_virosa0.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Illustration_Cicuta_virosa0.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "belladonna": {
+  "file": "Atropa_belladonna_(16627871072).jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Atropa_belladonna_(16627871072).jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "lily-valley": {
+  "file": "3840px-Convallaria_majalis_inflorescence_-_Keila.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:3840px-Convallaria_majalis_inflorescence_-_Keila.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail"
+ },
+ "salal": {
+  "file": "Gaultheria_shallon_RF.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Gaultheria_shallon_RF.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "oregon-grape": {
+  "file": "Mahonia_aquifolium.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Mahonia_aquifolium.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "sphagnum": {
+  "file": "Sphagnum.flexuosum.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Sphagnum.flexuosum.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "chanterelle": {
+  "file": "2007-07-14_Cantharellus_cibarius_Detail.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:2007-07-14_Cantharellus_cibarius_Detail.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "chaga": {
+  "file": "Inonotus_obliquus.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Inonotus_obliquus.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "puffball": {
+  "file": "Giant_Puffball.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Giant_Puffball.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "destroying-angel": {
+  "file": "Destroying_Angel.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Destroying_Angel.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "adder": {
+  "file": "3840px-Common_European_viper_(Vipera_berus)_female_Pieniny.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:3840px-Common_European_viper_(Vipera_berus)_female_Pieniny.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail"
+ },
+ "rattlesnake": {
+  "file": "Crotalus_oreganus.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Crotalus_oreganus.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "black-bear": {
+  "file": "01_Schwarzbär.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:01_Schwarzb%C3%A4r.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "cougar": {
+  "file": "Mountain_Lion_in_Glacier_National_Park.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Mountain_Lion_in_Glacier_National_Park.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "wild-boar": {
+  "file": "Wildschwein,_Nähe_Pulverstampftor_(cropped).jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Wildschwein%2C_N%C3%A4he_Pulverstampftor_(cropped).jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "wolf": {
+  "file": "Eurasian_wolf_2.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Eurasian_wolf_2.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "marmot": {
+  "file": "3840px-071_Wild_marmot_at_Grand_Muveran_Nature_Reserve_Photo_by_Giles_Laurent.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:3840px-071_Wild_marmot_at_Grand_Muveran_Nature_Reserve_Photo_by_Giles_Laurent.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail"
+ },
+ "quartz": {
+  "file": "Quartz_Brésil.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Quartz_Br%C3%A9sil.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "pyrite": {
+  "file": "3840px-Pyrite_-_Huanzala_mine,_Huallanca,_Bolognesi,_Ancash,_Peru.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:3840px-Pyrite_-_Huanzala_mine%2C_Huallanca%2C_Bolognesi%2C_Ancash%2C_Peru.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail"
+ },
+ "obsidian": {
+  "file": "LvMS-Lvv.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:LvMS-Lvv.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "granite": {
+  "file": "World_geologic_provinces.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:World_geologic_provinces.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "limestone": {
+  "file": "Calcium_carbonate.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Calcium_carbonate.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "basalt": {
+  "file": "Ignimbrite.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Ignimbrite.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "clay": {
+  "file": "Boulder_clay_cliff_south_of_Withernsea_(geograph_6054962).jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Boulder_clay_cliff_south_of_Withernsea_(geograph_6054962).jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "charcoal": {
+  "file": "Graphite-and-diamond-with-scale.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Graphite-and-diamond-with-scale.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "steel": {
+  "file": "3840px-Арматурный_прокат.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:3840px-%D0%90%D1%80%D0%BC%D0%B0%D1%82%D1%83%D1%80%D0%BD%D1%8B%D0%B9_%D0%BF%D1%80%D0%BE%D0%BA%D0%B0%D1%82.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail"
+ },
+ "foil": {
+  "file": "Aluminium-4.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Aluminium-4.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "cotton": {
+  "file": "Zellstoff_200_fach_Polfilter.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Zellstoff_200_fach_Polfilter.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "wax": {
+  "file": "LA2_Skultuna_kontorsljusstake.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:LA2_Skultuna_kontorsljusstake.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ },
+ "snow": {
+  "file": "3840px-CargoNet_Di_12_Euro_4000_Lønsdal_-_Bolna.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:3840px-CargoNet_Di_12_Euro_4000_L%C3%B8nsdal_-_Bolna.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail"
+ },
+ "seawater": {
+  "file": "3840px-Mar_de_Siete_Colores_-_West_(8331578284).jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:3840px-Mar_de_Siete_Colores_-_West_(8331578284).jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail"
+ },
+ "rainwater": {
+  "file": "960px-H2O_2D_labelled.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:960px-H2O_2D_labelled.svg.png%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail"
+ },
+ "footbridge": {
+  "file": "Nahulingo_footbridge.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "artist": "",
+  "license": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Nahulingo_footbridge.jpg%3Futm_source%3Den.wikipedia.org%26utm_campaign%3Dapi%26utm_content%3Dthumbnail_unscaled"
+ }
+}
