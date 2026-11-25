@@ -10,6 +10,20 @@ for (; j < html.length; j++) {
   if (c === '[') d++; else if (c === ']') { d--; if (!d) break; }
 }
 const SP = eval(html.slice(i + 9, j + 1));
+{ // species added later with SP.push(...)
+  let k = html.indexOf('SP.push(');
+  while (k >= 0) {
+    let dd = 0, e = k + 7;
+    for (; e < html.length; e++) {
+      const c = html[e];
+      if (c === '"' || c === "'" || c === '`') { const q = c; e++; while (html[e] !== q) { if (html[e] === '\\') e++; e++; } continue; }
+      if (c === '(') dd++; else if (c === ')') { dd--; if (!dd) break; }
+    }
+    SP.push(...eval('[' + html.slice(k + 8, e) + ']'));
+    k = html.indexOf('SP.push(', e);
+  }
+}
+console.log('species', SP.length);
 const dir = 'app/img/sp';
 fs.mkdirSync(dir, { recursive: true });
 const credits = fs.existsSync(dir + '/credits.json') ? JSON.parse(fs.readFileSync(dir + '/credits.json', 'utf8')) : {};
@@ -26,7 +40,7 @@ for (const s of SP) {
       const r = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(q.replace(/ /g, '_'))}`, { headers: UA });
       if (r.ok) { const js = await r.json(); if (js.thumbnail) { sum = js; break; } }
     }
-    if (!sum) { miss.push(s.id); continue; }
+    if (!sum) { miss.push(s.id); if (miss.length < 3) console.log('no summary', s.id); continue; }
     const src = sum.thumbnail.source.replace(/\/\d+px-/, '/400px-');
     const img = await fetch(src, { headers: UA });
     if (!img.ok) { miss.push(s.id); continue; }
@@ -42,7 +56,7 @@ for (const s of SP) {
     credits[s.id] = { file: fname, artist: artist.slice(0, 120), license: lic, page: `https://commons.wikimedia.org/wiki/File:${encodeURIComponent(fname)}` };
     ok++;
     await new Promise((r) => setTimeout(r, 250));
-  } catch (e) { miss.push(s.id); }
+  } catch (e) { miss.push(s.id); if (miss.length < 3) console.log('error', s.id, e && e.message, e && e.cause && e.cause.message); }
 }
 fs.writeFileSync(dir + '/credits.json', JSON.stringify(credits, null, 1));
 console.log('photos', ok, 'of', SP.length, 'missing', miss.join(' '));
