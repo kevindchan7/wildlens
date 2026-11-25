@@ -41,9 +41,9 @@ for (const s of SP) {
       if (r.ok) { const js = await r.json(); if (js.thumbnail) { sum = js; break; } }
     }
     if (!sum) { miss.push(s.id); if (miss.length < 3) console.log('no summary', s.id); continue; }
-    const src = sum.thumbnail.source.replace(/\/\d+px-/, '/400px-');
+    const src = sum.thumbnail.source;
     const img = await fetch(src, { headers: UA });
-    if (!img.ok) { miss.push(s.id); continue; }
+    if (!img.ok) { miss.push(s.id); if (miss.length < 3) console.log('image', s.id, img.status, src); continue; }
     fs.writeFileSync(file, Buffer.from(await img.arrayBuffer()));
     const fname = decodeURIComponent((sum.originalimage || sum.thumbnail).source.split('/').pop());
     let artist = '', lic = '';
