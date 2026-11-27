@@ -1,5 +1,5 @@
-const CORE='wildlens-core-v52',RUN='wildlens-run-v1',LIB='wildlens-lib-v1';
-const CORE_FILES=['./','index.html','manifest.webmanifest','icon.svg','qr.js','accesso.js','voce.js','ai-worker.js','segui.html','img/kevin.svg','https://unpkg.com/leaflet@1.9.4/dist/leaflet.css','https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'];
+const CORE='wildlens-core-v53',RUN='wildlens-run-v1',LIB='wildlens-lib-v1';
+const CORE_FILES=['./','index.html','manifest.webmanifest','icon.svg','qr.js','accesso.js','voce.js','ai-worker.js','segui.html','guides/en.json','guides/it.json','guides/es.json','guides/fr.json','img/kevin.svg','https://unpkg.com/leaflet@1.9.4/dist/leaflet.css','https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'];
 /* a GPX shared to the installed web app (Android share menu): kept for the page, which imports it */
 self.addEventListener('fetch',e=>{const r=e.request;if(r.method!=='POST'||!new URL(r.url).searchParams.has('share-gpx'))return;
  e.respondWith((async()=>{try{const f=await r.formData();const file=f.get('gpx');if(file&&file.size){const c=await caches.open('wildlens-share');await c.put('/shared-gpx',new Response(await file.text(),{headers:{'x-name':encodeURIComponent(file.name||'track.gpx')}}))}}catch(x){}return Response.redirect('./index.html?gpx=1',303)})())});
