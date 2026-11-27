@@ -1,4 +1,4 @@
-const CORE='wildlens-core-v50',RUN='wildlens-run-v1',LIB='wildlens-lib-v1';
+const CORE='wildlens-core-v51',RUN='wildlens-run-v1',LIB='wildlens-lib-v1';
 const CORE_FILES=['./','index.html','manifest.webmanifest','icon.svg','qr.js','accesso.js','voce.js','ai-worker.js','segui.html','img/kevin.svg','https://unpkg.com/leaflet@1.9.4/dist/leaflet.css','https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'];
 /* a GPX shared to the installed web app (Android share menu): kept for the page, which imports it */
 self.addEventListener('fetch',e=>{const r=e.request;if(r.method!=='POST'||!new URL(r.url).searchParams.has('share-gpx'))return;

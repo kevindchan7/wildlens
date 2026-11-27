@@ -1,6 +1,6 @@
 {
   "appId": "app.wildlens.field",
-  "appName": "TentMate",
+  "appName": "Tent Mate",
   "webDir": "www",
   "android": { "allowMixedContent": false },
   "plugins": {

@@ -1,4 +1,4 @@
-/* TentMate — la voce di Taylor.
+/* Tent Mate — la voce di Taylor.
    Parla (sintesi vocale) e ascolta (riconoscimento vocale).
    App Android: plugin nativi @capacitor-community/text-to-speech e speech-recognition.
    Browser: Web Speech API. Mentre parla, ogni disegno di Taylor muove la bocca. */

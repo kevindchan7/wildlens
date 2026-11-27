@@ -77,25 +77,27 @@ jobs:
       - name: Build debug APK
         run: cd android && chmod +x gradlew && ./gradlew assembleDebug --no-daemon
       - name: Rename
-        run: cp android/app/build/outputs/apk/debug/app-debug.apk ../Wildlens.apk
+        run: cp android/app/build/outputs/apk/debug/app-debug.apk ../TentMate.apk && cp ../TentMate.apk ../Wildlens.apk
       - uses: actions/upload-artifact@v4
         with:
           name: Wildlens-android
-          path: Wildlens.apk
+          path: TentMate.apk
       - name: Publish to the "android-latest" release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: android-latest
-          name: TentMate for Android (latest build)
+          name: Tent Mate for Android (latest build)
           prerelease: true
-          files: Wildlens.apk
-          body: Test build of TentMate (formerly Wildlens) for Android. Download Wildlens.apk on your phone and open it (allow installing from your browser).
+          files: |
+            TentMate.apk
+            Wildlens.apk
+          body: Test build of Tent Mate (formerly Wildlens) for Android. Download TentMate.apk on your phone and open it (allow installing from your browser).
       - name: Publish website, web app, Gestionale and APK (branch "pubblico", served by Render)
         working-directory: .
         run: |
           rm -rf /tmp/site && mkdir -p /tmp/site
           cp -r index.html sw.js icon.svg condizioni.html poster.html app gestionale /tmp/site/
-          S=$(stat -c %s Wildlens.apk); if [ $S -lt 95000000 ]; then cp Wildlens.apk /tmp/site/Wildlens.apk; else echo "APK $S bytes: served from the GitHub release only"; fi
+          S=$(stat -c %s TentMate.apk); if [ $S -lt 95000000 ]; then cp TentMate.apk /tmp/site/TentMate.apk; cp TentMate.apk /tmp/site/Wildlens.apk; else echo "APK $S bytes: served from the GitHub release only"; fi
           npm install --silent --no-save --prefix /tmp/prot terser@5 && cp scripts/proteggi.mjs /tmp/prot/ && node /tmp/prot/proteggi.mjs /tmp/site
           cd /tmp/site
           git init -q -b pubblico

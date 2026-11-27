@@ -50,7 +50,7 @@ public class TrackService extends Service implements LocationListener {
                 nm.createNotificationChannel(new NotificationChannel(CH, "Route recording", NotificationManager.IMPORTANCE_LOW));
             Intent open = getPackageManager().getLaunchIntentForPackage(getPackageName());
             PendingIntent pi = PendingIntent.getActivity(this, 0, open, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
-            Notification no = new NotificationCompat.Builder(this, CH).setContentTitle("TentMate").setContentText(text)
+            Notification no = new NotificationCompat.Builder(this, CH).setContentTitle("Tent Mate").setContentText(text)
                     .setSmallIcon(getApplicationInfo().icon).setOngoing(true).setOnlyAlertOnce(true).setContentIntent(pi).build();
             if (Build.VERSION.SDK_INT >= 29) startForeground(4711, no, ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION);
             else startForeground(4711, no);
