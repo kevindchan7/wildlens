@@ -1,0 +1,21 @@
+name: Check the online brain
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/check-brain.yml']
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ask a question and scan a real photo
+        run: |
+          U=https://lrrjcpnswzlkpwqrdyyk.supabase.co/functions/v1/wl-vision
+          K=$(grep -o "SK2='[^']*'" <(curl -fsSL https://raw.githubusercontent.com/kevindchan7/wildlens/main/app/index.html) | head -1 | cut -d"'" -f2)
+          echo "--- question"
+          curl -s -X POST $U -H "apikey: $K" -H "Authorization: Bearer $K" -H "Content-Type: application/json" -d '{"device":"ci-test-1","lang":"it","question":"Come rendo potabile l acqua di un torrente?"}' | head -c 900; echo
+          echo "--- photo (Alpine ibex, Wikimedia Commons)"
+          curl -fsSL -A "WildlensCI/1.0" -o ibex.jpg "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Capra_ibex_ibex_-_Alpensteinbock_-_Bouquetin_des_Alpes.jpg/500px-Capra_ibex_ibex_-_Alpensteinbock_-_Bouquetin_des_Alpes.jpg" || curl -fsSL -A "WildlensCI/1.0" -o ibex.jpg "https://raw.githubusercontent.com/kevindchan7/wildlens/main/app/img/sp/porcini.jpg"
+          B=$(base64 -w0 ibex.jpg)
+          printf '{"device":"ci-test-1","lang":"it","image":"%s"}' "$B" > body.json
+          curl -s -X POST $U -H "apikey: $K" -H "Authorization: Bearer $K" -H "Content-Type: application/json" --data @body.json | head -c 1500; echo
