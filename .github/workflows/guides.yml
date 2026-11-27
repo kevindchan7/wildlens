@@ -1,0 +1,27 @@
+name: Guide pack (build and save translations)
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['scripts/guide-pack/g*.py', 'scripts/guide-pack/build.py', 'scripts/guide-pack/translate.py']
+permissions:
+  contents: write
+  actions: write
+concurrency: guides
+jobs:
+  guides:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the packs (English source, translations from the server)
+        run: python3 scripts/guide-pack/build.py && python3 scripts/guide-pack/translate.py it es fr
+      - name: Save and rebuild the app
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "tentmate-bot"; git config user.email "bot@users.noreply.github.com"
+          git add app/guides
+          git diff --cached --quiet && exit 0
+          git commit -m "Guide pack: translations updated"
+          for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done
+          gh workflow run android.yml
