@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#14201a">
-<title>Wildlens · Campfire</title>
+<title>TentMate · Campfire</title>
 <link rel="icon" href="/icon.svg">
 <style>
 :root{--bg:#f4f1ea;--card:#fff;--ink:#1d2a22;--mute:#6b7469;--line:#e4ddd0;--green:#2d5a34;--sos:#b8432c;--tan:#efe6d4}
@@ -41,7 +41,7 @@ footer{position:fixed;left:0;right:0;bottom:0;background:var(--bg);border-top:1.
 </header>
 <nav><button data-t="board" aria-pressed="true" id="tBoard">Board</button><button data-t="tasks" aria-pressed="false" id="tTasks">Tasks</button><button data-t="people" aria-pressed="false" id="tPeople">People</button></nav>
 <main id="main"></main>
-<p id="made" style="text-align:center;color:var(--mute);font-size:14px;margin:18px 0">🔥 <a href="https://wildlens-y5z2.onrender.com/" style="color:var(--green);font-weight:700">Wildlens</a></p>
+<p id="made" style="text-align:center;color:var(--mute);font-size:14px;margin:18px 0">🔥 <a href="https://wildlens-y5z2.onrender.com/" style="color:var(--green);font-weight:700">TentMate</a></p>
 <footer id="foot">
 <div class="kinds"><button id="kNote" aria-pressed="true">Note</button><button id="kUrg" class="urg" aria-pressed="false">⚠ Urgent</button></div>
 <form class="send" id="sf"><input id="tx" maxlength="500" autocomplete="off"><button aria-label="Send">➤</button></form>
@@ -54,7 +54,7 @@ const T={lit:['CAMPFIRE · LIT','FALÒ · ACCESO','FOGATA · ENCENDIDA'],board:[
 emptyB:['Nothing on the board yet. Leave the first note.','Ancora niente in bacheca. Lascia la prima nota.','Aún no hay nada en el tablón. Deja la primera nota.'],emptyT:['No tasks yet.','Ancora nessun compito.','Aún no hay tareas.'],emptyP:['Nobody has joined yet.','Non è ancora entrato nessuno.','Aún no se ha unido nadie.'],
 here:['here','presenti','presentes'],join:['Join the camp','Entra nel campo','Únete al campamento'],joinP:['Your name, so the others know who writes. No app, no account.','Il tuo nome, così gli altri sanno chi scrive. Niente app, niente account.','Tu nombre, para que los demás sepan quién escribe. Sin app ni cuenta.'],name:['Your name','Il tuo nome','Tu nombre'],
 off:['Lost contact with the camp phone. Stay close to it and on its Wi-Fi.','Contatto perso con il telefono del campo. Resta vicino e sulla sua rete Wi-Fi.','Se perdió el contacto con el móvil del campamento. Quédate cerca y en su Wi-Fi.'],now:['now','ora','ahora'],min:['min ago','min fa','min'],hrs:['h ago','h fa','h']};
-const CFFR={"lit": "FEU DE CAMP · ALLUMÉ", "board": "Tableau", "tasks": "Tâches", "people": "Personnes", "note": "Note", "urg": "⚠ Urgent", "ph": "Laissez une note pour le camp…", "phT": "Nouvelle tâche, ex. ramasser du bois", "emptyB": "Rien sur le tableau pour l'instant. Laissez la première note.", "emptyT": "Pas encore de tâches.", "emptyP": "Personne n'a encore rejoint.", "here": "ici", "join": "Rejoindre le camp", "joinP": "Votre nom, pour que les autres sachent qui écrit. Sans app, sans compte.", "name": "Votre nom", "off": "Contact perdu avec le téléphone du camp. Restez près de lui et sur son Wi-Fi.", "now": "maintenant", "min": "min", "hrs": "h", "made": "Fait avec Wildlens, l'app de montagne hors ligne · gratuite"};const t=k=>T[k][li]??T[k][0];T.made=['Made with Wildlens, the offline mountain app · free','Fatto con Wildlens, l\'app di montagna offline · gratis','Hecho con Wildlens, la app de montaña sin conexión · gratis'];
+const CFFR={"lit": "FEU DE CAMP · ALLUMÉ", "board": "Tableau", "tasks": "Tâches", "people": "Personnes", "note": "Note", "urg": "⚠ Urgent", "ph": "Laissez une note pour le camp…", "phT": "Nouvelle tâche, ex. ramasser du bois", "emptyB": "Rien sur le tableau pour l'instant. Laissez la première note.", "emptyT": "Pas encore de tâches.", "emptyP": "Personne n'a encore rejoint.", "here": "ici", "join": "Rejoindre le camp", "joinP": "Votre nom, pour que les autres sachent qui écrit. Sans app, sans compte.", "name": "Votre nom", "off": "Contact perdu avec le téléphone du camp. Restez près de lui et sur son Wi-Fi.", "now": "maintenant", "min": "min", "hrs": "h", "made": "Fait avec TentMate, l'app de montagne hors ligne · gratuite"};const t=k=>T[k][li]??T[k][0];T.made=['Made with TentMate, the offline mountain app · free','Fatto con TentMate, l\'app di montagna offline · gratis','Hecho con TentMate, la app de montaña sin conexión · gratis'];
 const $=i=>document.getElementById(i);const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let me={};try{me=JSON.parse(localStorage.getItem('wl-camp-me'))||{}}catch(e){}
 if(!me.id)me.id='g'+Math.random().toString(36).slice(2,10);

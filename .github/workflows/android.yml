@@ -86,10 +86,10 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: android-latest
-          name: Wildlens for Android (latest build)
+          name: TentMate for Android (latest build)
           prerelease: true
           files: Wildlens.apk
-          body: Test build of Wildlens for Android. Download Wildlens.apk on your phone and open it (allow installing from your browser).
+          body: Test build of TentMate (formerly Wildlens) for Android. Download Wildlens.apk on your phone and open it (allow installing from your browser).
       - name: Publish website, web app, Gestionale and APK (branch "pubblico", served by Render)
         working-directory: .
         run: |
