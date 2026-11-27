@@ -318,6 +318,18 @@ input,select,textarea{border-radius:14px}
 .note{color:var(--mute)}
 a.link,.link{color:var(--green);font-weight:700}
 .rt{border-radius:18px;background:var(--card)}
+
+/* NEW HOME 2026: camera first, big and bold; the rest below */
+#v-scan:not([hidden]){display:flex;flex-direction:column}
+#v-scan>*{order:20}#v-scan>.appbar{order:0}#v-scan>.scanbox{order:1}#v-scan>#camBtn{order:2}#v-scan>#galBtn{order:3}#v-scan>#tipsBtn{order:4}#v-scan>.hint{order:5}#v-scan>#scanOut{order:6}
+#v-scan>.askcard{order:7}#v-scan>#readyBtn{order:8}#v-scan>#ostat{order:9}#v-scan>#stat{order:10}#v-scan>#homeExtra{order:11}#v-scan>#exploreBox{order:12}#v-scan>#insBox{order:13}#v-scan>#premBtn{order:14}#v-scan>.caution{order:15}
+#v-scan>.scanbox{margin-top:4px;background:radial-gradient(120% 90% at 85% 0%,#34d399 0%,#0f8a55 38%,#063b26 100%)!important;color:#fff;border:0!important;padding:30px 20px 26px;box-shadow:0 18px 40px rgb(6 59 38/.35)}
+#v-scan>.scanbox h2{color:#fff;font-size:34px!important;line-height:1.02}
+#v-scan>.scanbox p{color:rgb(255 255 255/.86)}#v-scan>.scanbox .fieldcap{color:#b8f25c;font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:12px}
+#v-scan>.scanbox .lens{width:170px;height:170px;background:radial-gradient(circle at 30% 25%,#ffffff,#d7fbe9 45%,#7ee0b2);box-shadow:0 0 0 8px rgb(255 255 255/.12),0 0 0 18px rgb(255 255 255/.06),0 16px 40px rgb(0 0 0/.3)}
+#v-scan>#camBtn{min-height:64px;font-size:20px;background:linear-gradient(135deg,#b8f25c,#34d399)!important;color:#05301e!important;box-shadow:0 10px 26px rgb(52 211 153/.45)}
+#v-scan>#galBtn{margin-top:10px}
+#v-scan>.caution{opacity:.85}
 </style>
 <style id="wl03">
 /* === Wildlens 0.3: impaginazione e Taylor viva === */
@@ -1416,7 +1428,7 @@ for(const b of $('setUnits').children)b.setAttribute('aria-pressed',b.dataset.u=
 $('setUnits').onclick=e=>{const b=e.target.closest('[data-u]');if(!b)return;UNITS=b.dataset.u;store.set('ms-units',UNITS);renderKit()};
 
 /* ===== SPLASH ===== */
-(()=>{const s=$('splash');if(!s)return;$('splashScene').innerHTML=SCENE();const sub={it:'Guida da campo · funziona offline',es:'Guía de campo · funciona sin conexión'}[LANG];if(sub)$('splashSub').textContent=sub;const hide=()=>{s.classList.add('out');setTimeout(()=>s.remove(),600)};setTimeout(hide,matchMedia('(prefers-reduced-motion: reduce)').matches?300:1400);s.onclick=hide})();
+(()=>{const s=$('splash');if(!s)return;$('splashScene').innerHTML=SCENE();const sub={it:'Field Lab · funziona offline',es:'Field Lab · funciona sin conexión'}[LANG];if(sub)$('splashSub').textContent=sub;const hide=()=>{s.classList.add('out');setTimeout(()=>s.remove(),600)};setTimeout(hide,matchMedia('(prefers-reduced-motion: reduce)').matches?300:1400);s.onclick=hide})();
 /* ===== XP, LEVELS, BADGES ===== */
 const wlStats=()=>store.get('ms-stats',{tools:{},quizXp:0,quizBest:0,quizPlays:0});
 const setStats=s=>store.set('ms-stats',s);
@@ -2466,6 +2478,8 @@ $('tripAct').innerHTML=ACTS.map(a=>`<option value="${a[0]}">${tr(a[1])}</option>
 $('tripName').value=store.get('ms-tname','');$('tripGo').onclick=tripStart;renderTrip();
 {const _tl=tripLinks;tripLinks=function(){_tl();if(trip){const m=encodeURIComponent(tripLinkMsg());$('tripWa').href='https://wa.me/?text='+m;$('tripSms').href='sms:?&body='+m}};tripLinks();}
 
+/* young wording (overrides older translations) */
+try{Object.assign(I18N,{"Get field-ready": ["Pronto a partire?", "¿Listo para salir?"], "Scan anything in the wild": ["Punta. Scatta. Scopri.", "Apunta. Dispara. Descubre."], "Snap a photo. Taylor tells you what it is, what it's made of, how it helps you survive or make fire, where it comes from and how to grow or produce it.": ["Una foto e Taylor ti dice cos'è, di cosa è fatto, se si mangia, se è pericoloso e come usarlo là fuori.", "Una foto y Taylor te dice qué es, de qué está hecho, si se come, si es peligroso y cómo usarlo ahí fuera."], "Take photo": ["Scatta ora", "Haz la foto"], "Pick from gallery": ["Dalla galleria", "Desde la galería"], "IDENTIFY NATURE": ["COSA HAI DAVANTI?", "¿QUÉ TIENES DELANTE?"], "TAYLOR'S GUIDE OF THE DAY": ["IL TRUCCO DEL GIORNO", "EL TRUCO DEL DÍA"], "Your field agent. Water, fire, bites, storms, the body, buildings: ask anything.": ["La tua compagna di avventure. Acqua, fuoco, morsi, temporali: chiedile tutto, anche offline.", "Tu compañera de aventuras. Agua, fuego, picaduras, tormentas: pregúntale todo, también sin conexión."], "Core field guide": ["Field Lab base", "Field Lab base"], "Field guide, 100+ pages (included)": ["Field Lab, oltre 100 schede (incluso)", "Field Lab, más de 100 fichas (incluido)"], "Photo tips": ["Come fare la foto perfetta", "Cómo hacer la foto perfecta"], "Plants, animals, mushrooms, rocks, water, buildings, materials: even asphalt or plastic.": ["Piante, animali, funghi, rocce, acqua, prodotti, materiali: anche asfalto o plastica.", "Plantas, animales, setas, rocas, agua, productos, materiales: incluso asfalto o plástico."]});Object.assign(FR_UI,{"Get field-ready": "Prêt à partir ?", "Scan anything in the wild": "Vise. Shoote. Découvre.", "Snap a photo. Taylor tells you what it is, what it's made of, how it helps you survive or make fire, where it comes from and how to grow or produce it.": "Une photo et Taylor te dit ce que c'est, de quoi c'est fait, si ça se mange, si c'est dangereux et comment l'utiliser dehors.", "Take photo": "Prends la photo", "Pick from gallery": "Depuis la galerie", "IDENTIFY NATURE": "QU'AS-TU DEVANT TOI ?", "TAYLOR'S GUIDE OF THE DAY": "L'ASTUCE DU JOUR", "Your field agent. Water, fire, bites, storms, the body, buildings: ask anything.": "Ta compagne d'aventure. Eau, feu, morsures, orages : demande-lui tout, même hors ligne.", "Core field guide": "Field Lab de base", "Field guide, 100+ pages (included)": "Field Lab, plus de 100 fiches (inclus)", "Photo tips": "Réussir ta photo", "Plants, animals, mushrooms, rocks, water, buildings, materials: even asphalt or plastic.": "Plantes, animaux, champignons, roches, eau, produits, matériaux : même l'asphalte ou le plastique."})}catch(e){}
 try{renderHome()}catch(e){}
 try{ensureMe();}catch(e){}
 renderStatus();renderPlates();
