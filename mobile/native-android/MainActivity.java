@@ -10,6 +10,7 @@ public class MainActivity extends BridgeActivity {
         registerPlugin(CampfirePlugin.class);
         registerPlugin(LlmPlugin.class);
         registerPlugin(VisionPlugin.class);
+        registerPlugin(TrackPlugin.class);
         super.onCreate(savedInstanceState);
     }
 }

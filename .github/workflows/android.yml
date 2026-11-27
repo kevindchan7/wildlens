@@ -35,7 +35,7 @@ jobs:
       - name: Permissions
         run: |
           M=android/app/src/main/AndroidManifest.xml
-          for perm in RECORD_AUDIO ACTIVITY_RECOGNITION ACCESS_FINE_LOCATION ACCESS_COARSE_LOCATION CAMERA FLASHLIGHT VIBRATE POST_NOTIFICATIONS WAKE_LOCK SCHEDULE_EXACT_ALARM; do
+          for perm in RECORD_AUDIO ACTIVITY_RECOGNITION ACCESS_FINE_LOCATION ACCESS_COARSE_LOCATION CAMERA FLASHLIGHT VIBRATE POST_NOTIFICATIONS WAKE_LOCK SCHEDULE_EXACT_ALARM FOREGROUND_SERVICE FOREGROUND_SERVICE_LOCATION; do
             grep -q "android.permission.$perm" $M || sed -i "s#</manifest>#    <uses-permission android:name=\"android.permission.$perm\" />\n</manifest>#" $M
           done
           grep -q 'android.hardware.location.gps' $M || sed -i 's#</manifest>#    <uses-feature android:name="android.hardware.location.gps" android:required="false" />\n    <uses-feature android:name="android.hardware.camera" android:required="false" />\n</manifest>#' $M
@@ -45,6 +45,7 @@ jobs:
           mkdir -p $D && cp native-android/*.java $D/
           M=android/app/src/main/AndroidManifest.xml
           grep -q 'RecognitionService' $M || sed -i 's#<application#<queries>\n        <intent><action android:name="android.speech.RecognitionService" /></intent>\n        <intent><action android:name="android.intent.action.TTS_SERVICE" /></intent>\n    </queries>\n    <application#' $M
+          grep -q 'TrackService' $M || sed -i 's#</application>#    <service android:name="app.wildlens.field.TrackService" android:exported="false" android:foregroundServiceType="location" />\n    </application>#' $M
           grep -q 'sensor.barometer' $M || sed -i 's#</manifest>#    <uses-feature android:name="android.hardware.sensor.barometer" android:required="false" />\n    <uses-feature android:name="android.hardware.sensor.stepcounter" android:required="false" />\n</manifest>#' $M
       - name: Native AI brain (MediaPipe LLM Inference)
         run: |
