@@ -1,0 +1,30 @@
+name: Check the online brain
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/check-brain.yml']
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Time a question and three photos
+        run: |
+          U=https://lrrjcpnswzlkpwqrdyyk.supabase.co/functions/v1/wl-vision
+          K=$(grep -o "SK2='[^']*'" app/index.html | head -1 | cut -d"'" -f2)
+          curl -s -X POST $U -H "apikey: $K" -H "Authorization: Bearer $K" -H "Content-Type: application/json" -d '{"device":"ci-speed","lang":"it","question":"Cos e il larice?"}' -w "\nHTTP %{http_code} in %{time_total}s\n" | tail -c 300; echo
+          for f in adder porcini larch; do [ -f app/img/sp/$f.jpg ] || continue; printf '{"device":"ci-speed","lang":"it","image":"%s"}' "$(base64 -w0 app/img/sp/$f.jpg)" > b.json
+            echo "--- $f"; curl -s -X POST $U -H "apikey: $K" -H "Authorization: Bearer $K" -H "Content-Type: application/json" --data @b.json -w "\nHTTP %{http_code} in %{time_total}s\n" | grep -o '"name":"[^"]*"\|"model":"[^"]*"\|"error":"[^"]*"\|HTTP.*'; done
+      - name: Check the trip server
+        run: |
+          U=https://lrrjcpnswzlkpwqrdyyk.supabase.co/functions/v1/wl-trip
+          B=$(date -u -d '+3 hours' +%Y-%m-%dT%H:%M:%SZ)
+          R=$(curl -s -X POST $U -H "Content-Type: application/json" -d "{\"op\":\"start\",\"device\":\"ci-trip\",\"name\":\"CI\",\"lang\":\"it\",\"back_at\":\"$B\",\"route\":\"Test\"}"); echo "$R" | head -c 200; echo
+          T=$(echo "$R" | python3 -c "import sys,json;print(json.load(sys.stdin)['token'])"); V=$(echo "$R" | python3 -c "import sys,json;print(json.load(sys.stdin)['view'])")
+          curl -s -X POST $U -H "Content-Type: application/json" -d "{\"op\":\"ping\",\"token\":\"$T\",\"lat\":46.45,\"lon\":11.6,\"acc\":9,\"batt\":0.8}"; echo
+          curl -s -X POST $U -H "Content-Type: application/json" -d "{\"op\":\"extend\",\"token\":\"$T\",\"minutes\":60}"; echo
+          curl -s -X POST $U -H "Content-Type: application/json" -d "{\"op\":\"view\",\"v\":\"$V\"}" | head -c 400; echo
+          curl -s -X POST $U -H "Content-Type: application/json" -d "{\"op\":\"coverage\",\"cells\":[[46.451,11.601,1],[46.452,11.602,0]]}"; echo
+          curl -s -X POST $U -H "Content-Type: application/json" -d '{"op":"covget","s":46.4,"w":11.5,"n":46.5,"e":11.7}'; echo
+          curl -s -X POST $U -H "Content-Type: application/json" -d "{\"op\":\"end\",\"token\":\"$T\"}"; echo

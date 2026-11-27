@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Wildlens · Segui il giro</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#2d5a34">
+<link rel="icon" href="icon.svg">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+:root{color-scheme:light dark;--bg:light-dark(#f3efe8,#16140f);--card:light-dark(#fffdf8,#221f19);--ink:light-dark(#1d1a15,#efe9de);--mut:light-dark(#6b6357,#a89f90);--line:light-dark(#e3dccf,#35312a);--g:#2d5a34;--r:#c0392b;--o:#c47a12}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 Inter,system-ui,sans-serif}
+header{display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--g);color:#f3efe8}header b{font-family:'Source Serif 4',Georgia,serif;font-size:20px}header small{opacity:.85;margin-left:auto}
+main{max-width:720px;margin:0 auto;padding:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin:10px 0}
+.st{border-radius:16px;padding:16px;color:#fff;margin:10px 0}.st h1{margin:0 0 4px;font-size:22px}.st p{margin:0}
+.st.on{background:var(--g)}.st.late{background:var(--r)}.st.safe{background:#2f7d4a}.st.soon{background:var(--o)}.st.exp{background:#555}
+#map{height:340px;border-radius:16px;border:1px solid var(--line);margin:10px 0}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}.kv div{background:light-dark(#f6f1e7,#2a261f);border-radius:12px;padding:8px 10px}.kv small{display:block;color:var(--mut);font-size:12px}
+.btn{display:block;width:100%;text-align:center;padding:13px;border-radius:12px;border:0;font:inherit;font-weight:700;background:var(--g);color:#fff;margin:8px 0;text-decoration:none;cursor:pointer}.btn.alt{background:transparent;color:var(--ink);border:1px solid var(--line)}.btn.red{background:var(--r)}
+ol{padding-left:20px;margin:6px 0}li{margin:4px 0}.note{color:var(--mut);font-size:14px}code{font-size:15px}
+</style>
+</head>
+<body>
+<header><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 20l6-12 4 7 3-4 5 9z"/></svg><b>Wildlens</b><small id="hdr"></small></header>
+<main>
+<div class="st on" id="st"><h1 id="stT">…</h1><p id="stB"></p></div>
+<div class="card" id="info"></div>
+<div id="map"></div>
+<div class="card" id="acts"></div>
+<div class="card" id="what"></div>
+<p class="note" id="foot"></p>
+</main>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const FN='https://lrrjcpnswzlkpwqrdyyk.supabase.co/functions/v1/wl-trip';
+const Q=new URLSearchParams(location.search),V=Q.get('v')||'';
+const LS=['it','en','es','fr','de'];let L=Q.get('l')||(navigator.language||'en').slice(0,2);if(!LS.includes(L))L='en';document.documentElement.lang=L;
+const S={
+hdr:['Segui il giro','Follow the trip','Sigue la salida','Suivre la sortie','Tour verfolgen'],
+on:['In cammino','On the trail','En ruta','En route','Unterwegs'],
+onB:['Rientro previsto alle {b}.','Planned return at {b}.','Vuelta prevista a las {b}.','Retour prévu à {b}.','Geplante Rückkehr um {b}.'],
+soon:["È l'ora del rientro","It is time to be back",'Es la hora de volver',"C'est l'heure du retour",'Zeit für die Rückkehr'],
+soonB:['Doveva tornare alle {b}. Wildlens avvisa automaticamente alle {g} se non conferma il rientro.','Planned to be back at {b}. Wildlens alerts automatically at {g} if they do not confirm.','Debía volver a las {b}. Wildlens avisa automáticamente a las {g} si no confirma.','Retour prévu à {b}. Wildlens alerte automatiquement à {g} sans confirmation.','Rückkehr war um {b} geplant. Wildlens alarmiert automatisch um {g}, wenn nicht bestätigt wird.'],
+late:['NON È ANCORA RIENTRATO','NOT BACK YET','TODAVÍA NO HA VUELTO','PAS ENCORE RENTRÉ','NOCH NICHT ZURÜCK'],
+lateB:['Doveva tornare alle {b} e non ha confermato. Leggi sotto cosa fare.','Was due back at {b} and has not confirmed. See below what to do.','Debía volver a las {b} y no lo ha confirmado. Mira abajo qué hacer.','Retour prévu à {b}, sans confirmation. Voir ci-dessous quoi faire.','Sollte um {b} zurück sein und hat nicht bestätigt. Unten steht, was zu tun ist.'],
+safe:['Rientrato ✓','Back safe ✓','Ha vuelto ✓','Rentré ✓','Zurück ✓'],
+safeB:['Giro concluso alle {e}. Tutto bene.','Trip finished at {e}. All good.','Salida terminada a las {e}. Todo bien.','Sortie terminée à {e}. Tout va bien.','Tour um {e} beendet. Alles gut.'],
+exp:['Giro scaduto','Trip expired','Salida caducada','Sortie expirée','Tour abgelaufen'],
+expB:['Questo link non è più attivo.','This link is no longer active.','Este enlace ya no está activo.',"Ce lien n'est plus actif.",'Dieser Link ist nicht mehr aktiv.'],
+nf:['Giro non trovato','Trip not found','Salida no encontrada','Sortie introuvable','Tour nicht gefunden'],
+nfB:['Controlla di aver aperto il link completo.','Check that you opened the full link.','Comprueba que abriste el enlace completo.','Vérifiez que vous avez ouvert le lien complet.','Prüfe, ob du den vollständigen Link geöffnet hast.'],
+route:['Percorso','Route','Ruta','Parcours','Route'],people:['Persone','People','Personas','Personnes','Personen'],act:['Attività','Activity','Actividad','Activité','Aktivität'],left:['Partito alle','Left at','Salió a las','Parti à','Los um'],back:['Rientro previsto','Planned return','Vuelta prevista','Retour prévu','Geplante Rückkehr'],
+last:['Ultima posizione','Last position','Última posición','Dernière position','Letzte Position'],none:['non ancora ricevuta: in montagna spesso non c\'è rete','not received yet: there is often no signal in the mountains','aún no recibida: en la montaña a menudo no hay señal','pas encore reçue : souvent pas de réseau en montagne','noch nicht empfangen: in den Bergen gibt es oft kein Netz'],
+ago:['{m} fa','{m} ago','hace {m}','il y a {m}','vor {m}'],batt:['Batteria','Battery','Batería','Batterie','Akku'],note:['Note','Notes','Notas','Notes','Notizen'],
+notify:['🔔 Avvisami se è in ritardo','🔔 Alert me if they are late','🔔 Avísame si se retrasa','🔔 Prévenez-moi en cas de retard','🔔 Benachrichtige mich bei Verspätung'],
+notOn:['🔔 Avviso attivo su questo telefono ✓','🔔 Alerts on for this phone ✓','🔔 Avisos activados en este teléfono ✓','🔔 Alertes activées sur ce téléphone ✓','🔔 Benachrichtigungen auf diesem Handy aktiv ✓'],
+notNo:['Questo browser non può ricevere avvisi. Tieni aperta questa pagina o ricontrollala.','This browser cannot receive alerts. Keep this page open or check it again.','Este navegador no puede recibir avisos. Mantén abierta esta página o vuelve a mirarla.','Ce navigateur ne peut pas recevoir d\'alertes. Gardez cette page ouverte ou revenez la voir.','Dieser Browser kann keine Benachrichtigungen empfangen. Lass die Seite offen oder schau wieder nach.'],
+ios:['Su iPhone: tocca Condividi → "Aggiungi a Home", apri da lì e attiva l\'avviso.','On iPhone: tap Share → "Add to Home Screen", open it from there and turn alerts on.','En iPhone: toca Compartir → "Añadir a inicio", ábrelo desde ahí y activa los avisos.','Sur iPhone : touchez Partager → « Sur l\'écran d\'accueil », ouvrez-la depuis là et activez les alertes.','Auf dem iPhone: Teilen → „Zum Home-Bildschirm", von dort öffnen und Benachrichtigungen einschalten.'],
+denied:['Avvisi bloccati: consentili nelle impostazioni del browser.','Alerts blocked: allow them in the browser settings.','Avisos bloqueados: permítelos en los ajustes del navegador.','Alertes bloquées : autorisez-les dans les réglages du navigateur.','Benachrichtigungen blockiert: in den Browsereinstellungen erlauben.'],
+maps:['📍 Apri la posizione in Mappe','📍 Open the position in Maps','📍 Abrir la posición en Mapas','📍 Ouvrir la position dans Plans','📍 Position in Karten öffnen'],
+call:['📞 Chiama','📞 Call','📞 Llamar','📞 Appeler','📞 Anrufen'],copy:['📋 Copia i dati per i soccorsi','📋 Copy the details for rescuers','📋 Copiar los datos para el rescate','📋 Copier les infos pour les secours','📋 Daten für die Rettung kopieren'],copied:['Copiato ✓','Copied ✓','Copiado ✓','Copié ✓','Kopiert ✓'],
+whatT:['Cosa fare se non rientra','What to do if they are not back','Qué hacer si no vuelve','Que faire s\'il ne rentre pas','Was tun, wenn er nicht zurückkommt'],
+w1:['Prova a chiamarlo e scrivergli: spesso è solo senza rete o in ritardo.','Try calling and texting: often they just have no signal or are late.','Intenta llamar y escribir: a menudo solo no tiene señal o va con retraso.','Essayez d\'appeler et d\'écrire : souvent il n\'a juste pas de réseau ou est en retard.','Versuche anzurufen und zu schreiben: oft gibt es nur kein Netz oder Verspätung.'],
+w2:['Guarda l\'ultima posizione e da quanto tempo non si aggiorna.','Check the last position and how long ago it updated.','Mira la última posición y hace cuánto se actualizó.','Regardez la dernière position et depuis quand elle n\'a pas bougé.','Prüfe die letzte Position und wann sie zuletzt aktualisiert wurde.'],
+w3:['Se non risponde e sta facendo buio, c\'è maltempo o il ritardo supera 1–2 ore: chiama il 112 (911 negli USA) e chiedi del soccorso alpino.','If there is no answer and it is getting dark, the weather is bad or they are 1–2 hours late: call 112 (911 in the US) and ask for mountain rescue.','Si no contesta y está oscureciendo, hace mal tiempo o el retraso supera 1–2 horas: llama al 112 y pide rescate de montaña.','S\'il ne répond pas et que la nuit tombe, qu\'il fait mauvais ou que le retard dépasse 1–2 heures : appelez le 112 et demandez les secours en montagne.','Wenn keine Antwort kommt und es dunkel wird, das Wetter schlecht ist oder die Verspätung 1–2 Stunden übersteigt: 112 anrufen und nach der Bergrettung fragen.'],
+w4:['Dai ai soccorsi i dati qui sotto (percorso, ora di partenza, ultima posizione) o il link di questa pagina.','Give rescuers the details below (route, start time, last position) or the link of this page.','Da al rescate los datos de abajo (ruta, hora de salida, última posición) o el enlace de esta página.','Donnez aux secours les infos ci-dessous (parcours, heure de départ, dernière position) ou le lien de cette page.','Gib der Rettung die Daten unten (Route, Startzeit, letzte Position) oder den Link dieser Seite.'],
+w5:['Non andare a cercarlo da solo.','Do not go searching alone.','No vayas a buscarle solo.','N\'allez pas le chercher seul.','Suche nicht allein.'],
+foot:['Pagina aggiornata ogni minuto. Le posizioni arrivano quando il telefono ha rete.','Page updates every minute. Positions arrive when the phone has signal.','La página se actualiza cada minuto. Las posiciones llegan cuando el teléfono tiene señal.','Page mise à jour chaque minute. Les positions arrivent quand le téléphone a du réseau.','Seite wird jede Minute aktualisiert. Positionen kommen an, wenn das Handy Netz hat.'],
+ACT:{hike:['Escursione','Hike','Senderismo','Randonnée','Wanderung'],ferrata:['Via ferrata','Via ferrata','Vía ferrata','Via ferrata','Klettersteig'],ski:['Scialpinismo','Ski touring','Esquí de travesía','Ski de randonnée','Skitour'],climb:['Arrampicata','Climbing','Escalada','Escalade','Klettern'],mtb:['Mountain bike','Mountain bike','Bici de montaña','VTT','Mountainbike'],run:['Trail running','Trail running','Trail running','Trail','Traillauf'],snow:['Ciaspole','Snowshoes','Raquetas','Raquettes','Schneeschuhe'],fungi:['Funghi e raccolta','Foraging','Setas y recolección','Cueillette','Pilze sammeln']}};
+const i=LS.indexOf(L),t=(k,v={})=>(S[k][i]||S[k][1]).replace(/\{(\w)\}/g,(_,x)=>v[x]??''),$=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let D=null,map=null,lay=null,fitted=false;
+const hm=(x,tz)=>{try{return new Date(x).toLocaleTimeString(L,{hour:'2-digit',minute:'2-digit',timeZone:tz})}catch(e){return new Date(x).toLocaleTimeString(L,{hour:'2-digit',minute:'2-digit'})}};
+const dh=(x,tz)=>{try{return new Date(x).toLocaleString(L,{weekday:'short',hour:'2-digit',minute:'2-digit',timeZone:tz})}catch(e){return new Date(x).toLocaleString(L)}};
+const ago=x=>{const m=Math.max(0,Math.round((Date.now()-Date.parse(x))/60000));return t('ago',{m:m<60?m+' min':Math.floor(m/60)+' h '+(m%60)+' min'})};
+$('hdr').textContent=t('hdr');$('foot').textContent=t('foot');
+function rescueText(){if(!D)return'';const p=D.plan||{},l=D.last;return[`${D.name} · ${t('route')}: ${p.route||'—'}`,`${t('people')}: ${p.n||1}${p.activity&&S.ACT[p.activity]?' · '+S.ACT[p.activity][i]:''}`,`${t('left')}: ${dh(D.created_at,D.tz)} · ${t('back')}: ${dh(D.back_at,D.tz)}`,l?`${t('last')}: ${l.lat}, ${l.lon} (${dh(l.t,D.tz)}${l.acc?' · ±'+Math.round(l.acc)+' m':''}) https://www.openstreetmap.org/?mlat=${l.lat}&mlon=${l.lon}#map=15/${l.lat}/${l.lon}`:`${t('last')}: ${t('none')}`,p.note?`${t('note')}: ${p.note}`:'',location.href].filter(Boolean).join('\n')}
+function render(){if(!D)return;const p=D.plan||{},back=Date.parse(D.back_at),g=back+D.grace_min*60e3,now=Date.now();
+ let k='on';if(D.status==='safe')k='safe';else if(D.status==='expired')k='exp';else if(D.status==='overdue')k='late';else if(now>=back)k='soon';
+ $('st').className='st '+(k==='late'?'late':k==='soon'?'soon':k==='safe'?'safe':k==='exp'?'exp':'on');
+ $('stT').textContent=t(k);$('stB').textContent=t(k+'B',{b:hm(D.back_at,D.tz),g:hm(g,D.tz),e:D.ended_at?hm(D.ended_at,D.tz):''});
+ document.title=`${D.name} · ${t(k)}`;
+ const l=D.last;
+ $('info').innerHTML=`<h2 style="margin:0 0 8px;font-size:20px">${esc(D.name)}</h2><div class="kv"><div><small>${t('route')}</small><b>${esc(p.route||'—')}</b></div><div><small>${t('people')}</small><b>${p.n||1}</b>${p.activity&&S.ACT[p.activity]?' · '+S.ACT[p.activity][i]:''}</div><div><small>${t('left')}</small><b>${dh(D.created_at,D.tz)}</b></div><div><small>${t('back')}</small><b>${dh(D.back_at,D.tz)}</b></div><div style="grid-column:1/-1"><small>${t('last')}</small><b>${l?`${dh(l.t,D.tz)} · ${ago(l.t)}${l.batt!=null?' · '+t('batt')+' '+Math.round(l.batt*100)+'%':''}`:t('none')}</b></div></div>${p.note?`<p class="note" style="margin:8px 0 0">${t('note')}: ${esc(p.note)}</p>`:''}`;
+ const ios=/iP(hone|ad|od)/.test(navigator.userAgent)&&!navigator.standalone,can='serviceWorker' in navigator&&'PushManager' in window,on=localStorage.getItem('wl-notify-'+V)==='1';
+ $('acts').innerHTML=(D.status==='active'||D.status==='overdue'?`<button class="btn" id="nb" ${on?'disabled':''}>${on?t('notOn'):t('notify')}</button><p class="note" id="nn">${ios&&!can?t('ios'):''}</p>`:'')+
+  (l?`<a class="btn alt" href="https://www.google.com/maps/search/?api=1&query=${l.lat},${l.lon}" target="_blank" rel="noopener">${t('maps')}</a>`:'')+(p.phone?`<a class="btn alt" href="tel:${esc(p.phone)}">${t('call')}</a>`:'')+`<button class="btn alt" id="cp">${t('copy')}</button>`;
+ const nb=$('nb');if(nb)nb.onclick=subscribe;$('cp').onclick=async()=>{try{await navigator.clipboard.writeText(rescueText());$('cp').textContent=t('copied')}catch(e){prompt('',rescueText())}};
+ $('what').innerHTML=`<details ${k==='late'?'open':''}><summary style="font-weight:700;cursor:pointer">${t('whatT')}</summary><ol><li>${t('w1')}</li><li>${t('w2')}</li><li><b>${t('w3')}</b></li><li>${t('w4')}</li><li>${t('w5')}</li></ol>${k==='late'?`<a class="btn red" href="tel:112">📞 112</a>`:''}</details>`;
+ drawMap()}
+function drawMap(){if(!window.L)return;if(!map){map=L.map('map');L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap'}).addTo(map);lay=L.layerGroup().addTo(map)}lay.clearLayers();const b=[],p=D.plan||{};
+ if(p.pts&&p.pts.length>1){L.polyline(p.pts,{color:'#2b6cb0',weight:4,opacity:.8,dashArray:'9 6'}).addTo(lay);b.push(...p.pts)}
+ const h=(D.hist||[]).map(x=>[x[0],x[1]]);if(h.length>1){L.polyline(h,{color:'#d1492a',weight:4}).addTo(lay);b.push(...h)}
+ if(p.start){L.circleMarker([p.start.lat,p.start.lon],{radius:7,color:'#fff',weight:2,fillColor:'#2d5a34',fillOpacity:1}).addTo(lay);b.push([p.start.lat,p.start.lon])}
+ if(D.last){const m=L.circleMarker([D.last.lat,D.last.lon],{radius:10,color:'#fff',weight:3,fillColor:'#d1492a',fillOpacity:1}).addTo(lay);m.bindTooltip(D.name+' · '+hm(D.last.t,D.tz),{permanent:true,direction:'top'});if(D.last.acc)L.circle([D.last.lat,D.last.lon],{radius:D.last.acc,color:'#d1492a',weight:1,fillOpacity:.08}).addTo(lay);b.push([D.last.lat,D.last.lon])}
+ if(!fitted){if(b.length>1)map.fitBounds(b,{padding:[30,30],maxZoom:15});else if(b.length)map.setView(b[0],14);else map.setView([46,10],6);fitted=true}}
+const u8=s=>{const p='='.repeat((4-s.length%4)%4),b=atob((s+p).replace(/-/g,'+').replace(/_/g,'/'));return Uint8Array.from(b,c=>c.charCodeAt(0))};
+async function subscribe(){const nn=$('nn');try{if(!('serviceWorker' in navigator)||!('PushManager' in window)){nn.textContent=/iP(hone|ad|od)/.test(navigator.userAgent)?t('ios'):t('notNo');return}
+ const perm=await Notification.requestPermission();if(perm!=='granted'){nn.textContent=t('denied');return}
+ const reg=await navigator.serviceWorker.register('sw.js');await navigator.serviceWorker.ready;
+ let sub=await reg.pushManager.getSubscription();if(!sub)sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:u8(D.vapid)});
+ const r=await fetch(FN,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({op:'subscribe',v:V,lang:L,sub:sub.toJSON()})});const j=await r.json();if(!j.ok)throw 0;
+ localStorage.setItem('wl-notify-'+V,'1');render()}catch(e){nn.textContent=t('notNo')}}
+async function load(){try{const r=await fetch(FN,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({op:'view',v:V})});if(r.status===404||!V)throw 'nf';D=await r.json();if(D.error)throw 'nf';render()}catch(e){if(e==='nf'||!D){$('st').className='st exp';$('stT').textContent=t('nf');$('stB').textContent=t('nfB')}}}
+load();setInterval(()=>{if(!document.hidden)load()},60000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)load()});
+</script>
+</body>
+</html>
