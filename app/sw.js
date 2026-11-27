@@ -1,5 +1,8 @@
-const CORE='wildlens-core-v38',RUN='wildlens-run-v1',LIB='wildlens-lib-v1';
+const CORE='wildlens-core-v39',RUN='wildlens-run-v1',LIB='wildlens-lib-v1';
 const CORE_FILES=['./','index.html','manifest.webmanifest','icon.svg','qr.js','accesso.js','voce.js','ai-worker.js','https://unpkg.com/leaflet@1.9.4/dist/leaflet.css','https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'];
+/* a GPX shared to the installed web app (Android share menu): kept for the page, which imports it */
+self.addEventListener('fetch',e=>{const r=e.request;if(r.method!=='POST'||!new URL(r.url).searchParams.has('share-gpx'))return;
+ e.respondWith((async()=>{try{const f=await r.formData();const file=f.get('gpx');if(file&&file.size){const c=await caches.open('wildlens-share');await c.put('/shared-gpx',new Response(await file.text(),{headers:{'x-name':encodeURIComponent(file.name||'track.gpx')}}))}}catch(x){}return Response.redirect('./index.html?gpx=1',303)})())});
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CORE).then(c=>Promise.all(CORE_FILES.map(u=>c.add(u).catch(()=>{})))).then(()=>self.skipWaiting()))});
 /* Only old app-shell caches are removed. AI brains (transformers-cache), the AI library (LIB) and map tiles (RUN) are kept across updates. */
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k.startsWith('wildlens-core-')&&k!==CORE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});

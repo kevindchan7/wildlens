@@ -72,6 +72,15 @@ public class TrackPlugin extends Plugin {
         call.resolve(o);
     }
 
+    /** The GPX file another app opened with Wildlens, if any (given once). */
+    @PluginMethod
+    public void takeShared(PluginCall call) {
+        JSObject o = new JSObject();
+        if (MainActivity.sharedText != null) { o.put("text", MainActivity.sharedText); o.put("name", MainActivity.sharedName); }
+        MainActivity.sharedText = null; MainActivity.sharedName = null;
+        call.resolve(o);
+    }
+
     @PluginMethod
     public void clear(PluginCall call) {
         try { TrackService.file(getContext()).delete(); } catch (Exception ignored) {}
