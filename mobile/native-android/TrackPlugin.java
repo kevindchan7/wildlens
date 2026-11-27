@@ -81,6 +81,21 @@ public class TrackPlugin extends Plugin {
         call.resolve(o);
     }
 
+    /** Safety alarm: the recorder also sends the position to the family page while the token is set. */
+    @PluginMethod
+    public void setTrip(PluginCall call) {
+        getContext().getSharedPreferences("wltrip", Context.MODE_PRIVATE).edit().putString("token", call.getString("token", "")).apply();
+        call.resolve();
+    }
+
+    @PluginMethod
+    public void tripStatus(PluginCall call) {
+        JSObject o = new JSObject();
+        o.put("last", getContext().getSharedPreferences("wltrip", Context.MODE_PRIVATE).getLong("last", 0));
+        o.put("running", TrackService.running);
+        call.resolve(o);
+    }
+
     @PluginMethod
     public void clear(PluginCall call) {
         try { TrackService.file(getContext()).delete(); } catch (Exception ignored) {}
