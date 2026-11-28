@@ -1,0 +1,2 @@
+/*! Wildlens © 2026 ART& CREATION LLC. All rights reserved. Unauthorized copying, modification or redistribution is prohibited. */
+self.addEventListener("install",()=>self.skipWaiting()),self.addEventListener("activate",e=>{e.waitUntil(self.registration.unregister().then(()=>self.clients.matchAll()).then(e=>e.forEach(e=>e.navigate(e.url))))});
